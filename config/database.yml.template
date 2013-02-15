@@ -1,0 +1,33 @@
+# You'll need to configure this file for the appropriate environment before
+# you run PowerDNS on Rails.
+
+# MySQL development
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: powerdns_development
+  host: localhost
+  username: postgres
+  password: postgres
+
+# Warning: The database defined as 'test' will be erased and
+# re-generated from your development database when you run 'rake'.
+# Do not set this db to the same as development or production.
+test: &TEST
+  adapter: postgresql
+  encoding: unicode
+  database: powerdns_test
+  host: localhost
+  username: postgres
+  password: postgres
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: powerdns_production
+  host: localhost
+  username: root
+  password: dont-use-root-here
+
+cucumber:
+  <<: *TEST

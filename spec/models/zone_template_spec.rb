@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe ZoneTemplate, "when new" do
 
@@ -15,7 +15,7 @@ describe ZoneTemplate, "when new" do
   end
 
   it "should have a unique name" do
-    Factory(:zone_template)
+    FactoryGirl.create(:zone_template)
     @zone_template.name = "East Coast Data Center"
     @zone_template.should have(1).error_on(:name)
   end
@@ -33,8 +33,8 @@ end
 describe ZoneTemplate, "when loaded" do
 
   before(:each) do
-    @zone_template = Factory( :zone_template )
-    Factory(:template_soa, :zone_template => @zone_template)
+    @zone_template = FactoryGirl.create(:zone_template)
+    FactoryGirl.create(:template_soa, :zone_template => @zone_template)
   end
 
   it "should have record templates" do
@@ -50,67 +50,47 @@ describe ZoneTemplate, "when loaded" do
   it "should have a sense of validity" do
     @zone_template.has_soa?.should be_true
 
-    Factory( :zone_template, :name => 'West Coast Data Center' ).has_soa?.should_not be_true
+    FactoryGirl.create( :zone_template, :name => 'West Coast Data Center' ).has_soa?.should_not be_true
   end
 end
 
-describe ZoneTemplate, "with scoped finders" do
+describe ZoneTemplate, "with scopes" do
 
   before(:each) do
-    @quentin = Factory(:quentin)
-    @zone_template = Factory(:zone_template, :user => @quentin)
-    @other_template = Factory(:zone_template, :name => 'West Coast Data Center')
-  end
-
-  it "should return all templates without a user" do
-    templates = ZoneTemplate.find( :all )
-    templates.should_not be_empty
-    templates.size.should be( ZoneTemplate.count )
+    @quentin = FactoryGirl.create(:quentin)
+    @zone_template = FactoryGirl.create(:zone_template, :user => @quentin)
+    @other_template = FactoryGirl.create(:zone_template, :name => 'West Coast Data Center')
   end
 
   it "should only return a user's templates if not an admin" do
-    templates = ZoneTemplate.find( :all, :user => @quentin )
+    templates = ZoneTemplate.user(@quentin).all
     templates.should_not be_empty
     templates.size.should be(1)
     templates.each { |z| z.user.should eql( @quentin ) }
   end
 
   it "should return all templates if the user is an admin" do
-    templates = ZoneTemplate.find( :all, :user => Factory(:admin) )
+    templates = ZoneTemplate.user(FactoryGirl.create(:admin)).all
     templates.should_not be_empty
     templates.size.should be( ZoneTemplate.count )
   end
 
-  it "should support will_paginate (no user)" do
-    pending
-    templates = ZoneTemplate.paginate( :page => 1 )
-    templates.should_not be_empty
-    templates.size.should be( ZoneTemplate.count )
-  end
+  it "should return only valid records" do
+    templates = ZoneTemplate.with_soa.all
+    templates.should be_empty
 
-  it "shoud support will_paginate (admin user)" do
-    pending
-    templates = ZoneTemplate.paginate( :page => 1, :user => users(:admin) )
-    templates.should_not be_empty
-    templates.size.should be( ZoneTemplate.count )
-  end
-
-  it "should support will_paginate (template owner)" do
-    pending
-    templates = ZoneTemplate.paginate( :page => 1, :user => users(:quentin) )
-    templates.should_not be_empty
-    templates.size.should be(1)
-    templates.each { |z| z.user.should eql(users(:quentin)) }
+    FactoryGirl.create(:template_soa, :zone_template => @zone_template)
+    ZoneTemplate.with_soa.all.should_not be_empty
   end
 end
 
 describe ZoneTemplate, "when used to build a zone" do
 
   before(:each) do
-    @zone_template = Factory( :zone_template )
-    Factory(:template_soa, :zone_template => @zone_template)
-    Factory(:template_ns, :zone_template => @zone_template)
-    Factory(:template_ns, :content => 'ns2.%ZONE%', :zone_template => @zone_template)
+    @zone_template = FactoryGirl.create(:zone_template)
+    FactoryGirl.create(:template_soa, :zone_template => @zone_template)
+    FactoryGirl.create(:template_ns, :zone_template => @zone_template)
+    FactoryGirl.create(:template_ns, :content => 'ns2.%ZONE%', :zone_template => @zone_template)
 
     @domain = @zone_template.build( 'example.org' )
   end
@@ -144,13 +124,13 @@ end
 describe ZoneTemplate, "when used to build a zone for a user" do
 
   before(:each) do
-    @user = Factory(:quentin)
-    @zone_template = Factory(:zone_template, :user => @quentin)
-    Factory(:template_soa, :zone_template => @zone_template)
-    Factory(:template_ns, :zone_template => @zone_template)
-    Factory(:template_ns, :name => 'ns2.%ZONE%', :zone_template => @zone_template)
-    Factory(:template_cname, :zone_template => @zone_template)
-    Factory(:template_cname, :name => 'www.%ZONE%', :zone_template => @zone_template)
+    @user = FactoryGirl.create(:quentin)
+    @zone_template = FactoryGirl.create(:zone_template, :user => @quentin)
+    FactoryGirl.create(:template_soa, :zone_template => @zone_template)
+    FactoryGirl.create(:template_ns, :zone_template => @zone_template)
+    FactoryGirl.create(:template_ns, :name => 'ns2.%ZONE%', :zone_template => @zone_template)
+    FactoryGirl.create(:template_cname, :zone_template => @zone_template)
+    FactoryGirl.create(:template_cname, :name => 'www.%ZONE%', :zone_template => @zone_template)
 
     @domain = @zone_template.build( 'example.org', @user )
   end
@@ -193,10 +173,10 @@ end
 describe ZoneTemplate, "and finders" do
 
   before(:each) do
-    zt1 = Factory(:zone_template)
-    Factory(:template_soa, :zone_template => zt1 )
+    zt1 = FactoryGirl.create(:zone_template)
+    FactoryGirl.create(:template_soa, :zone_template => zt1 )
 
-    Factory(:zone_template, :name => 'No SOA')
+    FactoryGirl.create(:zone_template, :name => 'No SOA')
   end
 
   it "should be able to return all templates" do

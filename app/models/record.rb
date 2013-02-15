@@ -6,26 +6,36 @@
 # that can easily be applied to any DNS RR's
 #
 class Record < ActiveRecord::Base
+  audited :associated_with => :domain, :allow_mass_assignment => true
+  self.non_audited_columns.delete( self.inheritance_column ) # Audit the 'type' column
+
+  def self.attributes_protected_by_default
+    []
+  end
 
   belongs_to :domain
 
-  validates_presence_of :domain_id, :name
+  validates_presence_of :name
   validates_numericality_of :ttl,
     :greater_than_or_equal_to => 0,
     :only_integer => true
 
-  class_inheritable_accessor :batch_soa_updates
+  class_attribute :batch_soa_updates
 
   # This is needed here for generic form support, actual functionality
   # implemented in #SOA
   attr_accessor :primary_ns, :contact, :refresh, :retry, :expire, :minimum
 
+  before_validation :inherit_attributes_from_domain
   before_save :update_change_date
   after_save  :update_soa_serial
 
   # Known record types
-  @@record_types = ['A', 'AAAA', 'CNAME', 'LOC', 'MX', 'NS', 'PTR', 'SOA', 'SPF', 'SRV', 'TXT']
-  cattr_reader :record_types
+
+  class_attribute :record_types
+  self.record_types = ['A', 'AAAA', 'CNAME', 'LOC', 'MX', 'NS', 'PTR', 'SOA', 'SPF', 'SRV','SSHFP', 'TXT']
+
+  validates_inclusion_of :type, in: self.record_types
 
   class << self
 
@@ -66,11 +76,10 @@ class Record < ActiveRecord::Base
   alias_method_chain :to_xml, :cleanup
 
   # Pull in the name & TTL from the domain if missing
-  def before_validation #:nodoc:
-    unless self.domain_id.nil?
-      append_domain_name!
-      self.ttl ||= self.domain.ttl
-    end
+  def inherit_attributes_from_domain #:nodoc:
+    return unless self.domain
+    append_domain_name!
+    self.ttl ||= self.domain.ttl
   end
 
   # Update the change date for automatic serial number generation
@@ -83,11 +92,6 @@ class Record < ActiveRecord::Base
       self.domain.soa_record.update_serial!
       @serial_updated = true
     end
-  end
-
-  # Force acts_as_audited to record all attributes when a record is destroyed
-  def audit_destroy(user = nil)
-    write_audit(:action => 'destroy', :auditable_parent => auditable_parent, :changes => audited_attributes, :user => user)
   end
 
   # By default records don't support priorities. Those who do can overwrite

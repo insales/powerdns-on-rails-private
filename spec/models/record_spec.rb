@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe Record, "when new" do
   before(:each) do
@@ -40,14 +40,14 @@ end
 
 describe Record, "during updates" do
   before(:each) do
-    @domain = Factory(:domain)
+    @domain = FactoryGirl.create(:domain)
     @soa = @domain.soa_record
   end
 
   it "should update the serial on the SOA" do
     serial = @soa.serial
 
-    record = Factory(:a, :domain => @domain)
+    record = FactoryGirl.create(:a, :domain => @domain)
     record.content = '10.0.0.1'
     record.save.should be_true
 
@@ -96,7 +96,7 @@ end
 
 describe Record, "when created" do
   before(:each) do
-    @domain = Factory(:domain)
+    @domain = FactoryGirl.create(:domain)
     @soa = @domain.soa_record
   end
 
@@ -167,8 +167,8 @@ end
 
 describe Record, "when loaded" do
   before(:each) do
-    domain = Factory(:domain)
-    @record = Factory(:a, :domain => domain)
+    domain = FactoryGirl.create(:domain)
+    @record = FactoryGirl.create(:a, :domain => domain)
   end
 
   it "should have a full name" do
@@ -182,8 +182,8 @@ end
 
 describe Record, "when serializing to XML" do
   before(:each) do
-    domain = Factory(:domain)
-    @record = Factory(:a, :domain => domain)
+    domain = FactoryGirl.create(:domain)
+    @record = FactoryGirl.create(:a, :domain => domain)
   end
 
   it "should have a root tag of the record type" do

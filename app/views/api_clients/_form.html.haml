@@ -1,0 +1,13 @@
+= form_for( @api_client ) do |f|
+  = error_messages_for( :api_client )
+
+  %table
+    %tr
+      %td= t :label_api_client_name
+      %td= f.text_field :name
+    %tr
+      %td &nbsp;
+      %td &nbsp;
+    %tr
+      %td.right= link_to t(:generic_cancel), api_clients_path
+      %td= submit_tag t(:generic_save)

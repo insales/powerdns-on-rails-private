@@ -10,8 +10,8 @@ require 'scoped_finders'
 # * It specifies a default $TTL
 #
 class Domain < ActiveRecord::Base
-
-  scope_user
+  audited :allow_mass_assignment => true
+  has_associated_audits
 
   belongs_to :user
 
@@ -27,6 +27,7 @@ class Domain < ActiveRecord::Base
   has_many :aaaa_records,  :class_name => 'AAAA'
   has_many :spf_records,   :class_name => 'SPF'
   has_many :srv_records,   :class_name => 'SRV'
+  has_many :sshfp_records, :class_name => 'SSHFP'
   has_many :ptr_records,   :class_name => 'PTR'
 
   validates_presence_of :name
@@ -39,7 +40,7 @@ class Domain < ActiveRecord::Base
     :with => /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/
 
   # Disable single table inheritence (STI)
-  set_inheritance_column 'not_used_here'
+  self.inheritance_column = 'not_used_here'
 
   # Virtual attributes that ease new zone creation. If present, they'll be
   # used to create an SOA for the domain
@@ -55,6 +56,33 @@ class Domain < ActiveRecord::Base
   # Helper attributes for API clients and forms (keep it RESTful)
   attr_accessor :zone_template_id, :zone_template_name
 
+  # Needed for acts_as_audited (TODO: figure out why this is needed...)
+  #attr_accessible :type
+
+  # Scopes
+  scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
+  default_scope order('name')
+
+  class << self
+
+    def search( string, page, user = nil )
+      query = self.scoped
+      query = query.user( user ) unless user.nil?
+      query.where('name LIKE ?', "%#{string}%").paginate( :page => page )
+    end
+
+  end
+
+  def initialize(params = {})
+    super
+    build_soa_record
+  end
+
+  # arguably should have as_json includes here too FIX
+  def to_xml(options={})
+    super(options.merge(:include => :records))
+  end
+  
   # Are we a slave domain
   def slave?
     self.type == 'SLAVE'
@@ -62,25 +90,8 @@ class Domain < ActiveRecord::Base
 
   # return the records, excluding the SOA record
   def records_without_soa
-    records.find(:all, :include => :domain ).select { |r| !r.is_a?( SOA ) }
+    records.includes(:domain).all.select { |r| !r.is_a?( SOA ) }.sort_by {|r| [r.shortname, r.type]}
   end
-
-  # Convenience method to get the all the audits for the different records that
-  # belong to this domain
-  def record_audits
-    Record.record_types.inject([]) do |memo, t|
-      memo << send( "#{t.downcase}_audits" )
-      memo
-    end
-  end
-
-  # Nicer representation of the domain as XML
-  def to_xml_with_cleanup(options = {}, &block)
-    #to_xml_without_cleanup options.merge(:include => [:records],
-    #:except => [:user_id], &block)
-    to_xml_without_cleanup options.merge(:except => [:user_id], &block)
-  end
-  alias_method_chain :to_xml, :cleanup
 
   # Expand our validations to include SOA details
   def after_validation_on_create #:nodoc:
@@ -98,15 +109,13 @@ class Domain < ActiveRecord::Base
   end
 
   # Setup an SOA if we have the requirements
-  def after_create #:nodoc:
+  def build_soa_record #:nodoc:
     return if self.slave?
 
-    soa = SOA.new( :domain => self )
-    SOA_FIELDS.each do |f|
-      soa.send( "#{f}=", send( f ) )
-    end
-    soa.serial = serial unless serial.nil? # Optional
-    soa.save
+    soa_args = Hash[SOA_FIELDS.map { |f| [f, send(f)] }]
+    self.records << soa = SOA.new(soa_args)
+    soa.domain = self
+    #soa.serial = serial unless serial.nil? # Optional
   end
 
   def attach_errors(e)

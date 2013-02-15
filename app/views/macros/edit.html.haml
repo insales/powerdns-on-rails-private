@@ -5,7 +5,7 @@
   #macro-name= t :help_macro_name
   #macro-active= t :help_macro_active
 
-- form_for( @macro ) do |f|
+= form_for( @macro ) do |f|
   = error_messages_for :macro
 
   %table
@@ -14,22 +14,22 @@
       %td &nbsp;
       %td
         = f.text_field :name
-        = prototip_help_icon('macro-name')
+        = help_icon('macro-name')
     %tr
       %td.top= t(:label_macro_description)
       %td &nbsp;
       %td= f.text_area :description, :size => '35x2'
-    - unless @users.nil? || @users.empty?
+    - if current_user.admin? && !possible_owners.empty?
       %tr
         %td= t(:label_macro_owner)
         %td &nbsp;
-        %td= f.collection_select :user_id, @users, :id, :login, :include_blank => true
+        %td= f.collection_select :user_id, possible_owners, :id, :login, :include_blank => true
     %tr
       %td= t(:label_macro_active)
       %td &nbsp;
       %td
         = f.check_box :active
-        = prototip_help_icon('macro-active')
+        = help_icon('macro-active')
     %tr
       %td.right= link_to_cancel @macro
       %td &nbsp;
