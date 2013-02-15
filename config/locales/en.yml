@@ -118,6 +118,7 @@ en:
   layout_menu_macros: "Macros"
   layout_menu_logs: "Logs"
   layout_menu_users: "Users"
+  layout_menu_api_clients: "Api clients"
   layout_menu_reports: "Reports"
   layout_menu_logout: "Logout"
 
@@ -499,6 +500,55 @@ en:
   label_user_create: "New user"
   confirm_user_remove: "Are you sure you want to remove this user?"
   label_user_detail: "More Detail"
+
+#api_clients. copied from users
+  help_api_client_create:
+    Creates a new api_client
+  help_api_client_is_active:
+    This is an active api_client
+  help_api_client_is_suspended:
+    This api_client is currently suspended
+  help_api_client_details_edit:
+    Edit this api_client's details
+  help_api_client_suspend:
+    Suspend this api_client
+  help_api_client_activate:
+    Re-activates this api_client
+  help_api_client_delete:
+    Delete this api_client from the system
+  label_api_client_roles:
+    admin: "Admin"
+    api_client: "api_client"
+    domain_owner: "Domain Owner"
+
+# api_client form
+  help_api_client_is_admin:
+    This api_client has access to all PowerDNS on Rails facilities.
+  help_api_client_is_api_client:
+    This api_client can only change aspects of his domain.
+  help_api_client_token_info:
+    Only has effect if the api_client is an admin. This allows the api_client to generate
+    authentication tokens for temporary access to manage a specific domain.
+    Useful only where PowerDNS on Rails' API features are used.
+
+  label_api_client_email: "Email address"
+  text_api_client_password_edit_notice:
+    Leave blank to keep current password
+  label_api_client_password_again: "Password (Again)"
+  label_api_client_role_sign: "Role"
+  text_api_client_manage_token:
+    Manage authentication tokens
+
+# api_client index
+  help_api_client_add:
+    Add a new api_client to PowerDNS on Rails
+  title_api_clients: "api_clients"
+
+# api_client show
+  title_api_client_details_for: " Details for %{name}"
+  label_api_client_create: "New api_client"
+  confirm_api_client_remove: "Are you sure you want to remove this api_client?"
+  label_api_client_detail: "More Detail"
 
 
 ### Controllers

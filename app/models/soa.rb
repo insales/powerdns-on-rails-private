@@ -20,7 +20,7 @@ class SOA < Record
     :greater_than_or_equal_to => 0,
     :less_than_or_equal_to => 10800
 
-  validates_uniqueness_of :domain_id
+  #validates_uniqueness_of :domain_id
   validates_format_of :contact, :with => /\A[a-zA-Z0-9\-\.]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,6}\z/
   validates :name, :presence => true, :hostname => true
 
@@ -31,6 +31,7 @@ class SOA < Record
   # The portions of the +content+ column that make up our SOA fields
   SOA_FIELDS = %w{ primary_ns contact serial refresh retry expire minimum }
 
+  attr_accessible *SOA_FIELDS
   # This allows us to have these convenience attributes act like any other
   # column in terms of validations
   SOA_FIELDS.each do |soa_entry|

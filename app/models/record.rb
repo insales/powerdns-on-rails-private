@@ -15,7 +15,7 @@ class Record < ActiveRecord::Base
 
   belongs_to :domain
 
-  validates_presence_of :domain_id, :name
+  validates_presence_of :name
   validates_numericality_of :ttl,
     :greater_than_or_equal_to => 0,
     :only_integer => true
@@ -34,6 +34,8 @@ class Record < ActiveRecord::Base
 
   class_attribute :record_types
   self.record_types = ['A', 'AAAA', 'CNAME', 'LOC', 'MX', 'NS', 'PTR', 'SOA', 'SPF', 'SRV','SSHFP', 'TXT']
+
+  validates_inclusion_of :type, in: self.record_types
 
   class << self
 
@@ -75,10 +77,9 @@ class Record < ActiveRecord::Base
 
   # Pull in the name & TTL from the domain if missing
   def inherit_attributes_from_domain #:nodoc:
-    unless self.domain_id.nil?
-      append_domain_name!
-      self.ttl ||= self.domain.ttl
-    end
+    return unless self.domain
+    append_domain_name!
+    self.ttl ||= self.domain.ttl
   end
 
   # Update the change date for automatic serial number generation

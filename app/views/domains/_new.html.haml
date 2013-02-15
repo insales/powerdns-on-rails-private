@@ -11,8 +11,8 @@
   #help-master=t :help_domain_master
 
 %p=t :label_create_new_domain_note
-
-= form_for( Domain.new ) do |f|
+- require 'PP'; pp @domain.records.first.errors
+= form_for( @domain ) do |f|
   = error_messages_for :domain
   %p &nbsp;
   %table.grid

@@ -42,8 +42,6 @@ class Domain < ActiveRecord::Base
   # Disable single table inheritence (STI)
   self.inheritance_column = 'not_used_here'
 
-  after_create :create_soa_record
-
   # Virtual attributes that ease new zone creation. If present, they'll be
   # used to create an SOA for the domain
   SOA_FIELDS = [ :primary_ns, :contact, :refresh, :retry, :expire, :minimum ]
@@ -73,6 +71,11 @@ class Domain < ActiveRecord::Base
       query.where('name LIKE ?', "%#{string}%").paginate( :page => page )
     end
 
+  end
+
+  def initialize(params = {})
+    super
+    build_soa_record
   end
 
   # arguably should have as_json includes here too FIX
@@ -106,15 +109,13 @@ class Domain < ActiveRecord::Base
   end
 
   # Setup an SOA if we have the requirements
-  def create_soa_record #:nodoc:
+  def build_soa_record #:nodoc:
     return if self.slave?
 
-    soa = SOA.new( :domain => self )
-    SOA_FIELDS.each do |f|
-      soa.send( "#{f}=", send( f ) )
-    end
-    soa.serial = serial unless serial.nil? # Optional
-    soa.save
+    soa_args = Hash[SOA_FIELDS.map { |f| [f, send(f)] }]
+    self.records << soa = SOA.new(soa_args)
+    soa.domain = self
+    #soa.serial = serial unless serial.nil? # Optional
   end
 
   def attach_errors(e)

@@ -1,0 +1,10 @@
+#new-user{ :style => 'display: none' }= t :help_api_client_add
+
+%h2.underline= t :title_api_clients
+
+%table.gridwide
+  %tr
+    %td{ :colspan => 5 }
+      = link_to info_icon('user_add.png', 'new-api-client'), new_api_client_path
+      = link_to t(:label_api_client_create), new_api_client_path
+  = render :partial => 'api_client', :collection => @api_clients

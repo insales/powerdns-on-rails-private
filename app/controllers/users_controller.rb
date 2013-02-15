@@ -1,10 +1,5 @@
 class UsersController < InheritedResources::Base
-
-  before_filter do
-    unless current_user.admin?
-      redirect_to root_url
-    end
-  end
+  allow_admin_only!
 
   def update
     # strip out blank params
@@ -31,5 +26,4 @@ class UsersController < InheritedResources::Base
     resource.destroy
     redirect_to users_path
   end
-
 end

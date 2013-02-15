@@ -24,6 +24,7 @@
             - if current_user.admin?
               %li= link_to((t :layout_menu_logs), audits_path)
               %li= link_to((t :layout_menu_users), users_path)
+              %li= link_to((t :layout_menu_api_clients), api_clients_path)
               %li= link_to((t :layout_menu_reports), reports_path)
             %li= link_to((t :layout_menu_logout), destroy_user_session_path)
 

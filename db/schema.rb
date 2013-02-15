@@ -11,7 +11,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120819220815) do
+ActiveRecord::Schema.define(:version => 20130213081650) do
+
+  create_table "api_clients", :force => true do |t|
+    t.string   "name"
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "authentication_token"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+  end
+
+  add_index "api_clients", ["authentication_token"], :name => "index_api_clients_on_authentication_token", :unique => true
 
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
@@ -40,8 +57,8 @@ ActiveRecord::Schema.define(:version => 20120819220815) do
     t.integer  "user_id"
     t.string   "token",       :null => false
     t.text     "permissions", :null => false
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "expires_at",  :null => false
   end
 
@@ -53,8 +70,8 @@ ActiveRecord::Schema.define(:version => 20120819220815) do
     t.integer  "notified_serial"
     t.string   "account"
     t.integer  "ttl",             :default => 86400
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "notes"
   end
@@ -72,8 +89,8 @@ ActiveRecord::Schema.define(:version => 20120819220815) do
     t.integer  "position",                      :null => false
     t.boolean  "active",      :default => true
     t.string   "note"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "macros", :force => true do |t|
@@ -81,8 +98,8 @@ ActiveRecord::Schema.define(:version => 20120819220815) do
     t.string   "description"
     t.integer  "user_id"
     t.boolean  "active",      :default => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "record_templates", :force => true do |t|
@@ -92,8 +109,8 @@ ActiveRecord::Schema.define(:version => 20120819220815) do
     t.string   "content",          :null => false
     t.integer  "ttl",              :null => false
     t.integer  "prio"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "records", :force => true do |t|
@@ -104,8 +121,8 @@ ActiveRecord::Schema.define(:version => 20120819220815) do
     t.integer  "ttl",         :null => false
     t.integer  "prio"
     t.integer  "change_date", :null => false
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "records", ["domain_id"], :name => "index_records_on_domain_id"
@@ -135,8 +152,8 @@ ActiveRecord::Schema.define(:version => 20120819220815) do
   create_table "zone_templates", :force => true do |t|
     t.string   "name"
     t.integer  "ttl",        :default => 86400
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id"
   end
 

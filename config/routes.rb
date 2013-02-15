@@ -1,4 +1,17 @@
+
+# -*- encoding : utf-8 -*-
 PowerdnsOnRails::Application.routes.draw do
+  namespace :api do
+    namespace :v1 do
+      devise_for :api_clients, skip: [:sessions, :registrations, :confirmations]
+      resources :domains do
+        resources :records do
+          delete on: :collection, action: :delete_all
+        end
+      end
+    end
+  end
+
   devise_for :users, :controllers => { :sessions => "sessions" }, :path => "sessions"
 
   root :to => 'dashboard#index'
@@ -38,6 +51,8 @@ PowerdnsOnRails::Application.routes.draw do
       delete :purge
     end
   end
+
+  resources :api_clients
 
   get '/search(/:action)' => 'search#results', :as => :search
 

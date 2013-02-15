@@ -6,29 +6,6 @@ class DomainsController < InheritedResources::Base
   custom_actions :resource => :apply_macro
   respond_to :xml, :json, :js
 
-  protected
-
-  def collection
-    @domains = Domain.user( current_user ).paginate :page => params[:page]
-  end
-
-  def resource
-    @domain = Domain.scoped.includes(:records)
-
-    if current_user
-      @domain = @domain.user( current_user ).find( params[:id] )
-    else
-      @domain = @domain.find( current_token.domain_id )
-    end
-    @domain
-  end
-
-  def restrict_token_movements
-    redirect_to domain_path( current_token.domain ) if current_token
-  end
-
-  public
-
   def show
     if current_user && current_user.admin?
       @users = User.active_owners
@@ -44,13 +21,13 @@ class DomainsController < InheritedResources::Base
       @zone_template = ZoneTemplate.find(params[:domain][:zone_template_id]) unless params[:domain][:zone_template_id].blank?
       @zone_template ||= ZoneTemplate.find_by_name(params[:domain][:zone_template_name]) unless params[:domain][:zone_template_name].blank?
 
-      unless @zone_template.nil?
+      if @zone_template
         begin
           @domain = @zone_template.build( params[:domain][:name] )
         rescue ActiveRecord::RecordInvalid => e
           @domain.attach_errors(e)
 
-          render :action => :new
+          render action: :new
           return
         end
       end
@@ -103,4 +80,22 @@ class DomainsController < InheritedResources::Base
 
   end
 
+  protected
+    def collection
+      @domains = Domain.user( current_user ).paginate :page => params[:page]
+    end
+
+    def resource
+      @domain = Domain.scoped.includes(:records)
+      if current_user
+        @domain = @domain.user( current_user ).find( params[:id] )
+      else
+        @domain = @domain.find( current_token.domain_id )
+      end
+      @domain
+    end
+
+    def restrict_token_movements
+      redirect_to domain_path current_token.domain if current_token
+    end
 end
