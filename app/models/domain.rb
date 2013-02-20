@@ -64,17 +64,15 @@ class Domain < ActiveRecord::Base
   default_scope order('name')
 
   class << self
-
     def search( string, page, user = nil )
       query = self.scoped
       query = query.user( user ) unless user.nil?
       query.where('name LIKE ?', "%#{string}%").paginate( :page => page )
     end
-
   end
 
   def initialize(params = {})
-    super
+    super self.class.const_defined?(:DOMAIN_DEFAULTS) ? DOMAIN_DEFAULTS.merge(params) : params
     build_soa_record
   end
 

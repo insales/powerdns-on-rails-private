@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
       nil
     end
 
-    def token_user
+    def token_user?
       false
     end
 end

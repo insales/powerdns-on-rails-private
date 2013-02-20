@@ -14,7 +14,7 @@ class RecordsController < InheritedResources::Base
 
     if current_token && !current_token.allow_new_records? &&
         !current_token.can_add?( @record )
-      render :text => t(:message_token_not_authorized), :status => 403
+      render :text => t(:message_token_not_authorized), status: :forbidden
       return
     end
 
@@ -32,7 +32,7 @@ class RecordsController < InheritedResources::Base
 
   def update
     if current_token && !current_token.can_change?( resource )
-      render text: t(:message_token_not_authorized), status: :unauthorized
+      render text: t(:message_token_not_authorized), status: :forbidden
       return
     end
     update!
@@ -40,7 +40,7 @@ class RecordsController < InheritedResources::Base
 
   def destroy
     if current_token && !current_token.can_remove?( resource )
-      render text: t(:message_token_not_authorized), status: :unauthorized
+      render text: t(:message_token_not_authorized), status: :forbidden
       return
     end
     destroy! do |format|
@@ -76,7 +76,7 @@ class RecordsController < InheritedResources::Base
 
     def restrict_token_movements
       return true unless current_token
-      render text: t(:message_token_not_authorized), status: :unauthorized
+      render text: t(:message_token_not_authorized), status: :forbidden
       return false
     end
 end

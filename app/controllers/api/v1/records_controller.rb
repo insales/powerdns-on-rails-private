@@ -5,6 +5,10 @@ class Api::V1::RecordsController < Api::V1Controller
   belongs_to :domain
 
   def create
+    return respond_to do |format|
+      format.json { render json: {error: 'Type not set'}, status: :unprocessable_entity }
+      format.xml  { render xml:  {error: 'Type not set'}, status: :unprocessable_entity }
+    end unless params[:record].try(:[], :type)
     @record = parent.send( "#{params[:record][:type].downcase}_records".to_sym ).new params[:record]
     create!
   end
@@ -17,8 +21,8 @@ class Api::V1::RecordsController < Api::V1Controller
     end
   rescue => e
     respond_to do |format|
-      format.json { render json: {error: e.message}, status: :unprocessible_entity }
-      format.xml  { render xml:  {error: e.message}, status: :unprocessible_entity }
+      format.json { render json: {error: e.message}, status: :unprocessable_entity }
+      format.xml  { render xml:  {error: e.message}, status: :unprocessable_entity }
     end
   end
 
@@ -26,6 +30,6 @@ class Api::V1::RecordsController < Api::V1Controller
     def evaluate_parent(parent_symbol, parent_config, chain = nil)
       @domain ||= params[:domain_name] ?
         Domain.find_by_name!(params[:domain_name]) :
-        Domain.find!(params[:id])
+        Domain.find(params[:domain_id])
     end
 end

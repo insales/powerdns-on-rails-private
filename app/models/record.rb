@@ -38,7 +38,6 @@ class Record < ActiveRecord::Base
   validates_inclusion_of :type, in: self.record_types
 
   class << self
-
     # Restrict the SOA serial number updates to just one during the execution
     # of the block. Useful for batch updates to a zone
     def batch
@@ -58,7 +57,6 @@ class Record < ActiveRecord::Base
         klass.write_inheritable_attribute :non_audited_columns, defaults.flatten.map(&:to_s)
       end
     end
-
   end
 
   def shortname
