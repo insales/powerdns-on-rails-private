@@ -42,21 +42,20 @@ class Domain < ActiveRecord::Base
   # Disable single table inheritence (STI)
   self.inheritance_column = 'not_used_here'
 
+  attr_accessible :type
+
   # Virtual attributes that ease new zone creation. If present, they'll be
   # used to create an SOA for the domain
+  attr_accessible *SOA::SOA_FIELDS
+  attr_accessor *SOA::SOA_FIELDS
+
   SOA::SOA_FIELDS.each do |f|
-    attr_accessor f
+    next if :serial == f # serial is generated in soa
     validates_presence_of f, :on => :create, :unless => :slave?
   end
 
-  # Serial is optional, but will be passed to the SOA too
-  attr_accessor :serial
-
   # Helper attributes for API clients and forms (keep it RESTful)
   attr_accessor :zone_template_id, :zone_template_name
-
-  # Needed for acts_as_audited (TODO: figure out why this is needed...)
-  #attr_accessible :type
 
   # Scopes
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
@@ -100,7 +99,6 @@ class Domain < ActiveRecord::Base
     self.records << soa = SOA.new(soa_args)
     self.soa_record = soa
     soa.domain = self
-    #soa.serial = serial unless serial.nil? # Optional
   end
 
   def attach_errors(e)
