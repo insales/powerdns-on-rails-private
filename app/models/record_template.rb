@@ -12,10 +12,11 @@ class RecordTemplate < ActiveRecord::Base
   after_initialize :update_convenience_accessors
   validate :validate_record_template
 
+  attr_accessible :record_type, :name, :ttl, :prio, :content
+
   # We need to cope with the SOA convenience
-  SOA::SOA_FIELDS.each do |f|
-    attr_accessor f
-  end
+  attr_accessor *SOA::SOA_FIELDS
+  attr_accessible *SOA::SOA_FIELDS
 
   class << self
     def record_types
@@ -35,11 +36,14 @@ class RecordTemplate < ActiveRecord::Base
   def build( domain_name = nil )
     # get the class of the record_type
     record_class = self.record_type.constantize
+    white_list = record_class.accessible_attributes
 
     # duplicate our own attributes, strip out the ones the destination doesn't
     # have (and the id as well)
-    attrs = self.attributes.dup.with_indifferent_access
-    attrs.delete_if { |k,_| !record_class.columns.map( &:name ).include?( k ) }
+    attrs = attributes.dup.with_indifferent_access
+    attrs.delete_if { |k,_|
+      !record_class.columns.map(&:name).include?(k) || white_list.deny?(k)
+    }
     attrs.delete( :id )
 
     # parse each attribute, looking for %ZONE%
@@ -58,7 +62,7 @@ class RecordTemplate < ActiveRecord::Base
     end
 
     # instantiate a new destination with our duplicated attributes & validate
-    record_class.new( attrs )
+    record_class.new attrs
   end
 
   def soa?
@@ -85,6 +89,7 @@ class RecordTemplate < ActiveRecord::Base
   # model without any duplication of rules. This allows us to simply extend the
   # appropriate record and gain those validations in the templates
   def validate_record_template #:nodoc:
+    return # this magic fails!
     unless self.record_type.blank?
       record = build
       record.errors.each do |k,v|

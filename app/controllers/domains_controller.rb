@@ -15,22 +15,13 @@ class DomainsController < InheritedResources::Base
   end
 
   def create
-    @domain = Domain.new( params[:domain] )
+    @zone_template = ZoneTemplate.find(params[:domain][:zone_template_id]) unless params[:domain][:zone_template_id].blank?
+    @zone_template ||= ZoneTemplate.find_by_name(params[:domain][:zone_template_name]) unless params[:domain][:zone_template_name].blank?
 
-    unless @domain.slave?
-      @zone_template = ZoneTemplate.find(params[:domain][:zone_template_id]) unless params[:domain][:zone_template_id].blank?
-      @zone_template ||= ZoneTemplate.find_by_name(params[:domain][:zone_template_name]) unless params[:domain][:zone_template_name].blank?
-
-      if @zone_template
-        begin
-          @domain = @zone_template.build( params[:domain][:name] )
-        rescue ActiveRecord::RecordInvalid => e
-          @domain.attach_errors(e)
-
-          render action: :new
-          return
-        end
-      end
+    if @zone_template
+      @domain = @zone_template.build( params[:domain][:name] )
+    else
+      @domain = Domain.new( params[:domain] )
     end
 
     @domain.user = current_user unless current_user.admin?

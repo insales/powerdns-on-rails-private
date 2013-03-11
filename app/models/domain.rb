@@ -44,8 +44,7 @@ class Domain < ActiveRecord::Base
 
   # Virtual attributes that ease new zone creation. If present, they'll be
   # used to create an SOA for the domain
-  SOA_FIELDS = [ :primary_ns, :contact, :refresh, :retry, :expire, :minimum ]
-  SOA_FIELDS.each do |f|
+  SOA::SOA_FIELDS.each do |f|
     attr_accessor f
     validates_presence_of f, :on => :create, :unless => :slave?
   end
@@ -72,7 +71,9 @@ class Domain < ActiveRecord::Base
   end
 
   def initialize(params = {})
-    super self.class.const_defined?(:DOMAIN_DEFAULTS) ? DOMAIN_DEFAULTS.merge(params) : params
+    params_sym = params.symbolize_keys
+    super self.class.const_defined?(:DOMAIN_DEFAULTS) ?
+      DOMAIN_DEFAULTS.merge(params_sym) : params_sym
     build_soa_record
   end
 
@@ -91,27 +92,13 @@ class Domain < ActiveRecord::Base
     records.includes(:domain).all.select { |r| !r.is_a?( SOA ) }.sort_by {|r| [r.shortname, r.type]}
   end
 
-  # Expand our validations to include SOA details
-  def after_validation_on_create #:nodoc:
-    soa = SOA.new( :domain => self )
-    SOA_FIELDS.each do |f|
-      soa.send( "#{f}=", send( f ) )
-    end
-    soa.serial = serial unless serial.nil? # Optional
-
-    unless soa.valid?
-      soa.errors.each_full do |e|
-        errors.add_to_base e
-      end
-    end
-  end
-
   # Setup an SOA if we have the requirements
   def build_soa_record #:nodoc:
     return if self.slave?
 
-    soa_args = Hash[SOA_FIELDS.map { |f| [f, send(f)] }]
+    soa_args = Hash[SOA::SOA_FIELDS.map { |f| [f, send(f)] }]
     self.records << soa = SOA.new(soa_args)
+    self.soa_record = soa
     soa.domain = self
     #soa.serial = serial unless serial.nil? # Optional
   end

@@ -34,10 +34,10 @@ class SOA < Record
   SOA_FIELDS = %w{ primary_ns contact serial refresh retry expire minimum }
 
   attr_accessible *SOA_FIELDS
+  attr_accessor :serial
   # This allows us to have these convenience attributes act like any other
   # column in terms of validations
   SOA_FIELDS.each do |soa_entry|
-    attr_accessor soa_entry
     define_method "#{soa_entry}_before_type_cast" do
       instance_variable_get("@#{soa_entry}")
     end

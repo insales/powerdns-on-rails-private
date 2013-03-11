@@ -22,6 +22,8 @@ class Record < ActiveRecord::Base
 
   class_attribute :batch_soa_updates
 
+  attr_accessible :content, :name, :ttl, :prio
+
   # This is needed here for generic form support, actual functionality
   # implemented in #SOA
   attr_accessor :primary_ns, :contact, :refresh, :retry, :expire, :minimum

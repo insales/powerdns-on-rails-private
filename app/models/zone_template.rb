@@ -7,6 +7,8 @@ class ZoneTemplate < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_presence_of :ttl
 
+  attr_accessible :name, :content, :ttl, :prio
+
   # Scopes
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
   scope :with_soa, joins(:record_templates).where('record_templates.record_type = ?', 'SOA')
@@ -39,17 +41,12 @@ class ZoneTemplate < ActiveRecord::Base
   # This method will throw exceptions as it encounters errors, and will use a
   # transaction to complete/rollback the operation.
   def build( domain_name, user = nil )
-    domain = Domain.new( :name => domain_name, :ttl => self.ttl )
+    soa_template = record_templates.detect { |r| r.record_type == 'SOA' }
+    soa_args = Hash[SOA::SOA_FIELDS.map { |f| [f, soa_template.send(f)] }]
+    domain = Domain.new soa_args.merge(name: domain_name, ttl: ttl)
     domain.user = user if user.is_a?( User )
 
     self.class.transaction do
-      # Pick our SOA template out, and populate the zone
-      soa_template = record_templates.detect { |r| r.record_type == 'SOA' }
-      built_soa_template = soa_template.build( domain_name )
-      Domain::SOA_FIELDS.each do |f|
-        domain.send( "#{f}=", built_soa_template.send( f ) )
-      end
-
       # save the zone or die
       domain.save!
 
