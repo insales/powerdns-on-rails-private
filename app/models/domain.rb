@@ -42,20 +42,18 @@ class Domain < ActiveRecord::Base
   # Disable single table inheritence (STI)
   self.inheritance_column = 'not_used_here'
 
-  attr_accessible :type
+  attr_accessor :zone_template_id, :zone_template_name
+  attr_accessible :type, :ttl, :name, :master, :zone_template_id, :zone_template_name
 
   # Virtual attributes that ease new zone creation. If present, they'll be
   # used to create an SOA for the domain
-  attr_accessible *SOA::SOA_FIELDS
   attr_accessor *SOA::SOA_FIELDS
+  attr_accessible *SOA::SOA_FIELDS
 
   SOA::SOA_FIELDS.each do |f|
     next if :serial == f # serial is generated in soa
     validates_presence_of f, :on => :create, :unless => :slave?
   end
-
-  # Helper attributes for API clients and forms (keep it RESTful)
-  attr_accessor :zone_template_id, :zone_template_name
 
   # Scopes
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
