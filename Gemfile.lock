@@ -177,6 +177,7 @@ GEM
       multi_json (~> 1.0)
       rubyzip
       websocket (~> 1.0.4)
+    simpleidn (0.0.4)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -230,6 +231,7 @@ DEPENDENCIES
   rspec-rails
   ruby-debug19
   sass-rails
+  simpleidn
   state_machine
   therubyracer
   uglifier

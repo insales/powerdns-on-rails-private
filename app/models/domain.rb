@@ -63,7 +63,7 @@ class Domain < ActiveRecord::Base
     def search( string, page, user = nil )
       query = self.scoped
       query = query.user( user ) unless user.nil?
-      query.where('name LIKE ?', "%#{string}%").paginate( :page => page )
+      query.where('name LIKE ?', "%#{string.to_punicode}%").paginate( :page => page )
     end
   end
 

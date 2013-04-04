@@ -21,6 +21,7 @@ gem 'inherited_resources'
 gem 'devise'
 gem "devise-encryptable"
 gem 'rabl'
+gem 'simpleidn'
 
 gem 'acts_as_list'
 gem 'state_machine'

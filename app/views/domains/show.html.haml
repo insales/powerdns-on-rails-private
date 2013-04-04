@@ -41,7 +41,7 @@
   %table.gridwide
     %tr
       %td{ :width => "100" }= t :label_domain_name
-      %td= @domain.name
+      %td= domain_name_with_encoded @domain.name
       %td{ :width => "100" }
         - if current_user
           = link_to info_icon('table_edit.png', 'zone-edit'), edit_domain_path(@domain)
