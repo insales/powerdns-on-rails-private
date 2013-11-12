@@ -74,11 +74,15 @@ class Domain < ActiveRecord::Base
     build_soa_record
   end
 
+  def name=(val)
+    super val.try(:to_punicode)
+  end
+
   # arguably should have as_json includes here too FIX
   def to_xml(options={})
     super(options.merge(:include => :records))
   end
-  
+
   # Are we a slave domain
   def slave?
     self.type == 'SLAVE'

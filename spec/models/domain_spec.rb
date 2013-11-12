@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'spec_helper'
 
 describe "New 'untyped'", Domain do
@@ -10,6 +11,14 @@ describe "New 'untyped'", Domain do
   it "should not accept rubbish types" do
     subject.type = 'DOMINANCE'
     subject.should have(1).error_on(:type)
+  end
+
+  describe '#name=' do
+    it 'converts value to punicode' do
+      expect { subject.name = 'test.com' }.to change { subject.name }.to('test.com')
+      expect { subject.name = 'тест.рф' }.to change { subject.name }.to('xn--e1aybc.xn--p1ai')
+      expect { subject.name = nil }.to change { subject.name }.to(nil)
+    end
   end
 end
 
