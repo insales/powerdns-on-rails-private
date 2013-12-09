@@ -59,7 +59,7 @@ GEM
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
     coffee-script (2.2.0)
-      coffee-script-source   
+      coffee-script-source
       execjs
     coffee-script-source (1.4.0)
     columnize (0.3.6)
@@ -250,7 +250,7 @@ DEPENDENCIES
   haml
   inherited_resources
   jquery-rails
-  mocha   
+  mocha
   pg (>= 0.9.0)
   rabl
   rails (= 3.2.16)
@@ -260,7 +260,7 @@ DEPENDENCIES
   rvm-capistrano
   sass-rails
   simpleidn
-  state_machine  
+  state_machine
   therubyracer
   uglifier
   unicorn
