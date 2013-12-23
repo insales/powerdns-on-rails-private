@@ -8,16 +8,16 @@
 # support from clients.
 #
 # Obtained from http://en.wikipedia.org/wiki/SRV_record
-# 
+#
 # See also http://www.zytrax.com/books/dns/ch8/srv.html
 #
 class SRV < Record
 
   validates_numericality_of :prio,
     :greater_than_or_equal_to => 0
-  
-  validates_presence_of :content
-  
+
+  validates_format_of :content, :with => /\d+\s+\d+\s+\S+/
+
   # We support priorities
   def supports_prio?
     true
