@@ -63,7 +63,7 @@ class Domain < ActiveRecord::Base
     def search( string, page, user = nil )
       query = self.scoped
       query = query.user( user ) unless user.nil?
-      query.where('name LIKE ?', "%#{string.to_punicode}%").paginate( :page => page )
+      query.where('name LIKE ?', "%#{string.downcase.to_punicode}%").paginate( :page => page )
     end
   end
 
@@ -75,7 +75,7 @@ class Domain < ActiveRecord::Base
   end
 
   def name=(val)
-    super val.try(:to_punicode)
+    super val.try(:downcase).try(:to_punicode)
   end
 
   # arguably should have as_json includes here too FIX
