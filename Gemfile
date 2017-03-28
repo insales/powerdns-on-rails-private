@@ -1,8 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.19'
+group :production, :development, :test do
+  gem 'rails', '3.2.19'
+end
 
-gem 'unicorn'
+group :production do
+  gem 'unicorn'
+end
 
 group :assets do
   gem 'sass-rails'
@@ -15,20 +19,22 @@ platforms :ruby do
   gem 'therubyracer'
 end
 
-gem 'haml'
-gem 'jquery-rails'
-gem 'will_paginate', '~> 3.0.3'
-gem "audited-activerecord", "~> 3.0.0.rc2"
-gem 'inherited_resources'
-gem 'devise', '2.2.3'
-gem "devise-encryptable"
-gem 'ruby-ldap'
-gem 'rabl'
-gem 'simpleidn'
+group :production, :development, :test do
+  gem 'haml'
+  gem 'jquery-rails'
+  gem 'will_paginate', '~> 3.0.3'
+  gem "audited-activerecord", "~> 3.0.0.rc2"
+  gem 'inherited_resources'
+  gem 'devise', '2.2.3'
+  gem "devise-encryptable"
+  gem 'ruby-ldap'
+  gem 'rabl'
+  gem 'simpleidn'
 
-gem 'acts_as_list'
-gem 'state_machine'
-gem 'dynamic_form'
+  gem 'acts_as_list'
+  gem 'state_machine'
+  gem 'dynamic_form'
+end
 
 group :development, :test do
   gem "rspec-rails"
