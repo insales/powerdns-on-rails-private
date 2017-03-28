@@ -64,4 +64,22 @@ PowerdnsOnRails::Application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
+
+  config.action_mailer.default_url_options = {
+    host: 'bisu3.insales.ru',
+    from: 'noreply@insales.ru'
+  }
+  ActionMailer::Base.default from: 'noreply@insales.ru', :reply_to => 'support@insales.ru'
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => "mail.insales.ru",
+    :port                 => 25,
+    :domain               => 'insales.ru'}
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
 end
+
+LDAP_HOST   = 'ldap.insales.ru'
+LDAP_PORT   = 389
+LDAP_BASEDN = 'dc=insales,dc=ru'

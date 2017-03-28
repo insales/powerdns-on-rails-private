@@ -41,7 +41,5 @@ module PowerdnsOnRails
     config.filter_parameters += [:password]
 
     config.active_record.whitelist_attributes = false
-
-    config.secret_token = "some secret phrase of at least 30 characters"
   end
 end

@@ -1,6 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.17'
+gem 'rails', '3.2.19'
+
+gem 'unicorn'
 
 group :assets do
   gem 'sass-rails'
@@ -18,8 +20,9 @@ gem 'jquery-rails'
 gem 'will_paginate', '~> 3.0.3'
 gem "audited-activerecord", "~> 3.0.0.rc2"
 gem 'inherited_resources'
-gem 'devise'
+gem 'devise', '2.2.3'
 gem "devise-encryptable"
+gem 'ruby-ldap'
 gem 'rabl'
 gem 'simpleidn'
 
@@ -30,14 +33,13 @@ gem 'dynamic_form'
 group :development, :test do
   gem "rspec-rails"
   gem 'RedCloth', '>= 4.1.1'
+  gem 'capistrano'
+  gem 'capistrano-ext'
+  gem 'rvm-capistrano'
 end
 
 group :test do
-  if RUBY_VERSION < "1.9"
-    gem 'ruby-debug'
-  else
-    gem 'ruby-debug19'
-  end
+  gem 'ruby-debug19'
   gem "factory_girl_rails", "~> 3.0" #TODO: 4.0
 
   gem "cucumber-rails", :require => false

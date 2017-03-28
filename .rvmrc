@@ -1,1 +1,1 @@
-rvm --create use ruby-1.9.3-p547
+rvm use --create ruby-1.9.3-p547@powerdns-on-rails

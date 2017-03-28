@@ -1,10 +1,12 @@
 require 'digest/sha1'
+require 'ldap'
+
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
   devise :database_authenticatable,
-         :recoverable, :rememberable, :confirmable, :validatable,
-         :encryptable, :encryptor => :restful_authentication_sha1
+   :recoverable, :rememberable, :validatable,
+   :encryptable, encryptor: :restful_authentication_sha1
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
@@ -116,6 +118,44 @@ class User < ActiveRecord::Base
 
   def <=>(user)
     user.login <=> self.login
+  end
+
+  class << self
+    def ldap_connection(login, password)
+      conn = LDAP::SSLConn.new(LDAP_HOST, LDAP_PORT, true)
+      base = "uid=#{login},ou=people,#{LDAP_BASEDN}"
+      conn.bind(base, password)
+      yield conn, base
+    rescue LDAP::ResultError => e
+      logger.info "[LDAP] Exception #{e.inspect}"
+      raise e
+    rescue Exception => e
+      logger.info "[LDAP] Exception #{e.inspect}"
+      raise e
+    end
+
+    def ldap_authenticate(login, password)
+      return true if Rails.env.development?
+      ldap_connection(login, password) do |conn, _|
+        query = "(&(objectclass=person)(uid=#{login}))"
+        conn.search(LDAP_BASEDN, LDAP::LDAP_SCOPE_SUBTREE, query) do |entry|
+          if !entry['authorizedService'].include?('dns-admin.insales.ru')
+            logger.info "#{login} not enough permissions"
+            return false
+          end
+        end
+      end
+
+      true
+    rescue Exception => e
+      false
+    end
+  end
+
+  def valid_password?(password)
+    return super unless Rails.env.production?
+    login, = email.split '@'
+    self.class.ldap_authenticate login, password
   end
 
   protected
