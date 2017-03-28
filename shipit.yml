@@ -1,0 +1,16 @@
+deploy:
+  override:
+    - ./scripts/shipit-deploy.sh
+  variables:
+    -
+      name: RUN_MIGRATIONS
+      title: Database Migrations
+      select:
+        -
+          - run
+          - selected: true
+        - not_run
+
+rollback:
+  override:
+    - ./scripts/shipit-rollback.sh

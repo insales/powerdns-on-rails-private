@@ -33,9 +33,6 @@ gem 'dynamic_form'
 group :development, :test do
   gem "rspec-rails"
   gem 'RedCloth', '>= 4.1.1'
-  gem 'capistrano'
-  gem 'capistrano-ext'
-  gem 'rvm-capistrano'
 end
 
 group :test do
@@ -46,4 +43,10 @@ group :test do
   gem 'mocha', :require => false
   gem 'webrat'
   gem 'database_cleaner'
+end
+
+group :development, :deploy do
+  gem 'capistrano'
+  gem 'capistrano-ext'
+  gem 'rvm-capistrano'
 end

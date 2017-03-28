@@ -4,25 +4,27 @@ set :stages, %w(production development)
 
 set :default_stage, "development"
 
-require 'capistrano/ext/multistage'
-
-set :repository,  "ssh://git.insales.ru/projects/powerdns-on-rails.git"
+# Деплоим не мастер, а конкретную версию чекаут которой сделан.
+# При желании можно задать другую версию: cap -S branch="<branchname/commit_hash>" <action>
+set :branch, fetch(:branch, `git describe --always`.chomp)
 
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
-set :rvm_ruby_string, "ruby-1.9.3-p547@powerdns-on-rails"
+
+# Capistrano должен использовать туже версию, которая используется при работе
+# с проектом из консоли.
+set :rvm_ruby_string, File.open('.ruby-version', 'rt').read.strip
+
 set :rvm_type, :user
 set :rvm_install_ruby_threads, 4
+
+# Включаем ssh forward agent, чтобы пользователь мог ходить на github со своим ssh ключём.
+set :ssh_options, { :forward_agent => true }
 
 require 'capistrano/ext/multistage'
 require 'bundler/capistrano'
 
-# If you aren't deploying to /u/apps/#{application} on the target
-# servers (which is the default), you can specify the actual location
-# via the :deploy_to variable:
-# set :deploy_to, "/var/www/#{application}"
+set :repository,  "git@github.com:insales/powerdns-on-rails.git"
 
-# If you aren't using Subversion to manage your source code, specify
-# your SCM below:
 set :scm, :git
 
 set :git_enable_submodules, 1
@@ -32,12 +34,13 @@ set :user, 'deploy'
 
 set :use_sudo, false
 
+set :deploy_to, "/projects/cap/#{application}"
 
 shared_links = {
     'config/initializers/secret_token.rb' => 'config/initializers/secret_token.rb',
     'config/database.yml'             => 'config/database.yml',
     'locks'                           => 'locks'
-  }.freeze
+}.freeze
 
 namespace :deploy do
   desc "Deploy"
@@ -50,14 +53,20 @@ namespace :deploy do
 
   desc "Setup a GitHub-style deployment."
   task :setup, :except => { :no_release => true } do
-    run "mkdir -p #{releases_path}/release"
+    run "mkdir -p #{releases_path}"
+    run "test -d #{releases_path}/release || git clone #{repository} #{releases_path}/release"
+    run "test -L #{current_path} || ln -s #{releases_path}/release #{current_path}"
+    run "test -L /projects/#{application} || ln -s #{current_path} /projects/#{application}"
+
+    # устанавливаем bundler т.к. его не будет на чистой системе
+    run "bundler --version || gem install bundler"
+
     run "mkdir -p #{shared_path}"
+    run "mkdir -p #{shared_path}/bundle"
     run "mkdir -p #{shared_path}/config"
+    run "mkdir -p #{shared_path}/locks"
     run "mkdir -p #{shared_path}/log"
-    run "mkdir -p #{shared_path}/system"
     run "mkdir -p #{shared_path}/pids"
-    run "git clone #{repository} #{releases_path}/release"
-    run "ln -s #{releases_path}/release #{current_path}" 
   end
 
   desc "Update the deployed code."
