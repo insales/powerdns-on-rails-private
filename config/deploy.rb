@@ -100,12 +100,3 @@ after "deploy:finalize_update", "deploy:symlink_shared"
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems')].each do |vendored_notifier|
   $: << File.join(vendored_notifier, 'lib')
 end
-
-# Переопределённый bundle:install, чтобы учитывался gemset
-namespace :bundle do
-  task :install do
-    run "bash --login -c 'cd #{current_path} && gem install bundler && bundle install --quiet --frozen --without development test'"
-    run "bash --login -c 'cd #{current_path} && rvm list'"
-    run "bash --login -c 'cd #{current_path} && rvm gemset list'"
-  end
-end

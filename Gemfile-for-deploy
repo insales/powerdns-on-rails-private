@@ -1,0 +1,7 @@
+source 'http://rubygems.org'
+
+group :development, :deploy do
+  gem 'capistrano'
+  gem 'capistrano-ext'
+  gem 'rvm-capistrano'
+end
