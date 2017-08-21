@@ -48,5 +48,5 @@ end
 group :development, :deploy do
   gem 'capistrano'
   gem 'capistrano-ext'
-  gem 'rvm-capistrano'
+  gem 'rvm-capistrano', require: false
 end
