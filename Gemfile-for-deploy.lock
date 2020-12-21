@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     capistrano (2.15.5)
       highline
@@ -27,3 +27,6 @@ DEPENDENCIES
   capistrano
   capistrano-ext
   rvm-capistrano
+
+BUNDLED WITH
+   1.16.1
