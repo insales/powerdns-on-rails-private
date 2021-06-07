@@ -1,19 +1,26 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.19'
+gem 'rails', '3.2.22.5'
 
 gem 'unicorn'
 
 group :assets do
-  gem 'sass-rails'
-  gem 'coffee-rails'
-  gem 'uglifier'
+  # asset pipeline же не используется?
+  # gem 'sass-rails'
+  # gem 'coffee-rails'
+  # gem 'uglifier'
 end
 
 platforms :ruby do
   gem 'pg', '>= 0.9.0'
-  gem 'therubyracer'
+  # gem 'therubyracer'
 end
+
+# for rails 3.2
+gem 'iconv'
+gem 'rake', '< 11.0'
+gem 'test-unit', '~> 3.0'
+# end
 
 gem 'haml'
 gem 'jquery-rails'
@@ -32,11 +39,12 @@ gem 'dynamic_form'
 
 group :development, :test do
   gem "rspec-rails"
-  gem 'RedCloth', '>= 4.1.1'
+  gem 'rspec-collection_matchers'
+  # gem 'RedCloth', '>= 4.1.1'
 end
 
 group :test do
-  gem 'ruby-debug19'
+  # gem 'ruby-debug19'
   gem "factory_girl_rails", "~> 3.0" #TODO: 4.0
 
   gem "cucumber-rails", :require => false

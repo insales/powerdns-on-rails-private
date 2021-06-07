@@ -4,4 +4,6 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
+require './config/initializers/postgres_backport.rb'
+
 PowerdnsOnRails::Application.load_tasks

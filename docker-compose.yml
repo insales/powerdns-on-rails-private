@@ -1,0 +1,28 @@
+version: '3.6'
+services:
+  db:
+    image: postgres:12-alpine
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+
+  rails:
+    build: .
+    tty: true
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+      - bundler_gems:/usr/local/bundle/
+    command: bash -c 'bundle && bundle exec rails server'
+
+volumes:
+  postgres:
+  bundler_gems:
