@@ -30,7 +30,7 @@ describe "templates/new.html.haml" do
     it "should show the correct title" do
       render
 
-      rendered.should have_tag('h1.underline', :content => 'New Zone Template')
+      rendered.should have_tag('h1.underline', :text => 'New Zone Template')
     end
   end
 

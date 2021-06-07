@@ -143,7 +143,7 @@ describe Domain, "scopes" do
   it "should restrict authentication tokens"
 end
 
-describe "NATIVE/MASTER", Domain, "when created" do
+describe Domain, "NATIVE/MASTER when created" do
   it "with additional attributes should create an SOA record" do
     domain = Domain.new
     domain.name = 'example.org'
@@ -154,7 +154,7 @@ describe "NATIVE/MASTER", Domain, "when created" do
     domain.expire = 604800
     domain.minimum = 10800
 
-    domain.save.should be_true
+    domain.save.should be_truthy
     domain.soa_record.should_not be_nil
     domain.soa_record.primary_ns.should eql('ns1.example.org')
   end
@@ -170,13 +170,13 @@ describe "NATIVE/MASTER", Domain, "when created" do
       :minimum => 10800
     )
 
-    domain.save.should be_true
+    domain.save.should be_truthy
     domain.soa_record.should_not be_nil
     domain.soa_record.primary_ns.should eql('ns1.example.org')
   end
 end
 
-describe "SLAVE", Domain, "when created" do
+describe Domain, "SLAVE when created" do
   before(:each) do
     @domain = Domain.new( :type => 'SLAVE' )
   end
@@ -185,7 +185,7 @@ describe "SLAVE", Domain, "when created" do
     @domain.name = 'example.org'
     @domain.master = '127.0.0.1'
 
-    @domain.save.should be_true
+    @domain.save.should be_truthy
     @domain.soa_record.should be_nil
   end
 end

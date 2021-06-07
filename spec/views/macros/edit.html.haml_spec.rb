@@ -8,7 +8,7 @@ describe "macros/edit.html.haml" do
     end
 
     it "should behave accordingly" do
-      rendered.should have_tag('h1', :content => 'New Macro')
+      rendered.should have_tag('h1', :text => 'New Macro')
     end
 
   end
@@ -21,7 +21,7 @@ describe "macros/edit.html.haml" do
     end
 
     it "should behave accordingly" do
-      rendered.should have_tag('h1', :content => 'Update Macro')
+      rendered.should have_tag('h1', :text => 'Update Macro')
     end
   end
 

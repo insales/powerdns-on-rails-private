@@ -62,8 +62,8 @@ describe UsersController do
           :auth_tokens => '1'
         }
 
-      assigns(:user).admin?.should be_true
-      assigns(:user).auth_tokens?.should be_true
+      assigns(:user).admin?.should be_truthy
+      assigns(:user).auth_tokens?.should be_truthy
 
       response.should be_redirect
       response.should redirect_to( user_path( assigns(:user) ) )
@@ -93,7 +93,7 @@ describe UsersController do
         }
 
       assigns(:user).should_not be_an_admin
-      assigns(:user).auth_tokens?.should be_false
+      assigns(:user).auth_tokens?.should be_falsey
 
       response.should be_redirect
       response.should redirect_to( user_path( assigns(:user) ) )

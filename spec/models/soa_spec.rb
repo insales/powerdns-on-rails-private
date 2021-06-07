@@ -145,7 +145,7 @@ describe SOA, "when created" do
   end
 
   it "should create a content field from the convenience fields" do
-    @soa.save.should be_true
+    @soa.save.should be_truthy
 
     @soa.content.should match(/ns1\.example\.com dnsadmin@example.com \d+ 7200 1800 604800 10800/)
   end

@@ -16,11 +16,11 @@ describe "domains/_record" do
     end
 
     it "should have a row with the record details" do
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :content => "") # shortname
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :content => "") # ttl
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :content => "NS") # shortname
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :content => "") # prio
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :content => "ns1.example.com")
+      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "") # shortname
+      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "") # ttl
+      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "NS") # shortname
+      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "") # prio
+      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "ns1.example.com")
     end
 
     it "should have a row for editing record details" do
@@ -38,7 +38,7 @@ describe "domains/_record" do
     before(:each) do
       view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
       domain = FactoryGirl.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
-      @record = domain.a_records.create( :name => 'foo', :content => '127.0.0.1' )
+      @record = domain.a_records.create( :name => 'foo', :text => '127.0.0.1' )
       render :partial => 'domains/record', :object => @record
     end
 
@@ -48,11 +48,11 @@ describe "domains/_record" do
     end
 
     it "should have a row with the record details" do
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :content => "") # shortname
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :content => "") # ttl
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :content => "A")
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :content => "") # prio
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :content => "foo")
+      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "") # shortname
+      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "") # ttl
+      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "A")
+      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "") # prio
+      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "foo")
     end
 
     it "should not have a row for editing record details" do

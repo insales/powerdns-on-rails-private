@@ -90,7 +90,7 @@ describe RecordTemplate, "should inherit" do
 
     @record_template.content.should eql('ns1.%ZONE% admin@example.com 0 7200 1800 604800 10800')
     @record_template.should be_valid
-    @record_template.save.should be_true
+    @record_template.save.should be_truthy
   end
 end
 
@@ -137,7 +137,7 @@ describe RecordTemplate, "when creating" do
     record_template = RecordTemplate.new( :zone_template => @zone_template )
     record_template.record_type = 'A'
     record_template.content = '10.0.0.1'
-    record_template.save.should be_true
+    record_template.save.should be_truthy
 
     record_template.ttl.should be(@zone_template.ttl)
   end
@@ -147,7 +147,7 @@ describe RecordTemplate, "when creating" do
     record_template.record_type = 'A'
     record_template.content = '10.0.0.1'
     record_template.ttl = 43200
-    record_template.save.should be_true
+    record_template.save.should be_truthy
 
     record_template.ttl.should be(43200)
   end

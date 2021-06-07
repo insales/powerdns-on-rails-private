@@ -14,8 +14,8 @@ describe "domains/show.html.haml" do
     end
 
     it "should have the domain name in the title and dominant on the page" do
-      rendered.should have_tag( "title", :content => "example.com" )
-      rendered.should have_tag( "h1", :content => "example.com" )
+      rendered.should have_tag( "title", :text => "example.com" )
+      rendered.should have_tag( "h1", :text => "example.com" )
     end
   end
 
@@ -119,8 +119,8 @@ describe "domains/show.html.haml" do
     end
 
     it "should show the master address" do
-      rendered.should have_tag('#domain-name td', :content => "Master server")
-      rendered.should have_tag('#domain-name td', :content => @domain.master)
+      rendered.should have_tag('#domain-name td', :text => "Master server")
+      rendered.should have_tag('#domain-name td', :text => @domain.master)
     end
 
     it "should not allow for changing the SOA" do

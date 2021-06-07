@@ -48,9 +48,9 @@ describe ZoneTemplate, "when loaded" do
   end
 
   it "should have a sense of validity" do
-    @zone_template.has_soa?.should be_true
+    @zone_template.has_soa?.should be_truthy
 
-    FactoryGirl.create( :zone_template, :name => 'West Coast Data Center' ).has_soa?.should_not be_true
+    FactoryGirl.create( :zone_template, :name => 'West Coast Data Center' ).has_soa?.should_not be_truthy
   end
 end
 

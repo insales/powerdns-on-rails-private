@@ -26,6 +26,13 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::TestHelpers, type: :view
   config.include SignInHelpers, :type => :controller
   config.include Webrat::HaveTagMatcher
+
+  config.infer_spec_type_from_file_location!
+
+  config.expect_with :rspec do |expectations|
+    expectations.syntax = [:should, :expect]
+  end
 end

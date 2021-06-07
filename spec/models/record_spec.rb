@@ -33,7 +33,7 @@ describe Record, "when new" do
   end
 
   it "should not support priorities by default" do
-    @record.supports_prio?.should be_false
+    @record.supports_prio?.should be_falsey
   end
 
 end
@@ -49,7 +49,7 @@ describe Record, "during updates" do
 
     record = FactoryGirl.create(:a, :domain => @domain)
     record.content = '10.0.0.1'
-    record.save.should be_true
+    record.save.should be_truthy
 
     @soa.reload
     @soa.serial.should_not eql( serial )
@@ -67,7 +67,7 @@ describe Record, "during updates" do
         :content => '10.0.0.5',
         :ttl => 86400
       )
-      record.save.should be_true
+      record.save.should be_truthy
 
       record = A.new(
         :domain => @domain,
@@ -75,7 +75,7 @@ describe Record, "during updates" do
         :content => '10.0.0.6',
         :ttl => 86400
       )
-      record.save.should be_true
+      record.save.should be_truthy
 
       record = A.new(
         :domain => @domain,
@@ -83,7 +83,7 @@ describe Record, "during updates" do
         :content => '10.0.0.7',
         :ttl => 86400
       )
-      record.save.should be_true
+      record.save.should be_truthy
     end
 
     # Our serial should have move just one position, not three
@@ -109,7 +109,7 @@ describe Record, "when created" do
       :content => '10.0.0.5',
       :ttl => 86400
     )
-    record.save.should be_true
+    record.save.should be_truthy
 
     @soa.reload
     @soa.serial.should_not eql(serial)
@@ -120,7 +120,7 @@ describe Record, "when created" do
       :domain => @domain,
       :content => '10.0.0.6'
     )
-    record.save.should be_true
+    record.save.should be_truthy
 
     record.name.should eql('example.com')
   end
@@ -131,7 +131,7 @@ describe Record, "when created" do
       :name => 'test',
       :content => '10.0.0.6'
     )
-    record.save.should be_true
+    record.save.should be_truthy
 
     record.shortname.should eql('test')
     record.name.should eql('test.example.com')
@@ -146,7 +146,7 @@ describe Record, "when created" do
       :name => 'ftp',
       :content => '10.0.0.6'
     )
-    record.save.should be_true
+    record.save.should be_truthy
 
     record.ttl.should be( 86400 )
   end
@@ -158,7 +158,7 @@ describe Record, "when created" do
       :content => '10.0.0.6',
       :ttl => 43200
     )
-    record.save.should be_true
+    record.save.should be_truthy
 
     record.ttl.should be( 43200 )
   end

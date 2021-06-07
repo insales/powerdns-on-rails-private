@@ -190,8 +190,8 @@ describe RecordsController, "and tokens" do
     assigns(:record).should_not be_nil
 
     # Ensure the token han been updated
-    @token.can_change?( 'test', 'A' ).should be_true
-    @token.can_remove?( 'test', 'A' ).should be_true
+    @token.can_change?( 'test', 'A' ).should be_truthy
+    @token.can_remove?( 'test', 'A' ).should be_truthy
   end
 
   xit "should not create if not allowed" do

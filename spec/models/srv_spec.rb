@@ -8,6 +8,6 @@ describe SRV do
   it "should have tests" 
 
   it "should support priorities" do
-    @srv.supports_prio?.should be_true
+    @srv.supports_prio?.should be_truthy
   end
 end

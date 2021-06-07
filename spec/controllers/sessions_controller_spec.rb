@@ -44,7 +44,7 @@ describe SessionsController, "and users" do
   #  @quentin.remember_me
   #  request.cookies["auth_token"] = cookie_for(@quentin)
   #  get :new
-  #  controller.send(:logged_in?).should be_true
+  #  controller.send(:logged_in?).should be_truthy
   #end
 
   #it 'fails expired cookie login' do
@@ -52,14 +52,14 @@ describe SessionsController, "and users" do
   #  @quentin.update_attribute :remember_token_expires_at, 5.minutes.ago
   #  request.cookies["auth_token"] = cookie_for(@quentin)
   #  get :new
-  #  controller.send(:logged_in?).should_not be_true
+  #  controller.send(:logged_in?).should_not be_truthy
   #end
 
   #it 'fails cookie login' do
   #  @quentin.remember_me
   #  request.cookies["auth_token"] = auth_token('invalid_auth_token')
   #  get :new
-  #  controller.send(:logged_in?).should_not be_true
+  #  controller.send(:logged_in?).should_not be_truthy
   #end
 
   #def auth_token(token)
@@ -82,7 +82,7 @@ describe SessionsController, "and auth tokens" do
   xit 'accepts and redirects' do
     post :token, :token => '5zuld3g9dv76yosy'
     session[:token_id].should_not be_nil
-    controller.send(:token_user?).should be_true
+    controller.send(:token_user?).should be_truthy
     response.should be_redirect
     response.should redirect_to( domain_path( @domain ) )
   end
@@ -103,7 +103,7 @@ describe SessionsController, "and auth tokens" do
   xit 'fails expired cookie login' do
     @token.update_attribute :expires_at, 5.minutes.ago
     get :new
-    controller.send(:token_user?).should_not be_true
+    controller.send(:token_user?).should_not be_truthy
   end
 
 end

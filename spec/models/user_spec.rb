@@ -57,7 +57,7 @@ describe User, "as owner" do
   end
 
   it "should not have auth_tokens" do
-    @user.auth_tokens?.should be_false
+    @user.auth_tokens?.should be_falsey
   end
 end
 
@@ -76,15 +76,15 @@ describe User, "as admin" do
   end
 
   it "should have auth tokens" do
-    @admin.auth_tokens?.should be_true
+    @admin.auth_tokens?.should be_truthy
   end
 end
 
 describe User, "and roles" do
 
   it "should have a admin boolean flag" do
-    FactoryGirl.create(:admin).admin.should be_true
-    FactoryGirl.create(:quentin).admin.should be_false
+    FactoryGirl.create(:admin).admin.should be_truthy
+    FactoryGirl.create(:quentin).admin.should be_falsey
   end
 
   it "should have a way to easily find active owners" do
