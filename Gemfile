@@ -44,8 +44,10 @@ group :development, :test do
 end
 
 group :test do
-  # gem 'ruby-debug19'
   gem "factory_girl_rails", "~> 3.0" #TODO: 4.0
+
+  gem 'pry', '~>0.11.0' # для старых рельсов
+  gem 'pry-byebug'
 
   gem "cucumber-rails", :require => false
   gem 'mocha', :require => false
