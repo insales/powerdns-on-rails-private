@@ -52,3 +52,12 @@ PGPASSWORD=.. pg_dump -Fc --host=138.201.51.2 --port=14016 --username=powerdns -
 ```
 
 pg_restore --host=127.0.0.1 --port=5432 --clean --dbname=powerdns_development --username=postgres prod.dump
+
+### Тесты
+
+RSpec и Cucumber
+
+```sh
+rake spec
+rake cucumber
+```

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Given /^I have a domain$/ do
   @domain = FactoryGirl.create(:domain)
 end
@@ -17,26 +19,27 @@ end
 
 Given /^the macro "([^\"]*)" an? "([^\"]*)" record for "([^\"]*)" with "([^\"]*)"$/ do |action, type, name, content|
   # clean up the action by singularizing the components
-  action.gsub!(/s$/,'').gsub!('s_', '_')
+  action = action.gsub(/s$/,'').gsub('s_', '_')
 
   MacroStep.create!(:macro => @macro, :action => action, :record_type => type, :name => name, :content => content)
 end
 
 Given /^the macro "([^\"]*)" an "([^\"]*)" record for "([^\"]*)"$/ do |action, type, name|
   # clean up the action by singularizing the components
-  action.gsub!(/s$/,'').gsub!(/s_/, '')
+  action = action.gsub(/s$/,'').gsub(/s_/, '')
 
   MacroStep.create!(:macro => @macro, :action => action, :record_type => type, :name => name)
 end
 
 Given /^the macro "([^\"]*)" an "([^\"]*)" record with "([^\"]*)" with priority "([^\"]*)"$/ do |action, type, content, prio|
   # clean up the action by singularizing the components
-  action.gsub!(/s$/,'').gsub!(/s_/, '')
+  action = action.gsub(/s$/,'').gsub(/s_/, '')
 
   MacroStep.create!(:macro => @macro, :action => action, :record_type => type, :content => content, :prio => prio)
 end
 
 Given /^the domain has an? "([^\"]*)" record for "([^\"]*)" with "([^\"]*)"$/ do |type, name, content|
+  
   type.constantize.create!( :domain => @domain, :name => name, :content => content )
 end
 
