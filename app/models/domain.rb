@@ -61,7 +61,7 @@ class Domain < ActiveRecord::Base
 
   class << self
     def search( string, page, user = nil )
-      query = self.scoped
+      query = self.all # was scoped
       query = query.user( user ) unless user.nil?
       query.where('name LIKE ?', "%#{string.downcase.to_punicode}%").paginate( :page => page )
     end
@@ -89,7 +89,7 @@ class Domain < ActiveRecord::Base
 
   # return the records, excluding the SOA record
   def records_without_soa
-    records.includes(:domain).all.select { |r| !r.is_a?( SOA ) }.sort_by {|r| [r.shortname, r.type]}
+    records.includes(:domain).to_a.select { |r| !r.is_a?( SOA ) }.sort_by {|r| [r.shortname, r.type]}
   end
 
   # Setup an SOA if we have the requirements

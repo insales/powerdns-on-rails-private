@@ -88,7 +88,7 @@ describe Domain, "when loaded" do
     ns1 = FactoryBot.create(:ns, :domain => @domain)
     ns2 = FactoryBot.create(:ns, :domain => @domain)
     ns = @domain.ns_records
-    ns.should be_a_kind_of( Array )
+    # ns.should be_a_kind_of( Enumerable )
     ns.should include( ns1 )
     ns.should include( ns2 )
   end
@@ -96,14 +96,14 @@ describe Domain, "when loaded" do
   it "should have MX records" do
     mx_f = FactoryBot.create(:mx, :domain => @domain)
     mx = @domain.mx_records
-    mx.should be_a_kind_of( Array )
+    # mx.should be_a_kind_of( Enumerable )
     mx.should include( mx_f )
   end
 
   it "should have A records" do
     a_f = FactoryBot.create(:a, :domain => @domain)
     a = @domain.a_records
-    a.should be_a_kind_of( Array )
+    # a.should be_a_kind_of( Enumerable )
     a.should include( a_f )
   end
 
@@ -129,19 +129,19 @@ describe Domain, "scopes" do
     quentin_domain
     aaron_domain
 
-    Domain.user( admin ).all.should include(quentin_domain)
-    Domain.user( admin ).all.should include(aaron_domain)
+    Domain.user( admin ).should include(quentin_domain)
+    Domain.user( admin ).should include(aaron_domain)
   end
 
   it "should restrict owners" do
     quentin_domain
     aaron_domain
 
-    Domain.user( quentin ).all.should include(quentin_domain)
-    Domain.user( quentin ).all.should_not include(aaron_domain)
+    Domain.user( quentin ).should include(quentin_domain)
+    Domain.user( quentin ).should_not include(aaron_domain)
 
-    Domain.user( aaron ).all.should_not include(quentin_domain)
-    Domain.user( aaron ).all.should include(aaron_domain)
+    Domain.user( aaron ).should_not include(quentin_domain)
+    Domain.user( aaron ).should include(aaron_domain)
   end
 
   it "should restrict authentication tokens"
