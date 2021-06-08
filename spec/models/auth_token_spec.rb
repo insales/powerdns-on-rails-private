@@ -112,7 +112,7 @@ describe AuthToken, "and permissions" do
 
     lambda {
       @auth_token.policy = :open_sesame
-    }.should raise_error
+    }.should raise_error("Invalid policy")
   end
 
   it "should deny new RR's by default" do
