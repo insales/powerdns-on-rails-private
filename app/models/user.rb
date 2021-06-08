@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
   scope :active_owners, where(:state => :active, :admin => false)
 
   StateMachine::Machine.ignore_method_conflicts = true
-  state_machine :initial => :active do
+  state_machine :initial => :passive do
     event :activate do
       transition :suspended => :active
     end
