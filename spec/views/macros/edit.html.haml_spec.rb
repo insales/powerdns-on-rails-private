@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "macros/edit.html.haml" do
   let(:user) { FactoryGirl.create :admin }
   before do
-    view.stubs(:current_user).returns(user)
+    allow(view).to receive(:current_user).and_return(user)
   end
 
   context "for new macros" do

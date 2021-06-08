@@ -4,8 +4,8 @@ describe "search/results.html.haml" do
 
   before(:each) do
     @admin = FactoryGirl.create(:admin)
-    view.stubs(:current_user).returns(@admin)
-    view.stubs(:current_token).returns(nil)
+    allow(view).to receive(:current_user).and_return(@admin)
+    allow(view).to receive(:current_token).and_return(nil)
   end
 
   it "should handle no results" do

@@ -131,7 +131,7 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not allow new NS records" do
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => '',
@@ -149,7 +149,7 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not allow updating NS records" do
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     record = FactoryGirl.create(:ns, :domain => @domain)
 
@@ -171,7 +171,7 @@ describe RecordsController, "and tokens" do
 
   xit "should create when allowed" do
     @token.allow_new_records = true
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => 'test',
@@ -195,7 +195,7 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not create if not allowed" do
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => "test",
@@ -215,7 +215,7 @@ describe RecordsController, "and tokens" do
   xit "should update when allowed" do
     record = FactoryGirl.create(:www, :domain => @domain)
     @token.can_change( record )
-    controller.stubs(:current_token).returns( @token )
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => "www",
@@ -235,7 +235,7 @@ describe RecordsController, "and tokens" do
 
   xit "should not update if not allowed" do
     record = FactoryGirl.create(:www, :domain => @domain)
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => "www",
@@ -257,7 +257,7 @@ describe RecordsController, "and tokens" do
     record = FactoryGirl.create(:mx, :domain => @domain)
     @token.can_change( record )
     @token.remove_records=( true )
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     expect {
       delete :destroy, :domain_id => @domain.id, :id => record.id
@@ -268,7 +268,7 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not destroy records if not allowed" do
-    controller.stubs(:current_token).returns( @token )
+    allow(controller).to receive(:current_token).and_return(@token)
     record = FactoryGirl.create(:a, :domain => @domain)
 
     expect {
@@ -281,7 +281,7 @@ describe RecordsController, "and tokens" do
 
   xit "should not allow tampering with other domains" do
     @token.allow_new_records=( true )
-    controller.stubs( :current_token ).returns( @token )
+    allow(controller).to receive(:current_token).and_return(@token)
 
     record = {
       'name' => 'evil',

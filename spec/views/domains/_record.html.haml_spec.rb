@@ -6,7 +6,7 @@ describe "domains/_record" do
     let(:user) { FactoryGirl.create :admin }
     before(:each) do
       expect(user).to be_persisted
-      view.stubs(:current_user).returns(user)
+      allow(view).to receive(:current_user).and_return(user)
       domain = FactoryGirl.create(:domain, name: "example.com")
       @record = FactoryGirl.create(:ns, :domain => domain)
 
@@ -38,7 +38,7 @@ describe "domains/_record" do
   context "for a SLAVE domain" do
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
+      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
       domain = FactoryGirl.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
       @record = domain.a_records.create( :name => 'foo', :content => '127.0.0.1' )
       render :partial => 'domains/record', :object => @record
@@ -72,9 +72,9 @@ describe "domains/_record" do
 
     before(:each) do
       @domain = FactoryGirl.create(:domain, name: "example.com")
-      view.stubs(:current_user).returns( nil )
+      allow(view).to receive(:current_user).and_return(nil)
       token = FactoryGirl.create(:auth_token, :domain => @domain, :user => FactoryGirl.create(:admin))
-      view.stubs(:current_token).returns(token)
+      allow(view).to receive(:current_token).and_return(token)
     end
 
     it "should not allow editing NS records" do
@@ -112,7 +112,7 @@ describe "domains/_record" do
       )
       token.remove_records=( true )
       token.can_change( record )
-      view.stubs(:current_token).returns( token )
+      allow(view).to receive(:current_token).and_return(token)
 
       render :partial => 'domains/record', :object => record
 

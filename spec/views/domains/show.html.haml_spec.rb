@@ -6,8 +6,8 @@ describe "domains/show.html.haml" do
     let(:domain) { FactoryGirl.create(:domain, name: "example.com") }
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
+      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
       @domain = domain
       assign(:domain, @domain)
       assign(:users, User.active_owners)
@@ -24,8 +24,8 @@ describe "domains/show.html.haml" do
   context "for admins and domains without owners" do
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
+      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
       @domain = FactoryGirl.create(:domain)
       assign(:domain, @domain)
       assign(:users, User.active_owners)
@@ -54,8 +54,8 @@ describe "domains/show.html.haml" do
   context "for admins and domains with owners" do
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
+      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
       @domain = FactoryGirl.create(:domain, :user => FactoryGirl.create(:quentin))
       assign(:domain, @domain)
       assign(:users, User.active_owners)
@@ -76,8 +76,8 @@ describe "domains/show.html.haml" do
   context "for owners" do
     before(:each) do
       quentin = FactoryGirl.create(:quentin)
-      view.stubs(:current_user).returns( quentin )
-      view.stubs(:current_token).returns( nil )
+      allow(view).to receive(:current_user).and_return(quentin)
+      allow(view).to receive(:current_token).and_return(nil)
 
       @domain = FactoryGirl.create(:domain, :user => quentin)
       assign(:domain, @domain)
@@ -110,8 +110,8 @@ describe "domains/show.html.haml" do
   context "for SLAVE domains" do
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
+      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
 
       @domain = FactoryGirl.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
       assign(:domain, @domain)
@@ -144,8 +144,8 @@ describe "domains/show.html.haml" do
       @domain = FactoryGirl.create(:domain)
       assign(:domain, @domain)
 
-      view.stubs(:current_token).returns( FactoryGirl.create(:auth_token, :user => @admin, :domain => @domain) )
-      view.stubs(:current_user).returns( nil )
+      allow(view).to receive(:current_token).and_return(FactoryGirl.create(:auth_token, :user => @admin, :domain => @domain))
+      allow(view).to receive(:current_user).and_return(nil)
     end
 
     it "should not offer to remove the domain" do
@@ -172,7 +172,7 @@ describe "domains/show.html.haml" do
         :domain => @domain
       )
       token.allow_new_records=( true )
-      view.stubs(:current_token).returns( token )
+      allow(view).to receive(:current_token).and_return(token)
       render
 
       rendered.should have_css( "div#record-form-div" )

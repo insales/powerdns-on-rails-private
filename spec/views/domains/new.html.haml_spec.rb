@@ -5,7 +5,7 @@ describe "domains/new.html.haml" do
   before(:each) do
     assign(:domain, Domain.new)
 
-    view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
+    allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
   end
 
   it "should have a link to create a zone template if no zone templates are present" do

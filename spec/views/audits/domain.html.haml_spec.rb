@@ -8,7 +8,7 @@ describe "audits/domain.html.haml" do
     end
 
     it "should handle no audit entries on the domain" do
-      @domain.expects(:audits).returns( [] )
+      expect(@domain).to receive(:audits).and_return([])
       assign(:domain, @domain)
 
       render
@@ -25,7 +25,7 @@ describe "audits/domain.html.haml" do
         :action => 'create',
         :username => 'admin'
       )
-      @domain.expects(:audits).at_most(2).returns( [ audit ] )
+      expect(@domain).to receive(:audits).at_most(:twice).and_return([ audit ])
 
       assign(:domain, @domain)
       render
@@ -44,7 +44,7 @@ describe "audits/domain.html.haml" do
     end
 
     it "should handle no audit entries" do
-      @domain.expects(:associated_audits).at_most(2).returns( [] )
+      expect(@domain).to receive(:associated_audits).at_most(:twice).and_return([])
       assign(:domain, @domain)
 
       render

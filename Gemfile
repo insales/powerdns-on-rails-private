@@ -52,7 +52,6 @@ group :test do
   gem 'pry-byebug'
 
   gem "cucumber-rails", :require => false
-  gem 'mocha', :require => false
   gem 'database_cleaner'
 
   gem 'simplecov', require: false
