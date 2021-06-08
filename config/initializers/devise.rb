@@ -5,6 +5,9 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in DeviseMailer.
   config.mailer_sender = "powerdnsonrails@insales.com"
 
+  # generated on upgrade
+  config.secret_key = '911f48a6a656dcd80841eec379b8f5ade9d0ab4f5f8255cd158286a56b5d1d15378445dca2c7f51577b21d31eedd8f43a848a065a75362d59cba8143a4c06d67'
+
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
 

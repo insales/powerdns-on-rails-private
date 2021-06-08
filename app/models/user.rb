@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   has_many :audits, :as => :user
 
   # Named scopes
-  scope :active_owners, where(:state => :active, :admin => false)
+  scope :active_owners, -> { where(:state => :active, :admin => false) }
 
   StateMachine::Machine.ignore_method_conflicts = true
   state_machine :initial => :passive do

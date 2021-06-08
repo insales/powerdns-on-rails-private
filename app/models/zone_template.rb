@@ -11,8 +11,8 @@ class ZoneTemplate < ActiveRecord::Base
 
   # Scopes
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
-  scope :with_soa, joins(:record_templates).where('record_templates.record_type = ?', 'SOA')
-  default_scope order('name')
+  scope :with_soa, -> { joins(:record_templates).where('record_templates.record_type = ?', 'SOA') }
+  default_scope { order('name') }
 
   class << self
 

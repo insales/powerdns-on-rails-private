@@ -1,6 +1,18 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.22.5'
+# gem 'rails', '3.2.22.5'
+# (ruby 2.0) (но 1.9.3 уже можно на 4, вероятно сначала до 4.2 и максимум тестов, а потом уже руби)
+gem 'rails', '4.0.13'
+# gem 'rails', '4.1.16'
+# gem 'rails', '4.2.11.3'
+# ruby 2.3 - на проде (powerdnsapp3/6) уже есть (не забыть что нужен полный рестарт при смене рубей)
+# gem 'rails', '5.0.7.2'
+# gem 'rails', '5.1.7'
+# gem 'rails', '5.2.6'
+# ruby 2.5
+# ruby 2.6 - тоже есть на проде
+# gem 'rails', '6.0.3.7'
+# gem 'rails', '6.1.3.2'
 
 gem 'unicorn'
 
@@ -25,10 +37,11 @@ gem 'test-unit', '~> 3.0'
 gem 'haml'
 gem 'jquery-rails'
 gem 'will_paginate', '~> 3.0.3'
-gem "audited-activerecord", "~> 3.0.0.rc2"
+gem "audited-activerecord", "4.0"
 gem 'inherited_resources'
-gem 'devise', '2.2.3'
+gem 'devise', '~>3.0'
 gem "devise-encryptable"
+gem 'devise-token_authenticatable'
 gem 'ruby-ldap'
 gem 'rabl'
 gem 'simpleidn'
@@ -36,6 +49,8 @@ gem 'simpleidn'
 gem 'acts_as_list'
 gem 'state_machine'
 gem 'dynamic_form'
+
+gem 'protected_attributes' # attr_accessible backport
 
 group :development, :test do
   gem "rspec-rails"
