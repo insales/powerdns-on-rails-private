@@ -30,4 +30,12 @@ describe RecordTemplatesController, "when updating SOA records" do
     target_soa.primary_ns.should eql('ns1.provider.net')
   end
 
+  describe "destroy" do
+    let(:target_record) { FactoryGirl.create(:template_mx) }
+    it "should destroy templates" do
+      expect do
+        xhr :delete, :destroy, id: target_record.id
+      end.to change(target_record.class, :count).by(-1)
+    end
+  end
 end

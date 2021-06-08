@@ -55,6 +55,8 @@ group :test do
   gem 'mocha', :require => false
   # gem 'webrat'
   gem 'database_cleaner'
+
+  gem 'simplecov', require: false
 end
 
 group :development, :deploy do
