@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe ReportsController, "index" do
   before(:each) do
-    sign_in(FactoryGirl.create(:admin))
+    sign_in(FactoryBot.create(:admin))
 
-    FactoryGirl.create(:domain)
-    q = FactoryGirl.create(:quentin)
-    FactoryGirl.create(:domain, :name => 'example.net', :user => q)
+    FactoryBot.create(:domain)
+    q = FactoryBot.create(:quentin)
+    FactoryBot.create(:domain, :name => 'example.net', :user => q)
   end
 
   it "should display all users to the admin" do
@@ -28,12 +28,12 @@ end
 
 describe ReportsController, "results" do
   before(:each) do
-    sign_in(FactoryGirl.create(:admin))
+    sign_in(FactoryBot.create(:admin))
   end
 
   it "should display a list of users for a search hit" do
-    FactoryGirl.create(:aaron)
-    FactoryGirl.create(:api_client)
+    FactoryBot.create(:aaron)
+    FactoryBot.create(:api_client)
 
     get 'results', :q => "a"
 
@@ -53,11 +53,11 @@ end
 
 describe ReportsController , "view" do
   before(:each) do
-    sign_in(FactoryGirl.create(:admin))
+    sign_in(FactoryBot.create(:admin))
   end
 
   it "should show a user reports" do
-    get "view" , :id => FactoryGirl.create(:aaron).id
+    get "view" , :id => FactoryBot.create(:aaron).id
 
     response.should render_template("reports/view")
     assigns(:user).should_not be_nil

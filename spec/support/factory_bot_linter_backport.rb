@@ -1,5 +1,5 @@
 # from factory_bot 5.1
-FactoryBot = FactoryGirl
+FactoryBot = FactoryBot
 module FactoryBot
   class InvalidFactoryError < RuntimeError; end
 

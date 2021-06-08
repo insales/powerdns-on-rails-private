@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe TemplatesController, "and admins" do
   before(:each) do
-    sign_in(FactoryGirl.create(:admin))
+    sign_in(FactoryBot.create(:admin))
   end
 
   it "should have a template list" do
-    FactoryGirl.create(:zone_template)
+    FactoryBot.create(:zone_template)
 
     get :index
 
@@ -15,7 +15,7 @@ describe TemplatesController, "and admins" do
   end
 
   it "should have a detailed view of a template" do
-    get :show, :id => FactoryGirl.create(:zone_template).id
+    get :show, :id => FactoryBot.create(:zone_template).id
 
     assigns(:zone_template).should_not be_nil
 
@@ -34,13 +34,13 @@ end
 
 describe TemplatesController, "and users" do
   before(:each) do
-    @quentin = FactoryGirl.create(:quentin)
+    @quentin = FactoryBot.create(:quentin)
     sign_in(@quentin)
   end
 
   it "should have a limited list" do
-    FactoryGirl.create(:zone_template, :user => @quentin)
-    FactoryGirl.create(:zone_template, :name => '!Quentin')
+    FactoryBot.create(:zone_template, :user => @quentin)
+    FactoryBot.create(:zone_template, :name => '!Quentin')
 
     get :index
 
@@ -57,11 +57,11 @@ end
 
 describe TemplatesController, "should handle a REST client" do
   before(:each) do
-    sign_in(FactoryGirl.create(:api_client))
+    sign_in(FactoryBot.create(:api_client))
   end
 
   it "asking for a list of templates" do
-    FactoryGirl.create(:zone_template)
+    FactoryBot.create(:zone_template)
 
     get :index, :format => "xml"
 

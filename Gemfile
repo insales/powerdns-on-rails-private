@@ -45,8 +45,7 @@ group :development, :test do
 end
 
 group :test do
-  # gem "factory_girl_rails", "~> 3.0" #TODO: 4.0
-  gem "factory_girl_rails", "~> 4.9.0" #TODO: migrate to factory_bot
+  gem "factory_bot_rails", "~> 4.9"
 
   gem 'pry', '~>0.11.0' # для старых рельсов
   gem 'pry-byebug'

@@ -40,7 +40,7 @@ describe Record, "when new" do
 end
 
 describe Record, "during updates" do
-  let!(:domain) { @domain = FactoryGirl.create(:domain, name: "example.com") }
+  let!(:domain) { @domain = FactoryBot.create(:domain, name: "example.com") }
   before(:each) do
     @soa = domain.soa_record
   end
@@ -48,7 +48,7 @@ describe Record, "during updates" do
   it "should update the serial on the SOA" do
     serial = @soa.serial
 
-    record = FactoryGirl.create(:a, :domain => @domain)
+    record = FactoryBot.create(:a, :domain => @domain)
     record.content = '10.0.0.1'
     record.save.should be_truthy
 
@@ -97,7 +97,7 @@ end
 
 describe Record, "when created" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain, name: "example.com")
+    @domain = FactoryBot.create(:domain, name: "example.com")
     @soa = @domain.soa_record
   end
 
@@ -168,8 +168,8 @@ end
 
 describe Record, "when loaded" do
   before(:each) do
-    domain = FactoryGirl.create(:domain, name: "example.com")
-    @record = FactoryGirl.create(:a, :domain => domain)
+    domain = FactoryBot.create(:domain, name: "example.com")
+    @record = FactoryBot.create(:a, :domain => domain)
   end
 
   it "should have a full name" do
@@ -183,8 +183,8 @@ end
 
 describe Record, "when serializing to XML" do
   before(:each) do
-    domain = FactoryGirl.create(:domain)
-    @record = FactoryGirl.create(:a, :domain => domain)
+    domain = FactoryBot.create(:domain)
+    @record = FactoryBot.create(:a, :domain => domain)
   end
 
   it "should have a root tag of the record type" do

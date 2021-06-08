@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :auth_token do
     domain
     user { create :admin }

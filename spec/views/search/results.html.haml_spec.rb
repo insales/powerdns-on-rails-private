@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "search/results.html.haml" do
 
   before(:each) do
-    @admin = FactoryGirl.create(:admin)
+    @admin = FactoryBot.create(:admin)
     allow(view).to receive(:current_user).and_return(@admin)
     allow(view).to receive(:current_token).and_return(nil)
   end

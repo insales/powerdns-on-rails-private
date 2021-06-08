@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence :macro_name do |i|
     "Some macro #{i}"
   end

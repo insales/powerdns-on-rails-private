@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "macros/edit.html.haml" do
-  let(:user) { FactoryGirl.create :admin }
+  let(:user) { FactoryBot.create :admin }
   before do
     allow(view).to receive(:current_user).and_return(user)
   end
@@ -20,7 +20,7 @@ describe "macros/edit.html.haml" do
 
   context "for existing records" do
     before(:each) do
-      @macro = FactoryGirl.create(:macro)
+      @macro = FactoryBot.create(:macro)
       assign(:macro, @macro)
       render
     end

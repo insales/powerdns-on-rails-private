@@ -3,10 +3,10 @@ require 'spec_helper'
 describe "domains/show.html.haml" do
   context "for all users" do
 
-    let(:domain) { FactoryGirl.create(:domain, name: "example.com") }
+    let(:domain) { FactoryBot.create(:domain, name: "example.com") }
 
     before(:each) do
-      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
       allow(view).to receive(:current_token).and_return(nil)
       @domain = domain
       assign(:domain, @domain)
@@ -24,9 +24,9 @@ describe "domains/show.html.haml" do
   context "for admins and domains without owners" do
 
     before(:each) do
-      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
       allow(view).to receive(:current_token).and_return(nil)
-      @domain = FactoryGirl.create(:domain)
+      @domain = FactoryBot.create(:domain)
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -54,9 +54,9 @@ describe "domains/show.html.haml" do
   context "for admins and domains with owners" do
 
     before(:each) do
-      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
       allow(view).to receive(:current_token).and_return(nil)
-      @domain = FactoryGirl.create(:domain, :user => FactoryGirl.create(:quentin))
+      @domain = FactoryBot.create(:domain, :user => FactoryBot.create(:quentin))
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -75,11 +75,11 @@ describe "domains/show.html.haml" do
 
   context "for owners" do
     before(:each) do
-      quentin = FactoryGirl.create(:quentin)
+      quentin = FactoryBot.create(:quentin)
       allow(view).to receive(:current_user).and_return(quentin)
       allow(view).to receive(:current_token).and_return(nil)
 
-      @domain = FactoryGirl.create(:domain, :user => quentin)
+      @domain = FactoryBot.create(:domain, :user => quentin)
       assign(:domain, @domain)
 
       render
@@ -110,10 +110,10 @@ describe "domains/show.html.haml" do
   context "for SLAVE domains" do
 
     before(:each) do
-      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
       allow(view).to receive(:current_token).and_return(nil)
 
-      @domain = FactoryGirl.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
+      @domain = FactoryBot.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -140,11 +140,11 @@ describe "domains/show.html.haml" do
 
   context "for token users" do
     before(:each) do
-      @admin = FactoryGirl.create(:admin)
-      @domain = FactoryGirl.create(:domain)
+      @admin = FactoryBot.create(:admin)
+      @domain = FactoryBot.create(:domain)
       assign(:domain, @domain)
 
-      allow(view).to receive(:current_token).and_return(FactoryGirl.create(:auth_token, :user => @admin, :domain => @domain))
+      allow(view).to receive(:current_token).and_return(FactoryBot.create(:auth_token, :user => @admin, :domain => @domain))
       allow(view).to receive(:current_user).and_return(nil)
     end
 

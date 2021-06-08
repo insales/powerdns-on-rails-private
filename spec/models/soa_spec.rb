@@ -12,7 +12,7 @@ describe SOA, "when new" do
 
   it "should be unique per domain" do
     skip "валидация зачем-то выключена"
-    @soa.domain = FactoryGirl.create(:domain)
+    @soa.domain = FactoryBot.create(:domain)
     @soa.should have(1).error_on(:domain_id)
   end
 
@@ -127,7 +127,7 @@ end
 
 describe SOA, "when created" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryBot.create(:domain)
     @domain.soa_record.destroy
 
     @soa = SOA.new(
@@ -155,7 +155,7 @@ end
 
 describe SOA, "and serial numbers" do
   before(:each) do
-    @soa = FactoryGirl.create(:domain).soa_record
+    @soa = FactoryBot.create(:domain).soa_record
   end
 
   it "should have an easy way to update (without saving)" do
@@ -197,7 +197,7 @@ end
 
 describe SOA, "when serializing to XML" do
   before(:each) do
-    @soa = FactoryGirl.create(:domain).soa_record
+    @soa = FactoryBot.create(:domain).soa_record
   end
 
   it "should make an soa tag" do

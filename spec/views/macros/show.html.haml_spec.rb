@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe "macros/show.html.haml" do
   before(:each) do
-    @macro = FactoryGirl.create(:macro)
-    FactoryGirl.create(:macro_step_create, :macro => @macro)
+    @macro = FactoryBot.create(:macro)
+    FactoryBot.create(:macro_step_create, :macro => @macro)
 
     assign(:macro, @macro)
 

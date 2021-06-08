@@ -3,12 +3,12 @@ require 'spec_helper'
 describe "domains/_record" do
   context "for a user" do
 
-    let(:user) { FactoryGirl.create :admin }
+    let(:user) { FactoryBot.create :admin }
     before(:each) do
       expect(user).to be_persisted
       allow(view).to receive(:current_user).and_return(user)
-      domain = FactoryGirl.create(:domain, name: "example.com")
-      @record = FactoryGirl.create(:ns, :domain => domain)
+      domain = FactoryBot.create(:domain, name: "example.com")
+      @record = FactoryBot.create(:ns, :domain => domain)
 
       render :partial => 'domains/record', :object => @record
     end
@@ -38,8 +38,8 @@ describe "domains/_record" do
   context "for a SLAVE domain" do
 
     before(:each) do
-      allow(view).to receive(:current_user).and_return(FactoryGirl.create(:admin))
-      domain = FactoryGirl.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
+      domain = FactoryBot.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
       @record = domain.a_records.create( :name => 'foo', :content => '127.0.0.1' )
       render :partial => 'domains/record', :object => @record
       expect(@record).to be_persisted
@@ -71,14 +71,14 @@ describe "domains/_record" do
   context "for a token" do
 
     before(:each) do
-      @domain = FactoryGirl.create(:domain, name: "example.com")
+      @domain = FactoryBot.create(:domain, name: "example.com")
       allow(view).to receive(:current_user).and_return(nil)
-      token = FactoryGirl.create(:auth_token, :domain => @domain, :user => FactoryGirl.create(:admin))
+      token = FactoryBot.create(:auth_token, :domain => @domain, :user => FactoryBot.create(:admin))
       allow(view).to receive(:current_token).and_return(token)
     end
 
     it "should not allow editing NS records" do
-      record = FactoryGirl.create(:ns, :domain => @domain)
+      record = FactoryBot.create(:ns, :domain => @domain)
 
       render :partial => 'domains/record', :object => record
 
@@ -87,7 +87,7 @@ describe "domains/_record" do
     end
 
     it "should not allow removing NS records" do
-      record = FactoryGirl.create(:ns, :domain => @domain)
+      record = FactoryBot.create(:ns, :domain => @domain)
 
       render :partial => 'domains/record', :object => record
 
@@ -96,7 +96,7 @@ describe "domains/_record" do
 
     it "should allow edit records that aren't protected" do
       expect(@domain).not_to be_slave
-      record = FactoryGirl.create(:a, :domain => @domain)
+      record = FactoryBot.create(:a, :domain => @domain)
       render :partial => 'domains/record', :object => record
 
       # binding.pry
@@ -106,7 +106,7 @@ describe "domains/_record" do
     end
 
     it "should allow removing records if permitted" do
-      record = FactoryGirl.create(:a, :domain => @domain)
+      record = FactoryBot.create(:a, :domain => @domain)
       token = AuthToken.new(
         :domain => @domain
       )

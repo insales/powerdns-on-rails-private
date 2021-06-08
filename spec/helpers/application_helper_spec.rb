@@ -8,7 +8,7 @@ describe ApplicationHelper do
     end
 
     it "on existing records should link to show" do
-      macro = FactoryGirl.create(:macro)
+      macro = FactoryBot.create(:macro)
       html = helper.link_to_cancel( macro )
       html.should have_css("a[href='/macros/#{macro.id}']", :text => 'Cancel')
     end

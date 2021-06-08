@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence :zone_template_name do |i|
     "Zone template #{i}"
   end

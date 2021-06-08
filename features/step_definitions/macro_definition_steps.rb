@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 Given /^I have a domain$/ do
-  @domain = FactoryGirl.create(:domain)
+  @domain = FactoryBot.create(:domain)
 end
 
 Given /^I have a domain named "([^\"]*)"$/ do |name|
-  @domain = FactoryGirl.create(:domain, :name => name)
+  @domain = FactoryBot.create(:domain, :name => name)
 end
 
 Given /^I have a macro$/ do
-  @macro = FactoryGirl.create(:macro)
+  @macro = FactoryBot.create(:macro)
 end
 
 When /^I apply the macro$/ do
