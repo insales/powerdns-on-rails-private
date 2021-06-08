@@ -53,7 +53,6 @@ group :test do
 
   gem "cucumber-rails", :require => false
   gem 'mocha', :require => false
-  # gem 'webrat'
   gem 'database_cleaner'
 
   gem 'simplecov', require: false
