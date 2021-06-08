@@ -13,7 +13,7 @@ describe "templates/show.html.haml" do
     end
 
     it "should have the template name" do
-      rendered.should have_tag('h1', :text => @zone_template.name)
+      rendered.should have_css('h1', :text => @zone_template.name)
     end
 
     it "should have a table with template overview" do
@@ -44,7 +44,7 @@ describe "templates/show.html.haml" do
     end
 
     it "should have an SOA warning" do
-      rendered.should have_tag('div#soa-warning')
+      rendered.should have_css('div#soa-warning')
     end
 
   end

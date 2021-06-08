@@ -14,24 +14,24 @@ describe "domains/_record" do
     end
 
     it "should have a marker row (used by AJAX)" do
-      rendered.should have_tag("tr#marker_ns_#{@record.id}")
+      rendered.should have_css("tr#marker_ns_#{@record.id}")
     end
 
     it "should have a row with the record details" do
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "") # shortname
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "") # ttl
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "NS") # shortname
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "") # prio
-      rendered.should have_tag("tr#show_ns_#{@record.id} > td", :text => "ns1.example.com")
+      rendered.should have_css("tr#show_ns_#{@record.id} > td", :text => "") # shortname
+      rendered.should have_css("tr#show_ns_#{@record.id} > td", :text => "") # ttl
+      rendered.should have_css("tr#show_ns_#{@record.id} > td", :text => "NS") # shortname
+      rendered.should have_css("tr#show_ns_#{@record.id} > td", :text => "") # prio
+      rendered.should have_css("tr#show_ns_#{@record.id} > td", :text => "ns1.example.com")
     end
 
     it "should have a row for editing record details" do
-      rendered.should have_tag("tr#edit_ns_#{@record.id} > td[colspan='7'] > form")
+      rendered.should have_css("tr#edit_ns_#{@record.id} > td[colspan='7'] > form")
     end
 
     it "should have links to edit/remove the record" do
-      rendered.should have_tag("a[onclick^=editRecord]")
-      rendered.should have_tag("a > img[src*=database_delete]")
+      rendered.should have_css("a[onclick^=editRecord]")
+      rendered.should have_css("a > img[src*=database_delete]")
     end
   end
 
@@ -40,39 +40,41 @@ describe "domains/_record" do
     before(:each) do
       view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
       domain = FactoryGirl.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
-      @record = domain.a_records.create( :name => 'foo', :text => '127.0.0.1' )
+      @record = domain.a_records.create( :name => 'foo', :content => '127.0.0.1' )
       render :partial => 'domains/record', :object => @record
+      expect(@record).to be_persisted
     end
 
     it "should not have tooltips ready" do
-      rendered.should_not have_tag("div#record-template-edit-#{@record.id}")
-      rendered.should_not have_tag("div#record-template-delete-#{@record.id}")
+      rendered.should_not have_css("div#record-template-edit-#{@record.id}")
+      rendered.should_not have_css("div#record-template-delete-#{@record.id}")
     end
 
     it "should have a row with the record details" do
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "") # shortname
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "") # ttl
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "A")
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "") # prio
-      rendered.should have_tag("tr#show_a_#{@record.id} > td", :text => "foo")
+      rendered.should have_css("tr#show_a_#{@record.id} > td:nth-child(1)", :text => "foo") # shortname
+      rendered.should have_css("tr#show_a_#{@record.id} > td:nth-child(2)", :text => "") # ttl
+      rendered.should have_css("tr#show_a_#{@record.id} > td:nth-child(3)", :text => "A")
+      rendered.should have_css("tr#show_a_#{@record.id} > td:nth-child(4)", :text => "") # prio
+      rendered.should have_css("tr#show_a_#{@record.id} > td:nth-child(5)", :text => "127.0.0.1")
     end
 
     it "should not have a row for editing record details" do
-      rendered.should_not have_tag("tr#edit_ns_#{@record.id} > td[colspan='7'] > form")
+      rendered.should_not have_css("tr#edit_ns_#{@record.id} > td[colspan='7'] > form")
     end
 
     it "should not have links to edit/remove the record" do
-      rendered.should_not have_tag("a[onclick^=editRecord]")
-      rendered.should_not have_tag("a > img[src*=database_delete]")
+      rendered.should_not have_css("a[onclick^=editRecord]")
+      rendered.should_not have_css("a > img[src*=database_delete]")
     end
   end
 
   context "for a token" do
 
     before(:each) do
-      @domain = FactoryGirl.create(:domain)
+      @domain = FactoryGirl.create(:domain, name: "example.com")
       view.stubs(:current_user).returns( nil )
-      view.stubs(:current_token).returns( FactoryGirl.create(:auth_token, :domain => @domain, :user => FactoryGirl.create(:admin)) )
+      token = FactoryGirl.create(:auth_token, :domain => @domain, :user => FactoryGirl.create(:admin))
+      view.stubs(:current_token).returns(token)
     end
 
     it "should not allow editing NS records" do
@@ -80,8 +82,8 @@ describe "domains/_record" do
 
       render :partial => 'domains/record', :object => record
 
-      rendered.should_not have_tag("a[onclick^=editRecord]")
-      rendered.should_not have_tag("tr#edit_ns_#{record.id}")
+      rendered.should_not have_css("a[onclick^=editRecord]")
+      rendered.should_not have_css("tr#edit_ns_#{record.id}")
     end
 
     it "should not allow removing NS records" do
@@ -89,16 +91,18 @@ describe "domains/_record" do
 
       render :partial => 'domains/record', :object => record
 
-      rendered.should_not have_tag("a > img[src*=database_delete]")
+      rendered.should_not have_css("a > img[src*=database_delete]")
     end
 
     it "should allow edit records that aren't protected" do
+      expect(@domain).not_to be_slave
       record = FactoryGirl.create(:a, :domain => @domain)
       render :partial => 'domains/record', :object => record
 
-      rendered.should have_tag("a[onclick^=editRecord]")
-      rendered.should_not have_tag("a > img[src*=database_delete]")
-      rendered.should have_tag("tr#edit_a_#{record.id}")
+      # binding.pry
+      rendered.should have_css("a[onclick^=editRecord]")
+      rendered.should_not have_css("a > img[src*=database_delete]")
+      rendered.should have_css("tr#edit_a_#{record.id}")
     end
 
     it "should allow removing records if permitted" do
@@ -112,7 +116,7 @@ describe "domains/_record" do
 
       render :partial => 'domains/record', :object => record
 
-      rendered.should have_tag("a > img[src*=database_delete]")
+      rendered.should have_css("a > img[src*=database_delete]")
     end
   end
 end

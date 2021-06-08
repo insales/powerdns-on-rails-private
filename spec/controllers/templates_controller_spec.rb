@@ -65,6 +65,6 @@ describe TemplatesController, "should handle a REST client" do
 
     get :index, :format => "xml"
 
-    response.should have_tag('zone-templates > zone-template')
+    response.should have_css('zone-templates > zone-template')
   end
 end

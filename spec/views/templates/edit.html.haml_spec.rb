@@ -12,7 +12,7 @@ describe "templates/edit.html.haml" do
     it "should show the correct title" do
       render
 
-      rendered.should have_tag('h1.underline', :text => 'Update Zone Template')
+      rendered.should have_css('h1.underline', :text => 'Update Zone Template')
     end
   end
 

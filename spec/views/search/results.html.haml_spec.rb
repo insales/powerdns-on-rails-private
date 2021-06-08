@@ -13,7 +13,7 @@ describe "search/results.html.haml" do
 
     render
 
-    rendered.should have_tag("strong", :text => "No domains found")
+    rendered.should have_css("strong", :text => "No domains found")
   end
 
   it "should handle results within the pagination limit" do
@@ -28,7 +28,7 @@ describe "search/results.html.haml" do
 
     render 
 
-    rendered.should have_tag("table a", :text => "zone-1.com")
+    rendered.should have_css("table a", :text => "zone-1.com")
   end
 
   it "should handle results with pagination and scoping" do
@@ -43,7 +43,7 @@ describe "search/results.html.haml" do
 
     render
 
-    rendered.should have_tag("table a", :text => "domain-1.com")
+    rendered.should have_css("table a", :text => "domain-1.com")
   end
 
 end

@@ -13,7 +13,7 @@ describe "macros/edit.html.haml" do
     end
 
     it "should behave accordingly" do
-      rendered.should have_tag('h1', :text => 'New Macro')
+      rendered.should have_css('h1', :text => 'New Macro')
     end
 
   end
@@ -26,7 +26,7 @@ describe "macros/edit.html.haml" do
     end
 
     it "should behave accordingly" do
-      rendered.should have_tag('h1', :text => 'Update Macro')
+      rendered.should have_css('h1', :text => 'Update Macro')
     end
   end
 
@@ -39,7 +39,7 @@ describe "macros/edit.html.haml" do
     end
 
     it "should display the errors" do
-      rendered.should have_tag('div.errorExplanation')
+      rendered.should have_css('div.errorExplanation')
     end
   end
 
