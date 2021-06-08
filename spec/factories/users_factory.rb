@@ -1,14 +1,19 @@
 FactoryGirl.define do
+  sequence :user_email do |i|
+    "user#{i}@example.com"
+  end
+
   factory :admin, :class => User do
     login 'admin'
-    email 'admin@example.com'
+    # email 'admin@example.com'
+    email { generate :user_email }
     password 'secret'
     password_confirmation 'secret'
     confirmation_token nil
     confirmed_at Time.now
     admin true
   end
-  
+
   factory(:quentin, :class => User) do
     login 'quentin'
     email 'quentin@example.com'

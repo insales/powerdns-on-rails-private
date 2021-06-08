@@ -13,7 +13,8 @@ class Record < ActiveRecord::Base
     []
   end
 
-  belongs_to :domain
+  belongs_to :domain #, required: true
+  validates_presence_of :domain_id
 
   validates_presence_of :name
   validates_numericality_of :ttl,
@@ -23,6 +24,7 @@ class Record < ActiveRecord::Base
   class_attribute :batch_soa_updates
 
   attr_accessible :content, :name, :ttl, :prio
+  attr_accessible :domain # хакофикс тестов, но вообще надо просто record создавать через domain
 
   # This is needed here for generic form support, actual functionality
   # implemented in #SOA
@@ -45,6 +47,7 @@ class Record < ActiveRecord::Base
     def batch
       raise ArgumentError, "Block expected" unless block_given?
 
+      # FIXME: такое надо складывать в Thread.current
       self.batch_soa_updates = []
       yield
       self.batch_soa_updates = nil
@@ -105,7 +108,6 @@ class Record < ActiveRecord::Base
   # Append the domain name to the +name+ field if missing
   def append_domain_name!
     self[:name] = self.domain.name if self[:name].blank?
-
     self[:name] << ".#{self.domain.name}" unless self[:name].index( self.domain.name )
   end
 end

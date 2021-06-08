@@ -44,7 +44,7 @@ end
 
 describe AuthToken, "internals" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryGirl.create(:domain, name: "example.com")
     @auth_token = AuthToken.new( :domain => @domain )
   end
 
@@ -87,7 +87,7 @@ end
 
 describe AuthToken, "and permissions" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryGirl.create(:domain, name: 'example.com')
     @auth_token = AuthToken.new(
       :user => FactoryGirl.create(:admin),
       :domain => @domain,
@@ -244,7 +244,7 @@ end
 
 describe AuthToken, "and authentication" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryGirl.create(:domain, name: "example.com")
     @user = FactoryGirl.create(:admin)
     @auth_token = FactoryGirl.create(:auth_token, :domain => @domain, :user => @user)
   end

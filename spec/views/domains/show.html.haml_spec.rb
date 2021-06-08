@@ -3,10 +3,12 @@ require 'spec_helper'
 describe "domains/show.html.haml" do
   context "for all users" do
 
+    let(:domain) { FactoryGirl.create(:domain, name: "example.com") }
+
     before(:each) do
       view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
       view.stubs(:current_token).returns( nil )
-      @domain = FactoryGirl.create(:domain)
+      @domain = domain
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -14,8 +16,9 @@ describe "domains/show.html.haml" do
     end
 
     it "should have the domain name in the title and dominant on the page" do
-      rendered.should have_tag( "title", :text => "example.com" )
-      rendered.should have_tag( "h1", :text => "example.com" )
+      # binding.pry
+      rendered.should have_tag( "title", :content => domain.name, exact: false)
+      rendered.should have_tag( "h1", :content => domain.name, exact: false)
     end
   end
 

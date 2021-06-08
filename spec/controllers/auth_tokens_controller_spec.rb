@@ -29,21 +29,21 @@ describe AuthTokensController do
   end
 
   it "bail cleanly on invalid requests" do
-    FactoryGirl.create(:domain)
+    domain = FactoryGirl.create(:domain)
 
     sign_in(FactoryGirl.create(:token_user))
 
-    post :create, :auth_token => { :domain => 'example.com' }
-
+    post :create, :auth_token => { :domain => domain.name }
     response.should have_selector('error')
   end
 
   describe "generating tokens" do
 
+    let(:domain) { FactoryGirl.create(:domain) }
     before(:each) do
       sign_in(FactoryGirl.create(:token_user))
 
-      @domain = FactoryGirl.create(:domain)
+      @domain = domain
       @params = { :domain => @domain.name, :expires_at => 1.hour.since.to_s(:rfc822) }
     end
 
@@ -61,7 +61,7 @@ describe AuthTokensController do
 
     it "with remove set" do
       a = FactoryGirl.create(:www, :domain => @domain)
-      post :create, :auth_token => @params.merge(:remove => 'true', :record => ['www.example.com'])
+      post :create, :auth_token => @params.merge(:remove => 'true', :record => ["www.#{domain.name}"])
 
       response.should have_selector('token > expires')
       response.should have_selector('token > auth_token')
@@ -87,7 +87,7 @@ describe AuthTokensController do
       mx = FactoryGirl.create(:mx, :domain => @domain)
 
       post :create, :auth_token => @params.merge(
-        :protect => ['example.com:A', 'www.example.com'],
+        :protect => ["#{domain.name}:A", "www.#{domain.name}"],
         :policy => 'allow'
       )
 
@@ -114,7 +114,7 @@ describe AuthTokensController do
       www = FactoryGirl.create(:www, :domain => @domain)
       mx = FactoryGirl.create(:mx, :domain => @domain)
 
-      post :create, :auth_token => @params.merge(:record => ['example.com'])
+      post :create, :auth_token => @params.merge(:record => [domain.name])
 
       assigns(:auth_token).can_change?( www ).should be_falsey
       assigns(:auth_token).can_change?( a ).should be_truthy

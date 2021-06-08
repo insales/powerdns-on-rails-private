@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'rails', '3.2.22.5'
 
@@ -40,11 +40,13 @@ gem 'dynamic_form'
 group :development, :test do
   gem "rspec-rails"
   gem 'rspec-collection_matchers'
+  gem 'rspec-html-matchers' # legacy matchers
   # gem 'RedCloth', '>= 4.1.1'
 end
 
 group :test do
-  gem "factory_girl_rails", "~> 3.0" #TODO: 4.0
+  # gem "factory_girl_rails", "~> 3.0" #TODO: 4.0
+  gem "factory_girl_rails", "~> 4.9.0" #TODO: migrate to factory_bot
 
   gem 'pry', '~>0.11.0' # для старых рельсов
   gem 'pry-byebug'

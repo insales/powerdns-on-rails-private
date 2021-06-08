@@ -55,6 +55,8 @@ class Domain < ActiveRecord::Base
     validates_presence_of f, :on => :create, :unless => :slave?
   end
 
+  before_create :build_soa_record
+
   # Scopes
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
   default_scope order('name')
@@ -71,7 +73,6 @@ class Domain < ActiveRecord::Base
     params_sym = params.symbolize_keys
     super self.class.const_defined?(:DOMAIN_DEFAULTS) ?
       DOMAIN_DEFAULTS.merge(params_sym) : params_sym
-    build_soa_record
   end
 
   def name=(val)

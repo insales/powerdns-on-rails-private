@@ -68,10 +68,10 @@ describe AuditsHelper, "link_to_domain_audit" do
 end
 
 describe AuditsHelper, "link_to_record_audit" do
+  let(:domain) { FactoryGirl.create(:domain, name: "example.com") }
 
   it "should handle an existing record & existing user" do
     Audit.as_user( FactoryGirl.create(:admin) ) do
-      domain = FactoryGirl.create(:domain)
       record = FactoryGirl.create(:a, :domain => domain)
       audit = record.audits.first
 
@@ -82,7 +82,6 @@ describe AuditsHelper, "link_to_record_audit" do
 
   it "should handle existing records & removed users" do
     Audit.as_user( 'admin' ) do
-      domain = FactoryGirl.create(:domain)
       record = FactoryGirl.create(:a, :domain => domain)
       audit = record.audits.first
 
@@ -93,7 +92,6 @@ describe AuditsHelper, "link_to_record_audit" do
 
   it "should handle removed records & existing users" do
     Audit.as_user( FactoryGirl.create(:admin) ) do
-      domain = FactoryGirl.create(:domain)
       record = FactoryGirl.create(:a, :domain => domain)
       record.destroy
       audit = record.audits.last
@@ -105,7 +103,6 @@ describe AuditsHelper, "link_to_record_audit" do
 
   it "should handle removed records & removed users" do
     Audit.as_user( 'admin' ) do
-      domain = FactoryGirl.create(:domain)
       record = FactoryGirl.create(:a, :domain => domain)
       record.destroy
       audit = record.audits.last
@@ -116,7 +113,6 @@ describe AuditsHelper, "link_to_record_audit" do
   end
 
   it "should handle records without a 'type' key in the changes hash" do
-    domain = FactoryGirl.create(:domain)
     audit = Audit.new(
       :auditable => FactoryGirl.create(:a, :domain => domain),
       :associated => domain,
@@ -133,7 +129,7 @@ describe AuditsHelper, "link_to_record_audit" do
   it "should handle removed records without a 'type' key in the changes hash" do
     audit = Audit.new(
       :auditable => nil,
-      :associated => FactoryGirl.create(:domain),
+      :associated => domain,
       :action => 'destroy',
       :version => 1,
       :user => FactoryGirl.create(:admin),

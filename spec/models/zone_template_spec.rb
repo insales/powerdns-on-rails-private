@@ -15,8 +15,8 @@ describe ZoneTemplate, "when new" do
   end
 
   it "should have a unique name" do
-    FactoryGirl.create(:zone_template)
-    @zone_template.name = "East Coast Data Center"
+    existing = FactoryGirl.create(:zone_template)
+    @zone_template.name = existing.name
     @zone_template.should have(1).error_on(:name)
   end
 
@@ -91,8 +91,8 @@ describe ZoneTemplate, "when used to build a zone" do
     FactoryGirl.create(:template_soa, :zone_template => @zone_template)
     FactoryGirl.create(:template_ns, :zone_template => @zone_template)
     FactoryGirl.create(:template_ns, :content => 'ns2.%ZONE%', :zone_template => @zone_template)
-
-    @domain = @zone_template.build( 'example.org' )
+    expect(@zone_template.record_templates.count).to eq 3
+    @domain = @zone_template.build( 'example.org' ).reload
   end
 
   it "should create a valid new zone" do
@@ -132,7 +132,7 @@ describe ZoneTemplate, "when used to build a zone for a user" do
     FactoryGirl.create(:template_cname, :zone_template => @zone_template)
     FactoryGirl.create(:template_cname, :name => 'www.%ZONE%', :zone_template => @zone_template)
 
-    @domain = @zone_template.build( 'example.org', @user )
+    @domain = @zone_template.build( 'example.org', @user ).reload
   end
 
   it "should create a valid new zone" do
@@ -141,7 +141,7 @@ describe ZoneTemplate, "when used to build a zone for a user" do
   end
 
   it "should be owned by the user" do
-    @domain.user.should be( @user )
+    @domain.user.should eq(@user)
   end
 
   it "should create the correct number of records (from templates)" do

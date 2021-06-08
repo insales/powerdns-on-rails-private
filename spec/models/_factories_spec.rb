@@ -3,6 +3,7 @@ require "spec_helper"
 RSpec.describe "Factories" do
   it "are linted" do
     disabled_factories = %i{
+      record_template record macro_step
     }
     pending_factories = %i{
     }

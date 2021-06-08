@@ -5,7 +5,8 @@ describe "New 'untyped'", Domain do
   subject { Domain.new }
 
   it "should be NATIVE by default" do
-    subject.type.should == 'NATIVE'
+    # subject.type.should == 'NATIVE'
+    subject.type.should == DOMAIN_DEFAULTS[:type]
   end
 
   it "should not accept rubbish types" do
@@ -30,17 +31,19 @@ describe "New MASTER/NATIVE", Domain do
   end
 
   it "should not allow duplicate names" do
-    FactoryGirl.create(:domain)
+    FactoryGirl.create(:domain, name: "example.com")
     subject.name = "example.com"
     subject.should have(1).error_on(:name)
   end
 
   it "should bail out on missing SOA fields" do
+    subject.primary_ns = nil
     subject.should have(1).error_on( :primary_ns )
   end
 
   it "should be NATIVE by default" do
-    subject.type.should eql('NATIVE')
+    # subject.type.should eql('NATIVE')
+    subject.type.should eql(DOMAIN_DEFAULTS[:type])
   end
 
   it "should not require a MASTER" do
@@ -70,7 +73,7 @@ end
 
 describe Domain, "when loaded" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryGirl.create(:domain, name: "example.com")
   end
 
   it "should have a name" do
@@ -106,7 +109,8 @@ describe Domain, "when loaded" do
 
   it "should give access to all records excluding the SOA" do
     FactoryGirl.create(:a, :domain => @domain)
-    @domain.records_without_soa.size.should be( @domain.records.size - 1 )
+    @domain.records_without_soa.size.should eq 1 #be( @domain.records.size - 1 )
+    expect(@domain.records_without_soa.map(&:class)).not_to include(SOA)
   end
 
   it "should not complain about missing SOA fields" do

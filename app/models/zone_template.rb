@@ -42,7 +42,10 @@ class ZoneTemplate < ActiveRecord::Base
   # transaction to complete/rollback the operation.
   def build( domain_name, user = nil )
     soa_template = record_templates.detect { |r| r.record_type == 'SOA' }
-    soa_args = Hash[SOA::SOA_FIELDS.map { |f| [f, soa_template.send(f)] }]
+    soa_args = soa_template && Hash[SOA::SOA_FIELDS.map { |f| [f, soa_template.send(f)] }] || {}
+    # TODO: более аккуратно разложить, например сделать record_template#build_attributes
+    soa_args.each_pair { |k,v| soa_args[k] = v.gsub('%ZONE%', domain_name) if v.is_a?(String) }
+
     domain = Domain.new soa_args.merge(name: domain_name, ttl: ttl)
     domain.user = user if user.is_a?( User )
 

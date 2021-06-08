@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe "macros/edit.html.haml" do
+  let(:user) { FactoryGirl.create :admin }
+  before do
+    view.stubs(:current_user).returns(user)
+  end
+
   context "for new macros" do
     before(:each) do
       assign(:macro, Macro.new)

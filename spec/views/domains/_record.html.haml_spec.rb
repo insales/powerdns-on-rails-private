@@ -3,9 +3,11 @@ require 'spec_helper'
 describe "domains/_record" do
   context "for a user" do
 
+    let(:user) { FactoryGirl.create :admin }
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      domain = FactoryGirl.create(:domain)
+      expect(user).to be_persisted
+      view.stubs(:current_user).returns(user)
+      domain = FactoryGirl.create(:domain, name: "example.com")
       @record = FactoryGirl.create(:ns, :domain => domain)
 
       render :partial => 'domains/record', :object => @record
