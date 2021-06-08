@@ -16,10 +16,9 @@ describe RecordsController, ", users, and non-SOA records" do
    { :name => '', :ttl => '86400', :type => 'AAAA', :content => '::1' },
    { :name => '', :ttl => '86400', :type => 'TXT', :content => 'Hello world' },
    { :name => '166.188.77.208.in-addr.arpa.', :type => 'PTR', :content => 'www.example.com' },
+   { :type => 'SPF', content: "v=spf1 -all" },
    # TODO: Test these
-   { :type => 'SPF', :pending => true },
-   { :type => 'LOC', :pending => true },
-   { :type => 'SPF', :pending => true }
+   { :type => 'LOC', content: "52 22 23.000 N 4 53 32.000 E -2.00m 0.00m 10000m 10m" },
   ].each do |record|
     it "should create a #{record[:type]} record when valid" do
       pending "Still need test for #{record[:type]}" if record.delete(:pending)
