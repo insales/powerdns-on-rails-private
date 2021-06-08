@@ -74,8 +74,10 @@ describe MacroStepsController do
   it "should re-position existing steps" do
     FactoryBot.create(:macro_step_create, :macro => @macro)
 
-    put :update, :macro_id => @macro.id, :id => @step.id,
-    :macro_step => { :position => '2' }
+    xhr :put, :update, {
+      :macro_id => @macro.id, :id => @step.id,
+      :macro_step => { :position => '2' }
+    }
 
     @step.reload.position.should == 2
   end

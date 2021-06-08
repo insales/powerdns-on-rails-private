@@ -17,6 +17,22 @@ class MacroStepsController < InheritedResources::Base
     collection.find( params[:id] )
   end
 
+  def macro_step_params
+    return {} unless params[:macro_step].any?
+
+    params.require(:macro_step).permit(
+      :action,
+      :record_type,
+      :name,
+      :content,
+      :ttl,
+      :prio,
+      :active,
+      :note,
+      :position,
+    )
+  end
+
   public
 
   def create
@@ -32,7 +48,7 @@ class MacroStepsController < InheritedResources::Base
       position = '1'
     end
 
-    @macro_step = parent.macro_steps.create( params[:macro_step] )
+    @macro_step = parent.macro_steps.create(macro_step_params)
 
     @macro_step.insert_at( position.to_i ) if position && !@macro_step.new_record?
 
@@ -48,7 +64,7 @@ class MacroStepsController < InheritedResources::Base
     position = params[:macro_step].delete(:position)
 
     @macro_step = parent.macro_steps.find( params[:id] )
-    @macro_step.update_attributes( params[:macro_step] )
+    @macro_step.update_attributes(macro_step_params)
 
     @macro_step.insert_at( position.to_i ) if position
 

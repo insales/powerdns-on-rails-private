@@ -10,6 +10,11 @@ class MacrosController < InheritedResources::Base
     @macros = Macro.user(current_user)
   end
 
+  def macro_params
+    params.require(:macro).permit(:name, :description, :active)
+      # :user_id ?
+  end
+
   public
 
   def new
