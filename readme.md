@@ -55,9 +55,4 @@ pg_restore --host=127.0.0.1 --port=5432 --clean --dbname=powerdns_development --
 
 ### Тесты
 
-RSpec и Cucumber
-
-```sh
-rake spec
-rake cucumber
-```
+RSpec

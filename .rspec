@@ -1,1 +1,3 @@
 --colour
+-r turnip/rspec
+-r spec_helper

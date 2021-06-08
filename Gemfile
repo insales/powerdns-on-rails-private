@@ -41,16 +41,17 @@ group :development, :test do
   gem "rspec-rails"
   gem 'rspec-collection_matchers'
   gem 'rspec-html-matchers' # legacy matchers
-  # gem 'RedCloth', '>= 4.1.1'
 end
 
 group :test do
   gem "factory_bot_rails", "~> 4.9"
 
+  gem "turnip" # run gherkin (cucumber) features in rspec
+
   gem 'pry', '~>0.11.0' # для старых рельсов
   gem 'pry-byebug'
 
-  gem "cucumber-rails", :require => false
+  gem 'capybara'
   gem 'database_cleaner'
 
   gem 'simplecov', require: false

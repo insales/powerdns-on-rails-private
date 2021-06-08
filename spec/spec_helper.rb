@@ -41,6 +41,8 @@ RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.syntax = [:should, :expect]
   end
+
+  config.include MacroDefinitionSteps
 end
 
 Capybara.configure do |config|
@@ -48,3 +50,4 @@ Capybara.configure do |config|
   # config.default_normalize_ws = true
   config.ignore_hidden_elements = false # хакофикс спек вьюх, там элементы похоже как скрытые определяются
 end
+Capybara.default_selector = :css
