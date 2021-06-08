@@ -13,11 +13,11 @@ RSpec.describe "Factories" do
       # progress: true
     }
     factories_to_lint = FactoryBot.factories.reject{|f| disabled_factories.include?(f.name) || pending_factories.include?(f.name) }
-    FactoryBot::Linter.new(factories_to_lint, **options).lint!
+    FactoryBot.lint(factories_to_lint, **options)
 
     if pending_factories.any?
       pending "pending factories"
-      FactoryBot::Linter.new(FactoryBot.factories.select{|f| pending_factories.include?(f.name) }, **options).lint!
+      FactoryBot.lint(FactoryBot.factories.select{|f| pending_factories.include?(f.name) }, **options)
     end
   end
 end

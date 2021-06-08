@@ -4,52 +4,52 @@ FactoryBot.define do
   end
 
   factory :admin, :class => User do
-    login 'admin'
+    login { 'admin' }
     # email 'admin@example.com'
     email { generate :user_email }
-    password 'secret'
-    password_confirmation 'secret'
-    confirmation_token nil
-    confirmed_at Time.now
-    admin true
+    password { 'secret' }
+    password_confirmation { 'secret' }
+    confirmation_token { nil }
+    confirmed_at { Time.now }
+    admin { true }
   end
 
   factory(:quentin, :class => User) do
-    login 'quentin'
-    email 'quentin@example.com'
-    password 'secret'
-    password_confirmation 'secret'
-    confirmation_token nil
-    confirmed_at Time.now
+    login { 'quentin' }
+    email { 'quentin@example.com' }
+    password { 'secret' }
+    password_confirmation { 'secret' }
+    confirmation_token { nil }
+    confirmed_at { Time.now }
   end
 
   factory(:aaron, :class => User) do
-    login 'aaron'
-    email 'aaron@example.com'
-    password 'secret'
-    password_confirmation 'secret'
-    confirmation_token nil
-    confirmed_at Time.now
+    login { 'aaron' }
+    email { 'aaron@example.com' }
+    password { 'secret' }
+    password_confirmation { 'secret' }
+    confirmation_token { nil }
+    confirmed_at { Time.now }
   end
 
   factory(:token_user, :class => User) do
-    login 'token'
-    email 'token@example.com'
-    password 'secret'
-    password_confirmation 'secret'
-    admin  true
-    auth_tokens true
-    confirmation_token nil
-    confirmed_at Time.now
+    login { 'token' }
+    email { 'token@example.com' }
+    password { 'secret' }
+    password_confirmation { 'secret' }
+    admin  { true }
+    auth_tokens { true }
+    confirmation_token { nil }
+    confirmed_at { Time.now }
   end
 
   factory(:api_client, :class => User) do
-    login 'api'
-    email 'api@example.com'
-    password 'secret'
-    password_confirmation 'secret'
-    admin true
-    confirmation_token nil
-    confirmed_at Time.now
+    login { 'api' }
+    email { 'api@example.com' }
+    password { 'secret' }
+    password_confirmation { 'secret' }
+    admin { true }
+    confirmation_token { nil }
+    confirmed_at { Time.now }
   end
 end

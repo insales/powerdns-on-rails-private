@@ -3,8 +3,8 @@ FactoryBot.define do
     domain
     user { create :admin }
 
-    token '5zuld3g9dv76yosy'
-    permissions({
+    token { '5zuld3g9dv76yosy' }
+    permissions { {
       'policy' => 'deny',
       'new' => false,
       'remove' => false,
@@ -14,7 +14,7 @@ FactoryBot.define do
         ['example.com', '*'],
         ['www.example.com', '*']
       ]
-    })
-    expires_at 3.hours.since
+    } }
+    expires_at { 3.hours.since }
   end
 end
