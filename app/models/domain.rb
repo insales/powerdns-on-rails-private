@@ -1,5 +1,3 @@
-require 'scoped_finders'
-
 # = Domain
 #
 # A #Domain is a unique domain name entry, and contains various #Record entries to
