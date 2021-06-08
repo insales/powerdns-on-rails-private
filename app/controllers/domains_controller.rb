@@ -76,7 +76,7 @@ class DomainsController < InheritedResources::Base
     end
 
     def resource
-      @domain = Domain.scoped.includes(:records)
+      @domain = Domain.all.includes(:records)
       if current_user
         @domain = @domain.user( current_user ).find( params[:id] )
       else

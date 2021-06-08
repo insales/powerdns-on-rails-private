@@ -6,7 +6,7 @@ class TemplatesController < InheritedResources::Base
   protected
 
   def collection
-    @zone_templates = ZoneTemplate.user(current_user).all
+    @zone_templates = ZoneTemplate.user(current_user).to_a
   end
 
   public

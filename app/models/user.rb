@@ -72,8 +72,7 @@ class User < ActiveRecord::Base
 
     # For our lookup purposes
     def search( params, page )
-      paginate :per_page => 50, :page => page,
-        :conditions => ['login LIKE ?', "%#{params.chomp}%"]
+      where(['login LIKE ?', "%#{params.chomp}%"]).paginate(per_page: 50, page: page)
     end
 
   end
@@ -183,11 +182,7 @@ class User < ActiveRecord::Base
     #end
 
     def persist_audits
-      quoted_login = ActiveRecord::Base.connection.quote(self.login)
-      Audit.update_all(
-                       "username = #{quoted_login}",
-                       [ 'user_type = ? AND user_id = ?', self.class.name, self.id ]
-                       )
+      Audit.where(user_type: self.class.name, user_id: self.id).update_all(username: self.login)
     end
 
     def check_auth_tokens
