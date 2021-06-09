@@ -17,20 +17,20 @@
   %p &nbsp;
   %table.grid
     %tr
-      %td{:width => "300"}=t :label_domain_name
+      %td{:width => "300"}= f.label :name, t(:label_domain_name)
       %td= f.text_field :name
       %td= help_icon('help-domain')
     %tr
-      %td=t :label_domain_type
+      %td= f.label :type, t(:label_domain_type)
       %td
         = f.select :type, ['NATIVE','MASTER','SLAVE']
       %td= help_icon('help-type')
     %tr#master-address{ :style => 'display: none' }
-      %td=t :label_domain_master_address
+      %td= f.label :master, t(:label_domain_master_address)
       %td= f.text_field :master
       %td= help_icon('help-master')
     %tr#zone-templates
-      %td=t :label_domain_zone_template
+      %td= f.label :zone_template_id, t(:label_domain_zone_template)
       %td
         - if ZoneTemplate.with_soa.user( current_user ).size > 0
           = f.collection_select( :zone_template_id, ZoneTemplate.with_soa.user( current_user ), :id, :name, :include_blank => true )
@@ -44,34 +44,34 @@
   #no-template-input
     %table.grid
       %tr
-        %td{:width => "300"}=t :label_domain_primary_name_server
+        %td{:width => "300"}= f.label :primary_ns, t(:label_domain_primary_name_server)
         %td= f.text_field :primary_ns
         %td= help_icon('help-primary-ns')
       %tr
-        %td=t :label_domain_contact
+        %td= f.label :contact, t(:label_domain_contact)
         %td= f.text_field :contact
         %td= help_icon('help-contact')
       %tr
-        %td=t :label_domain_refresh
+        %td= f.label :refresh, t(:label_domain_refresh)
         %td
           = f.text_field :refresh, :size => 6
           = help_icon('help-refresh')
         %td &nbsp;
 
       %tr
-        %td= t :label_domain_retry
+        %td= f.label :retry, t(:label_domain_retry)
         %td
           = f.text_field :retry, :size => 6
           = help_icon('help-retry')
         %td &nbsp;
       %tr
-        %td= t :label_domain_expire
+        %td= f.label :expire, t(:label_domain_expire)
         %td
           = f.text_field :expire, :size => 6
           = help_icon('help-expire')
         %td &nbsp;
       %tr
-        %td= t :label_domain_minimum
+        %td= f.label :minimum, t(:label_domain_minimum)
         %td
           = f.text_field :minimum, :size => 6
           = help_icon('help-minimum')

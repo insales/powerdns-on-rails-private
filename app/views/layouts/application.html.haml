@@ -1,7 +1,9 @@
 !!!
-%html
+%html(lang="en")
   %head
     %title= page_title
+    %meta(name="description" content="PowerDNS admin panel")
+    %meta(name="viewport" content="width=device-width, initial-scale=1")
     = stylesheet_link_tag 'application', 'tipTip', 'bold-dark'
     -# TODO: assets
     = javascript_include_tag '/javascripts/jquery.min', '/javascripts/jquery_ujs.js', '/javascripts/application', '/javascripts/jquery.tipTip', '/javascripts/humane'
@@ -34,13 +36,13 @@
 
         = yield
       #Footer
-        = link_to "PowerDNS on Rails", "http://www.opensourcery.co.za/powerdns-on-rails", :target => '_blank'
+        = link_to "PowerDNS on Rails", "http://www.opensourcery.co.za/powerdns-on-rails", target: '_blank', rel: "noopener noreferrer"
         \- &copy; Kenneth Kalmer
         %br
         Released under the MIT License.
         %br
         %br
-        = link_to "Report Bugs", "http://kennethkalmer.lighthouseapp.com/projects/11831-powerdns-on-rails", :target => '_blank'
+        = link_to "Report Bugs", "http://kennethkalmer.lighthouseapp.com/projects/11831-powerdns-on-rails", :target => '_blank', rel: "noopener noreferrer"
         \-
-        = link_to "Github", "http://github.com/kennethkalmer/powerdns-on-rails", :target => '_blank'
+        = link_to "Github", "http://github.com/kennethkalmer/powerdns-on-rails", :target => '_blank', rel: "noopener noreferrer"
 
