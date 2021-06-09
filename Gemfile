@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.16'
-# gem 'rails', '4.2.11.3'
+gem 'rails', '4.2.11.3'
 # ruby 2.3 - на проде (powerdnsapp3/6) уже есть (не забыть что нужен полный рестарт при смене рубей)
 # gem 'rails', '5.0.7.2'
 # gem 'rails', '5.1.7'
