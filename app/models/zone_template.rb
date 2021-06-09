@@ -18,12 +18,12 @@ class ZoneTemplate < ActiveRecord::Base
 
   #   # Custom find that takes one additional parameter, :require_soa (bool), for
   #   # restricting the returned resultset to only instances that #has_soa?
-  #   def find_with_validations( *args )
+  #   def find( *args )
   #     options = args.extract_options!
   #     valid_soa = options.delete( :require_soa ) || false
 
   #     # find as per usual
-  #     records = find_without_validations( *args << options )
+  #     records = super( *args << options )
 
   #     if valid_soa
   #       records.delete_if { |z| !z.has_soa? }
@@ -31,7 +31,6 @@ class ZoneTemplate < ActiveRecord::Base
 
   #     records # give back
   #   end
-  #   alias_method_chain :find, :validations
   # end
 
   # Build a new zone using +self+ as a template. +domain+ should be valid domain

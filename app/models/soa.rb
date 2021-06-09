@@ -54,11 +54,9 @@ class SOA < Record
   end
 
   # Hook into #reload
-  def reload_with_content
-    reload_without_content
-    update_convenience_accessors
+  def reload
+    super.tap { update_convenience_accessors }
   end
-  alias_method_chain :reload, :content
 
   # Updates the serial number to the next logical one. Format of the generated
   # serial is YYYYMMDDNN, where NN is the number of the change for the day.
@@ -101,7 +99,7 @@ class SOA < Record
 
   # Nicer representation of the domain as XML
   def to_xml(options = {}, &block)
-    to_xml_without_cleanup options.merge(:methods => SOA_FIELDS)
+    super(options.merge(:methods => SOA_FIELDS))
   end
 
   def set_content

@@ -26,11 +26,9 @@ class RecordTemplate < ActiveRecord::Base
   end
 
   # Hook into #reload
-  def reload_with_content
-    reload_without_content
-    update_convenience_accessors
+  def reload
+    super.tap { update_convenience_accessors }
   end
-  alias_method_chain :reload, :content
 
   # Convert this template record into a instance +record_type+ with the
   # attributes of the template copied over to the instance

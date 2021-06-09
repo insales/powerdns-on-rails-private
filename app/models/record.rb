@@ -73,10 +73,10 @@ class Record < ActiveRecord::Base
   end
 
   # Nicer representation of the domain as XML
-  def to_xml_with_cleanup(options = {}, &block)
-    to_xml_without_cleanup(options, &block)
+  def to_xml(options = {}, &block)
+    # no difference?
+    super(options, &block)
   end
-  alias_method_chain :to_xml, :cleanup
 
   # Pull in the name & TTL from the domain if missing
   def inherit_attributes_from_domain #:nodoc:
