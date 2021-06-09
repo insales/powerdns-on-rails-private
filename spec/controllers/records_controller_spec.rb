@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe RecordsController, ", users, and non-SOA records" do
   before( :each ) do
-    sign_in(FactoryGirl.create(:admin))
+    sign_in(FactoryBot.create(:admin))
 
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryBot.create(:domain)
   end
 
   # Test adding various records
@@ -16,10 +16,9 @@ describe RecordsController, ", users, and non-SOA records" do
    { :name => '', :ttl => '86400', :type => 'AAAA', :content => '::1' },
    { :name => '', :ttl => '86400', :type => 'TXT', :content => 'Hello world' },
    { :name => '166.188.77.208.in-addr.arpa.', :type => 'PTR', :content => 'www.example.com' },
+   { :type => 'SPF', content: "v=spf1 -all" },
    # TODO: Test these
-   { :type => 'SPF', :pending => true },
-   { :type => 'LOC', :pending => true },
-   { :type => 'SPF', :pending => true }
+   { :type => 'LOC', content: "52 22 23.000 N 4 53 32.000 E -2.00m 0.00m 10000m 10m" },
   ].each do |record|
     it "should create a #{record[:type]} record when valid" do
       pending "Still need test for #{record[:type]}" if record.delete(:pending)
@@ -47,7 +46,7 @@ describe RecordsController, ", users, and non-SOA records" do
   end
 
   it "should update when valid" do
-    record = FactoryGirl.create(:ns, :domain => @domain)
+    record = FactoryBot.create(:ns, :domain => @domain)
 
     params = {
       'name' => "",
@@ -62,7 +61,7 @@ describe RecordsController, ", users, and non-SOA records" do
   end
 
   it "shouldn't update when invalid" do
-    record = FactoryGirl.create(:ns, :domain => @domain)
+    record = FactoryBot.create(:ns, :domain => @domain)
 
     params = {
       'name' => "@",
@@ -81,7 +80,7 @@ describe RecordsController, ", users, and non-SOA records" do
   end
 
   it "should destroy when requested to do so" do
-    delete :destroy, :domain_id => @domain.id, :id => FactoryGirl.create(:mx, :domain => @domain).id
+    delete :destroy, :domain_id => @domain.id, :id => FactoryBot.create(:mx, :domain => @domain).id
 
     response.should be_redirect
     response.should redirect_to( domain_path( @domain ) )
@@ -90,9 +89,9 @@ end
 
 describe RecordsController, ", users, and SOA records" do
   it "should update when valid" do
-    sign_in( FactoryGirl.create(:admin) )
+    sign_in( FactoryBot.create(:admin) )
 
-    target_soa = FactoryGirl.create(:domain).soa_record
+    target_soa = FactoryBot.create(:domain).soa_record
 
     xhr :put, :update_soa, :id => target_soa.id, :domain_id => target_soa.domain.id,
       :soa => {
@@ -107,15 +106,15 @@ end
 
 describe RecordsController, "and tokens" do
   before( :each ) do
-    @domain = FactoryGirl.create(:domain)
-    @admin = FactoryGirl.create(:admin)
+    @domain = FactoryBot.create(:domain)
+    @admin = FactoryBot.create(:admin)
     @token = AuthToken.new(
       :domain => @domain, :expires_at => 1.hour.since, :user => @admin
     )
   end
 
   xit "should not be allowed to touch the SOA record" do
-    token = FactoryGirl.create(:auth_token, :domain => @domain, :user => @admin)
+    token = FactoryBot.create(:auth_token, :domain => @domain, :user => @admin)
     tokenize_as( token )
 
     target_soa = @domain.soa_record
@@ -131,7 +130,7 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not allow new NS records" do
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => '',
@@ -149,9 +148,9 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not allow updating NS records" do
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
-    record = FactoryGirl.create(:ns, :domain => @domain)
+    record = FactoryBot.create(:ns, :domain => @domain)
 
     params = {
       'name' => '',
@@ -171,7 +170,7 @@ describe RecordsController, "and tokens" do
 
   xit "should create when allowed" do
     @token.allow_new_records = true
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => 'test',
@@ -190,12 +189,12 @@ describe RecordsController, "and tokens" do
     assigns(:record).should_not be_nil
 
     # Ensure the token han been updated
-    @token.can_change?( 'test', 'A' ).should be_true
-    @token.can_remove?( 'test', 'A' ).should be_true
+    @token.can_change?( 'test', 'A' ).should be_truthy
+    @token.can_remove?( 'test', 'A' ).should be_truthy
   end
 
   xit "should not create if not allowed" do
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => "test",
@@ -213,9 +212,9 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should update when allowed" do
-    record = FactoryGirl.create(:www, :domain => @domain)
+    record = FactoryBot.create(:www, :domain => @domain)
     @token.can_change( record )
-    controller.stubs(:current_token).returns( @token )
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => "www",
@@ -234,8 +233,8 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not update if not allowed" do
-    record = FactoryGirl.create(:www, :domain => @domain)
-    controller.stubs(:current_token).returns(@token)
+    record = FactoryBot.create(:www, :domain => @domain)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     params = {
       'name' => "www",
@@ -254,10 +253,10 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should destroy when allowed" do
-    record = FactoryGirl.create(:mx, :domain => @domain)
+    record = FactoryBot.create(:mx, :domain => @domain)
     @token.can_change( record )
     @token.remove_records=( true )
-    controller.stubs(:current_token).returns(@token)
+    allow(controller).to receive(:current_token).and_return(@token)
 
     expect {
       delete :destroy, :domain_id => @domain.id, :id => record.id
@@ -268,8 +267,8 @@ describe RecordsController, "and tokens" do
   end
 
   xit "should not destroy records if not allowed" do
-    controller.stubs(:current_token).returns( @token )
-    record = FactoryGirl.create(:a, :domain => @domain)
+    allow(controller).to receive(:current_token).and_return(@token)
+    record = FactoryBot.create(:a, :domain => @domain)
 
     expect {
       delete :destroy, :domain_id => @domain.id, :id => record.id
@@ -281,7 +280,7 @@ describe RecordsController, "and tokens" do
 
   xit "should not allow tampering with other domains" do
     @token.allow_new_records=( true )
-    controller.stubs( :current_token ).returns( @token )
+    allow(controller).to receive(:current_token).and_return(@token)
 
     record = {
       'name' => 'evil',
@@ -289,7 +288,7 @@ describe RecordsController, "and tokens" do
       'content' => '127.0.0.3'
     }
 
-    xhr :post, :create, :domain_id => FactoryGirl.create(:domain, :name => 'example.net').id, :record => record
+    xhr :post, :create, :domain_id => FactoryBot.create(:domain, :name => 'example.net').id, :record => record
 
     response.code.should == "403"
   end

@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe "/reports/results" do
 
   before(:each) do
-    @admin = FactoryGirl.create(:admin)
+    @admin = FactoryBot.create(:admin)
   end
 
   it "should handle no results" do
@@ -11,7 +11,7 @@ describe "/reports/results" do
 
     render "/reports/results"
 
-    response.should have_tag("strong", "No users found")
+    response.should have_css("strong", "No users found")
   end
 
   it "should handle results within the pagination limit" do
@@ -19,7 +19,7 @@ describe "/reports/results" do
 
     render "/reports/results"
 
-    response.should have_tag("table") do
+    response.should have_css("table") do
       with_tag "a", "admin"
     end
   end
@@ -35,7 +35,7 @@ describe "/reports/results" do
 
     render "/reports/results"
 
-    response.should have_tag("table") do
+    response.should have_css("table") do
       with_tag "a", "test-user-1"
     end
   end

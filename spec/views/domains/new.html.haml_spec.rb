@@ -5,7 +5,7 @@ describe "domains/new.html.haml" do
   before(:each) do
     assign(:domain, Domain.new)
 
-    view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
+    allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
   end
 
   it "should have a link to create a zone template if no zone templates are present" do
@@ -18,8 +18,8 @@ describe "domains/new.html.haml" do
   end
 
   it "should have a list of zone templates to select from" do
-    zt = FactoryGirl.create(:zone_template)
-    FactoryGirl.create(:template_soa, :zone_template => zt)
+    zt = FactoryBot.create(:zone_template)
+    FactoryBot.create(:template_soa, :zone_template => zt)
 
     render
 

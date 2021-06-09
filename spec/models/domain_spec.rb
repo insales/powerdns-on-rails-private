@@ -5,7 +5,8 @@ describe "New 'untyped'", Domain do
   subject { Domain.new }
 
   it "should be NATIVE by default" do
-    subject.type.should == 'NATIVE'
+    # subject.type.should == 'NATIVE'
+    subject.type.should == DOMAIN_DEFAULTS[:type]
   end
 
   it "should not accept rubbish types" do
@@ -30,17 +31,19 @@ describe "New MASTER/NATIVE", Domain do
   end
 
   it "should not allow duplicate names" do
-    FactoryGirl.create(:domain)
+    FactoryBot.create(:domain, name: "example.com")
     subject.name = "example.com"
     subject.should have(1).error_on(:name)
   end
 
   it "should bail out on missing SOA fields" do
+    subject.primary_ns = nil
     subject.should have(1).error_on( :primary_ns )
   end
 
   it "should be NATIVE by default" do
-    subject.type.should eql('NATIVE')
+    # subject.type.should eql('NATIVE')
+    subject.type.should eql(DOMAIN_DEFAULTS[:type])
   end
 
   it "should not require a MASTER" do
@@ -70,7 +73,7 @@ end
 
 describe Domain, "when loaded" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryBot.create(:domain, name: "example.com")
   end
 
   it "should have a name" do
@@ -82,31 +85,32 @@ describe Domain, "when loaded" do
   end
 
   it "should have NS records" do
-    ns1 = FactoryGirl.create(:ns, :domain => @domain)
-    ns2 = FactoryGirl.create(:ns, :domain => @domain)
+    ns1 = FactoryBot.create(:ns, :domain => @domain)
+    ns2 = FactoryBot.create(:ns, :domain => @domain)
     ns = @domain.ns_records
-    ns.should be_a_kind_of( Array )
+    # ns.should be_a_kind_of( Enumerable )
     ns.should include( ns1 )
     ns.should include( ns2 )
   end
 
   it "should have MX records" do
-    mx_f = FactoryGirl.create(:mx, :domain => @domain)
+    mx_f = FactoryBot.create(:mx, :domain => @domain)
     mx = @domain.mx_records
-    mx.should be_a_kind_of( Array )
+    # mx.should be_a_kind_of( Enumerable )
     mx.should include( mx_f )
   end
 
   it "should have A records" do
-    a_f = FactoryGirl.create(:a, :domain => @domain)
+    a_f = FactoryBot.create(:a, :domain => @domain)
     a = @domain.a_records
-    a.should be_a_kind_of( Array )
+    # a.should be_a_kind_of( Enumerable )
     a.should include( a_f )
   end
 
   it "should give access to all records excluding the SOA" do
-    FactoryGirl.create(:a, :domain => @domain)
-    @domain.records_without_soa.size.should be( @domain.records.size - 1 )
+    FactoryBot.create(:a, :domain => @domain)
+    @domain.records_without_soa.size.should eq 1 #be( @domain.records.size - 1 )
+    expect(@domain.records_without_soa.map(&:class)).not_to include(SOA)
   end
 
   it "should not complain about missing SOA fields" do
@@ -115,35 +119,35 @@ describe Domain, "when loaded" do
 end
 
 describe Domain, "scopes" do
-  let(:quentin) { FactoryGirl.create(:quentin) }
-  let(:aaron) { FactoryGirl.create(:aaron) }
-  let(:quentin_domain) { FactoryGirl.create(:domain, :user => quentin) }
-  let(:aaron_domain) { FactoryGirl.create(:domain, :name => 'example.org', :user => aaron) }
-  let(:admin) { FactoryGirl.create(:admin) }
+  let(:quentin) { FactoryBot.create(:quentin) }
+  let(:aaron) { FactoryBot.create(:aaron) }
+  let(:quentin_domain) { FactoryBot.create(:domain, :user => quentin) }
+  let(:aaron_domain) { FactoryBot.create(:domain, :name => 'example.org', :user => aaron) }
+  let(:admin) { FactoryBot.create(:admin) }
 
   it "should show all domains to an admin" do
     quentin_domain
     aaron_domain
 
-    Domain.user( admin ).all.should include(quentin_domain)
-    Domain.user( admin ).all.should include(aaron_domain)
+    Domain.user( admin ).should include(quentin_domain)
+    Domain.user( admin ).should include(aaron_domain)
   end
 
   it "should restrict owners" do
     quentin_domain
     aaron_domain
 
-    Domain.user( quentin ).all.should include(quentin_domain)
-    Domain.user( quentin ).all.should_not include(aaron_domain)
+    Domain.user( quentin ).should include(quentin_domain)
+    Domain.user( quentin ).should_not include(aaron_domain)
 
-    Domain.user( aaron ).all.should_not include(quentin_domain)
-    Domain.user( aaron ).all.should include(aaron_domain)
+    Domain.user( aaron ).should_not include(quentin_domain)
+    Domain.user( aaron ).should include(aaron_domain)
   end
 
   it "should restrict authentication tokens"
 end
 
-describe "NATIVE/MASTER", Domain, "when created" do
+describe Domain, "NATIVE/MASTER when created" do
   it "with additional attributes should create an SOA record" do
     domain = Domain.new
     domain.name = 'example.org'
@@ -154,7 +158,7 @@ describe "NATIVE/MASTER", Domain, "when created" do
     domain.expire = 604800
     domain.minimum = 10800
 
-    domain.save.should be_true
+    domain.save.should be_truthy
     domain.soa_record.should_not be_nil
     domain.soa_record.primary_ns.should eql('ns1.example.org')
   end
@@ -170,13 +174,13 @@ describe "NATIVE/MASTER", Domain, "when created" do
       :minimum => 10800
     )
 
-    domain.save.should be_true
+    domain.save.should be_truthy
     domain.soa_record.should_not be_nil
     domain.soa_record.primary_ns.should eql('ns1.example.org')
   end
 end
 
-describe "SLAVE", Domain, "when created" do
+describe Domain, "SLAVE when created" do
   before(:each) do
     @domain = Domain.new( :type => 'SLAVE' )
   end
@@ -185,14 +189,14 @@ describe "SLAVE", Domain, "when created" do
     @domain.name = 'example.org'
     @domain.master = '127.0.0.1'
 
-    @domain.save.should be_true
+    @domain.save.should be_truthy
     @domain.soa_record.should be_nil
   end
 end
 
 describe Domain, "when deleting" do
   it "should delete its records as well" do
-    domain = FactoryGirl.create(:domain)
+    domain = FactoryBot.create(:domain)
     expect {
       domain.destroy
     }.to change(Record, :count).by(-domain.records.size)
@@ -201,12 +205,12 @@ end
 
 describe Domain, "when searching" do
   before(:each) do
-    @quentin = FactoryGirl.create(:quentin)
-    FactoryGirl.create(:domain, :user => @quentin)
+    @quentin = FactoryBot.create(:quentin)
+    FactoryBot.create(:domain, :user => @quentin)
   end
 
   it "should return results for admins" do
-    Domain.search('exa', 1, FactoryGirl.create(:admin)).should_not be_empty
+    Domain.search('exa', 1, FactoryBot.create(:admin)).should_not be_empty
   end
 
   it "should return results for users" do

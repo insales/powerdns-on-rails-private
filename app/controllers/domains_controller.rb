@@ -18,14 +18,13 @@ class DomainsController < InheritedResources::Base
     @zone_template = ZoneTemplate.find(params[:domain][:zone_template_id]) unless params[:domain][:zone_template_id].blank?
     @zone_template ||= ZoneTemplate.find_by_name(params[:domain][:zone_template_name]) unless params[:domain][:zone_template_name].blank?
 
-    if @zone_template
+    if @zone_template && params[:domain][:type] != "SLAVE"
       @domain = @zone_template.build( params[:domain][:name] )
     else
       @domain = Domain.new( params[:domain] )
     end
 
     @domain.user = current_user unless current_user.admin?
-
     create!
   end
 
@@ -77,7 +76,7 @@ class DomainsController < InheritedResources::Base
     end
 
     def resource
-      @domain = Domain.scoped.includes(:records)
+      @domain = Domain.all.includes(:records)
       if current_user
         @domain = @domain.user( current_user ).find( params[:id] )
       else

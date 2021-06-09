@@ -1,5 +1,3 @@
-require 'scoped_finders'
-
 # = Domain
 #
 # A #Domain is a unique domain name entry, and contains various #Record entries to
@@ -55,13 +53,15 @@ class Domain < ActiveRecord::Base
     validates_presence_of f, :on => :create, :unless => :slave?
   end
 
+  before_create :build_soa_record
+
   # Scopes
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
-  default_scope order('name')
+  default_scope{ order('name') }
 
   class << self
     def search( string, page, user = nil )
-      query = self.scoped
+      query = self.all # was scoped
       query = query.user( user ) unless user.nil?
       query.where('name LIKE ?', "%#{string.downcase.to_punicode}%").paginate( :page => page )
     end
@@ -71,7 +71,6 @@ class Domain < ActiveRecord::Base
     params_sym = params.symbolize_keys
     super self.class.const_defined?(:DOMAIN_DEFAULTS) ?
       DOMAIN_DEFAULTS.merge(params_sym) : params_sym
-    build_soa_record
   end
 
   def name=(val)
@@ -90,7 +89,7 @@ class Domain < ActiveRecord::Base
 
   # return the records, excluding the SOA record
   def records_without_soa
-    records.includes(:domain).all.select { |r| !r.is_a?( SOA ) }.sort_by {|r| [r.shortname, r.type]}
+    records.includes(:domain).to_a.select { |r| !r.is_a?( SOA ) }.sort_by {|r| [r.shortname, r.type]}
   end
 
   # Setup an SOA if we have the requirements

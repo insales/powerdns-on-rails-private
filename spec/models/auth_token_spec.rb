@@ -44,12 +44,12 @@ end
 
 describe AuthToken, "internals" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryBot.create(:domain, name: "example.com")
     @auth_token = AuthToken.new( :domain => @domain )
   end
 
   it "should extract the name and RR class from Record objects" do
-    record = FactoryGirl.create(:a, :domain => @domain)
+    record = FactoryBot.create(:a, :domain => @domain)
     name, type = @auth_token.send(:get_name_and_type_from_param, record )
     name.should eql('example.com')
     type.should eql('A')
@@ -87,9 +87,9 @@ end
 
 describe AuthToken, "and permissions" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
+    @domain = FactoryBot.create(:domain, name: 'example.com')
     @auth_token = AuthToken.new(
-      :user => FactoryGirl.create(:admin),
+      :user => FactoryBot.create(:admin),
       :domain => @domain,
       :expires_at => 5.hours.since
     )
@@ -112,96 +112,96 @@ describe AuthToken, "and permissions" do
 
     lambda {
       @auth_token.policy = :open_sesame
-    }.should raise_error
+    }.should raise_error("Invalid policy")
   end
 
   it "should deny new RR's by default" do
-    @auth_token.allow_new_records?.should be_false
+    @auth_token.allow_new_records?.should be_falsey
   end
 
   it "should allow for adding new RR" do
     @auth_token.allow_new_records = true
-    @auth_token.allow_new_records?.should be_true
+    @auth_token.allow_new_records?.should be_truthy
   end
 
   it "should deny removing RR's by default" do
-    @auth_token.remove_records?.should be_false
+    @auth_token.remove_records?.should be_falsey
   end
 
   it "should allow for removing RR's" do
     @auth_token.remove_records = true
-    @auth_token.remove_records?.should be_true
+    @auth_token.remove_records?.should be_truthy
 
-    a = FactoryGirl.create(:a, :domain => @domain)
-    @auth_token.can_remove?( a ).should be_false
-    @auth_token.can_remove?( 'example.com', 'A' ).should be_false
+    a = FactoryBot.create(:a, :domain => @domain)
+    @auth_token.can_remove?( a ).should be_falsey
+    @auth_token.can_remove?( 'example.com', 'A' ).should be_falsey
 
     @auth_token.can_change( a )
 
-    @auth_token.can_remove?( a ).should be_true
-    @auth_token.can_remove?( 'example.com', 'A' ).should be_true
+    @auth_token.can_remove?( a ).should be_truthy
+    @auth_token.can_remove?( 'example.com', 'A' ).should be_truthy
   end
 
   it "should allow for setting permissions to edit specific RR's (AR)" do
-    a = FactoryGirl.create(:a, :domain => @domain)
+    a = FactoryBot.create(:a, :domain => @domain)
     @auth_token.can_change( a )
 
-    @auth_token.can_change?( 'example.com' ).should be_true
-    @auth_token.can_change?( 'example.com', 'MX' ).should be_false
+    @auth_token.can_change?( 'example.com' ).should be_truthy
+    @auth_token.can_change?( 'example.com', 'MX' ).should be_falsey
 
-    mx = FactoryGirl.create(:mx, :domain => @domain)
-    @auth_token.can_change?( a ).should be_true
-    @auth_token.can_change?( mx ).should be_false
+    mx = FactoryBot.create(:mx, :domain => @domain)
+    @auth_token.can_change?( a ).should be_truthy
+    @auth_token.can_change?( mx ).should be_falsey
   end
 
   it "should allow for setting permissions to edit specific RR's (name)" do
-    a = FactoryGirl.create(:a, :domain => @domain)
-    mail = FactoryGirl.create(:a, :name => 'mail', :domain => @domain)
+    a = FactoryBot.create(:a, :domain => @domain)
+    mail = FactoryBot.create(:a, :name => 'mail', :domain => @domain)
 
     @auth_token.can_change( 'mail.example.com' )
 
-    @auth_token.can_change?( 'mail.example.com' ).should be_true
-    @auth_token.can_change?( mail ).should be_true
+    @auth_token.can_change?( 'mail.example.com' ).should be_truthy
+    @auth_token.can_change?( mail ).should be_truthy
 
-    @auth_token.can_change?( a ).should be_false
+    @auth_token.can_change?( a ).should be_falsey
   end
 
   it "should allow for protecting certain RR's" do
-    mail = FactoryGirl.create(:a, :name => 'mail', :domain => @domain)
-    mx = FactoryGirl.create(:mx, :domain => @domain)
-    a = FactoryGirl.create(:a, :domain => @domain)
+    mail = FactoryBot.create(:a, :name => 'mail', :domain => @domain)
+    mx = FactoryBot.create(:mx, :domain => @domain)
+    a = FactoryBot.create(:a, :domain => @domain)
 
     @auth_token.policy = :allow
     @auth_token.protect( mail )
     @auth_token.protect( mx )
 
-    @auth_token.can_change?( a ).should be_true
-    @auth_token.can_change?( 'example.com', 'A' ).should be_true
+    @auth_token.can_change?( a ).should be_truthy
+    @auth_token.can_change?( 'example.com', 'A' ).should be_truthy
 
-    @auth_token.can_change?( mx ).should be_false
-    @auth_token.can_change?( 'example.com', 'MX' ).should be_false
+    @auth_token.can_change?( mx ).should be_falsey
+    @auth_token.can_change?( 'example.com', 'MX' ).should be_falsey
 
-    @auth_token.can_change?( mail ).should be_false
+    @auth_token.can_change?( mail ).should be_falsey
   end
 
   it "should allow for protecting RR's by type" do
-    mail = FactoryGirl.create(:a, :name => 'mail', :domain => @domain)
-    mx = FactoryGirl.create(:mx, :domain => @domain)
+    mail = FactoryBot.create(:a, :name => 'mail', :domain => @domain)
+    mx = FactoryBot.create(:mx, :domain => @domain)
 
     @auth_token.policy = :allow
     @auth_token.protect_type 'A'
 
-    @auth_token.can_change?( mail ).should be_false
-    @auth_token.can_change?( mx ).should be_true
+    @auth_token.can_change?( mail ).should be_falsey
+    @auth_token.can_change?( mx ).should be_truthy
   end
 
   it "should prevent removing RR's by type" do
-    mx = FactoryGirl.create(:mx, :domain => @domain)
+    mx = FactoryBot.create(:mx, :domain => @domain)
 
     @auth_token.policy = :allow
     @auth_token.protect_type 'MX'
 
-    @auth_token.can_remove?( mx ).should be_false
+    @auth_token.can_remove?( mx ).should be_falsey
   end
 
   it "should prevent adding RR's by type" do
@@ -209,44 +209,44 @@ describe AuthToken, "and permissions" do
     @auth_token.allow_new_records = true
     @auth_token.protect_type 'MX'
 
-    @auth_token.can_add?( MX.new( :name => '', :domain => @domain ) ).should be_false
+    @auth_token.can_add?( MX.new( :name => '', :domain => @domain ) ).should be_falsey
   end
 
   it "should always protect NS records" do
-    ns1 = FactoryGirl.create(:ns, :domain => @domain)
-    ns2 = FactoryGirl.create(:ns, :name => 'ns2', :domain => @domain)
+    ns1 = FactoryBot.create(:ns, :domain => @domain)
+    ns2 = FactoryBot.create(:ns, :name => 'ns2', :domain => @domain)
 
     @auth_token.policy = :allow
     @auth_token.remove_records = true
     @auth_token.can_change( ns1 )
-    @auth_token.can_change?( ns1 ).should be_false
-    @auth_token.can_remove?( ns2 ).should be_false
+    @auth_token.can_change?( ns1 ).should be_falsey
+    @auth_token.can_remove?( ns2 ).should be_falsey
   end
 
   it "should always protect SOA records" do
     @auth_token.policy = :allow
     @auth_token.remove_records = true
     @auth_token.can_change( @domain.soa_record )
-    @auth_token.can_change?( @domain.soa_record ).should be_false
-    @auth_token.can_remove?( @domain.soa_record ).should be_false
+    @auth_token.can_change?( @domain.soa_record ).should be_falsey
+    @auth_token.can_remove?( @domain.soa_record ).should be_falsey
   end
 
   it "should provide a list of new RR types allowed" do
     @auth_token.new_types.should be_empty
 
     @auth_token.allow_new_records = true
-    @auth_token.new_types.include?('MX').should be_true
+    @auth_token.new_types.include?('MX').should be_truthy
 
     @auth_token.protect_type 'MX'
-    @auth_token.new_types.include?('MX').should be_false
+    @auth_token.new_types.include?('MX').should be_falsey
   end
 end
 
 describe AuthToken, "and authentication" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
-    @user = FactoryGirl.create(:admin)
-    @auth_token = FactoryGirl.create(:auth_token, :domain => @domain, :user => @user)
+    @domain = FactoryBot.create(:domain, name: "example.com")
+    @user = FactoryBot.create(:admin)
+    @auth_token = FactoryBot.create(:auth_token, :domain => @domain, :user => @user)
   end
 
   it "should authenticate current tokens" do
@@ -265,12 +265,12 @@ describe AuthToken, "and authentication" do
   end
 
   it "should correctly report the 'token' role" do
-    @auth_token.has_role?('token').should be_true
-    @auth_token.has_role?('admin').should be_false
+    @auth_token.has_role?('token').should be_truthy
+    @auth_token.has_role?('admin').should be_falsey
   end
 
   it "should correctly report permissions (deserialized)" do
-    a = FactoryGirl.create(:a, :domain => @domain)
-    @auth_token.can_change?( a ).should be_true
+    a = FactoryBot.create(:a, :domain => @domain)
+    @auth_token.can_change?( a ).should be_truthy
   end
 end

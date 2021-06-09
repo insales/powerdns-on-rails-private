@@ -1,5 +1,11 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start 'rails'
+end
+
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
@@ -26,6 +32,22 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.include Devise::TestHelpers, :type => :controller
+  # config.include Devise::TestHelpers, type: :view
   config.include SignInHelpers, :type => :controller
-  config.include Webrat::HaveTagMatcher
+  # config.include Webrat::HaveTagMatcher
+
+  config.infer_spec_type_from_file_location!
+
+  config.expect_with :rspec do |expectations|
+    expectations.syntax = [:should, :expect]
+  end
+
+  config.include MacroDefinitionSteps
 end
+
+Capybara.configure do |config|
+  config.exact_text = false
+  # config.default_normalize_ws = true
+  config.ignore_hidden_elements = false # хакофикс спек вьюх, там элементы похоже как скрытые определяются
+end
+Capybara.default_selector = :css

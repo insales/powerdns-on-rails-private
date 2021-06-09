@@ -3,9 +3,9 @@ require 'spec_helper'
 describe DashboardController, "and admins" do
 
   before(:each) do
-    sign_in( FactoryGirl.create(:admin) )
+    sign_in( FactoryBot.create(:admin) )
 
-    FactoryGirl.create(:domain)
+    FactoryBot.create(:domain)
 
     get :index
   end

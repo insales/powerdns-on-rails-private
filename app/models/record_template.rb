@@ -13,6 +13,7 @@ class RecordTemplate < ActiveRecord::Base
   validate :validate_record_template
 
   attr_accessible :record_type, :name, :ttl, :prio, :content
+  attr_accessible :zone_template # для тестов
 
   # We need to cope with the SOA convenience
   attr_accessor *SOA::SOA_FIELDS
@@ -51,6 +52,8 @@ class RecordTemplate < ActiveRecord::Base
       attrs.keys.each do |k|
         attrs[k] = attrs[k].gsub( '%ZONE%', domain_name ) if attrs[k].is_a?( String )
       end
+      # на 2.4 можно так:
+      # attrs.transform_values!{ |val| val.is_a?(String) ? val.gsub('%ZONE%', domain_name) : val }
     end
 
     # Handle SOA convenience fields if needed
@@ -94,7 +97,7 @@ class RecordTemplate < ActiveRecord::Base
       record = build
       record.errors.each do |k,v|
         # skip associations we don't have, validations we don't care about
-        next if k == :domain_id || k == :name
+        next if %i[domain_id domain name].include?(k)
 
         self.errors.add( k, v )
       end unless record.valid?

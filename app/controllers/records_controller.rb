@@ -10,7 +10,12 @@ class RecordsController < InheritedResources::Base
 
 
   def create
-    @record = parent.send( "#{params[:record][:type].downcase}_records".to_sym ).new( params[:record] )
+    record_type = params[:record][:type].downcase
+    if record_type == 'loc'
+      @record = parent.build_loc_record(params[:record])
+    else
+      @record = parent.send(:"#{record_type}_records").new(params[:record])
+    end
 
     if current_token && !current_token.allow_new_records? &&
         !current_token.can_add?( @record )

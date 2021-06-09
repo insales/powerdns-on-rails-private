@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
   devise :database_authenticatable,
-   :recoverable, :rememberable, :validatable,
+   # :recoverable,
+   :rememberable, :validatable,
    :encryptable, encryptor: :restful_authentication_sha1
 
   # Setup accessible (or protected) attributes for your model
@@ -35,10 +36,10 @@ class User < ActiveRecord::Base
   has_many :audits, :as => :user
 
   # Named scopes
-  scope :active_owners, where(:state => :active, :admin => false)
+  scope :active_owners, -> { where(:state => :active, :admin => false) }
 
   StateMachine::Machine.ignore_method_conflicts = true
-  state_machine :initial => :active do
+  state_machine :initial => :passive do
     event :activate do
       transition :suspended => :active
     end
@@ -71,8 +72,7 @@ class User < ActiveRecord::Base
 
     # For our lookup purposes
     def search( params, page )
-      paginate :per_page => 50, :page => page,
-        :conditions => ['login LIKE ?', "%#{params.chomp}%"]
+      where(['login LIKE ?', "%#{params.chomp}%"]).paginate(per_page: 50, page: page)
     end
 
   end
@@ -182,11 +182,7 @@ class User < ActiveRecord::Base
     #end
 
     def persist_audits
-      quoted_login = ActiveRecord::Base.connection.quote(self.login)
-      Audit.update_all(
-                       "username = #{quoted_login}",
-                       [ 'user_type = ? AND user_id = ?', self.class.name, self.id ]
-                       )
+      Audit.where(user_type: self.class.name, user_id: self.id).update_all(username: self.login)
     end
 
     def check_auth_tokens

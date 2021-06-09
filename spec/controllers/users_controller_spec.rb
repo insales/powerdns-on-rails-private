@@ -12,7 +12,7 @@ describe UsersController do
 
   describe "with an admin" do
     before(:each) do
-      @admin = FactoryGirl.create(:admin)
+      @admin = FactoryBot.create(:admin)
       sign_in( @admin )
     end
 
@@ -62,8 +62,8 @@ describe UsersController do
           :auth_tokens => '1'
         }
 
-      assigns(:user).admin?.should be_true
-      assigns(:user).auth_tokens?.should be_true
+      assigns(:user).admin?.should be_truthy
+      assigns(:user).auth_tokens?.should be_truthy
 
       response.should be_redirect
       response.should redirect_to( user_path( assigns(:user) ) )
@@ -93,14 +93,14 @@ describe UsersController do
         }
 
       assigns(:user).should_not be_an_admin
-      assigns(:user).auth_tokens?.should be_false
+      assigns(:user).auth_tokens?.should be_falsey
 
       response.should be_redirect
       response.should redirect_to( user_path( assigns(:user) ) )
     end
 
     it 'should update a user without password changes' do
-      user = FactoryGirl.create(:quentin)
+      user = FactoryBot.create(:quentin)
 
       lambda {
         post :update, :id => user.id, :user => {
@@ -116,7 +116,7 @@ describe UsersController do
     end
 
     it 'should be able to suspend users' do
-      @user = FactoryGirl.create(:quentin)
+      @user = FactoryBot.create(:quentin)
       put 'suspend', :id => @user.id
 
       response.should be_redirect

@@ -42,7 +42,7 @@ describe MX, "when new" do
   end
 
   it "should support priorities" do
-    @mx.supports_prio?.should be_true
+    @mx.supports_prio?.should be_truthy
   end
 
 end

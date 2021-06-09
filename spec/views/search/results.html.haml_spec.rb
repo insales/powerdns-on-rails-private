@@ -3,9 +3,9 @@ require 'spec_helper'
 describe "search/results.html.haml" do
 
   before(:each) do
-    @admin = FactoryGirl.create(:admin)
-    view.stubs(:current_user).returns(@admin)
-    view.stubs(:current_token).returns(nil)
+    @admin = FactoryBot.create(:admin)
+    allow(view).to receive(:current_user).and_return(@admin)
+    allow(view).to receive(:current_token).and_return(nil)
   end
 
   it "should handle no results" do
@@ -13,7 +13,7 @@ describe "search/results.html.haml" do
 
     render
 
-    rendered.should have_tag("strong", :content => "No domains found")
+    rendered.should have_css("strong", :text => "No domains found")
   end
 
   it "should handle results within the pagination limit" do
@@ -21,14 +21,14 @@ describe "search/results.html.haml" do
       zone = Domain.new
       zone.id = i
       zone.name = "zone-#{i}.com"
-      zone.save( :validate => false ).should be_true
+      zone.save( :validate => false ).should be_truthy
     end
 
     assign(:results, Domain.search( 'zone', 1, @admin ))
 
     render 
 
-    rendered.should have_tag("table a", :content => "zone-1.com")
+    rendered.should have_css("table a", :text => "zone-1.com")
   end
 
   it "should handle results with pagination and scoping" do
@@ -36,14 +36,14 @@ describe "search/results.html.haml" do
       zone = Domain.new
       zone.id = i
       zone.name = "domain-#{i}.com"
-      zone.save( :validate => false ).should be_true
+      zone.save( :validate => false ).should be_truthy
     end
 
     assign(:results, Domain.search( 'domain', 1, @admin ))
 
     render
 
-    rendered.should have_tag("table a", :content => "domain-1.com")
+    rendered.should have_css("table a", :text => "domain-1.com")
   end
 
 end

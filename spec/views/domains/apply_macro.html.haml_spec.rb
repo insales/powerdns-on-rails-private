@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe "domains/apply_macro.html.haml" do
   before(:each) do
-    @domain = FactoryGirl.create(:domain)
-    @macro = FactoryGirl.create(:macro)
+    @domain = FactoryBot.create(:domain)
+    @macro = FactoryBot.create(:macro)
 
     assign(:domain, @domain)
     assign(:macros, Macro.all)
@@ -12,7 +12,7 @@ describe "domains/apply_macro.html.haml" do
   end
 
   it "should have a selection of macros" do
-    rendered.should have_tag('select[name=macro_id]')
+    rendered.should have_css('select[name=macro_id]')
   end
 
 end

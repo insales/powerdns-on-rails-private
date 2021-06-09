@@ -1,6 +1,7 @@
+Rails.application.routes.draw do
+  # The priority is based upon order of creation: first created -> highest priority.
+  # See how all your routes lay out with "rake routes".
 
-# -*- encoding : utf-8 -*-
-PowerdnsOnRails::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       devise_for :api_clients, skip: [:sessions, :registrations, :confirmations]
@@ -38,8 +39,8 @@ PowerdnsOnRails::Application.routes.draw do
     resources :macro_steps
   end
 
-  match '/audits(/:action(/:id))' => 'audits#index', :as => :audits
-  match '/reports(/:action)' => 'reports#index', :as => :reports
+  get '/audits(/:action(/:id))' => 'audits#index', :as => :audits
+  get '/reports(/:action)' => 'reports#index', :as => :reports
 
   resource :auth_token
   post '/token/:token' => 'sessions#token', :as => :token

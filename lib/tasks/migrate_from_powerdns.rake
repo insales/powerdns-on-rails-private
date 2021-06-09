@@ -55,10 +55,10 @@ namespace :migrate do
 
         # http://weblog.jamisbuck.org/2007/4/6/faking-cursors-in-activerecord
         def self.each( limit = 500 )
-          rows = find(:all, :conditions => ["id > ?", 0], :limit => limit)
+          rows = where(["id > ?", 0]).limit(limit)
           while rows.any?
             rows.each { |record| yield record }
-            rows = find(:all, :conditions => ["id > ?", rows.last.id], :limit => limit)
+            rows = where(["id > ?", rows.last.id]).limit(limit)
           end
           self
         end

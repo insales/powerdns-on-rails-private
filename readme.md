@@ -34,3 +34,25 @@ ssh-add
 bundle exec cap production deploy
 bundle exec cap production deploy:migrate
 ```
+
+### Локальная разработка
+
+database.yml
+generate config/initializers/secret_token.rb
+
+создать юзера:
+```ruby
+User.create email:"some.one@insales.ru", password:"123456", admin: true
+```
+по факту в проде авторизация идет через LDAP, а в dev - фолбек до локального пароля
+
+Дамп прода (делать из офиса/vpn):
+```sh
+PGPASSWORD=.. pg_dump -Fc --host=138.201.51.2 --port=14016 --username=powerdns --exclude-table=audits powerdns > prod.dump
+```
+
+pg_restore --host=127.0.0.1 --port=5432 --clean --dbname=powerdns_development --username=postgres prod.dump
+
+### Тесты
+
+RSpec

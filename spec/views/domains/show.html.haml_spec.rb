@@ -3,10 +3,12 @@ require 'spec_helper'
 describe "domains/show.html.haml" do
   context "for all users" do
 
+    let(:domain) { FactoryBot.create(:domain, name: "example.com") }
+
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
-      @domain = FactoryGirl.create(:domain)
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
+      @domain = domain
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -14,17 +16,17 @@ describe "domains/show.html.haml" do
     end
 
     it "should have the domain name in the title and dominant on the page" do
-      rendered.should have_tag( "title", :content => "example.com" )
-      rendered.should have_tag( "h1", :content => "example.com" )
+      rendered.should have_css( "title", :text => domain.name)
+      rendered.should have_css( "h1", :text => domain.name)
     end
   end
 
   context "for admins and domains without owners" do
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
-      @domain = FactoryGirl.create(:domain)
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
+      @domain = FactoryBot.create(:domain)
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -32,29 +34,29 @@ describe "domains/show.html.haml" do
     end
 
     it "should display the owner" do
-      rendered.should have_tag( "div#owner-info" )
+      rendered.should have_css( "div#owner-info" )
     end
 
     it "should allow changing the SOA" do
-      rendered.should have_tag( "div#soa-form")
+      rendered.should have_css( "div#soa-form")
     end
 
     it "should have a form for adding new records" do
-      rendered.should have_tag( "div#record-form-div" )
+      rendered.should have_css( "div#record-form-div" )
     end
 
     it "should have not have an additional warnings for removing" do
-      rendered.should_not have_tag('div#warning-message')
-      rendered.should_not have_tag('a[onclick*=deleteDomain]')
+      rendered.should_not have_css('div#warning-message')
+      rendered.should_not have_css('a[onclick*=deleteDomain]')
     end
   end
 
   context "for admins and domains with owners" do
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
-      @domain = FactoryGirl.create(:domain, :user => FactoryGirl.create(:quentin))
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
+      @domain = FactoryBot.create(:domain, :user => FactoryBot.create(:quentin))
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -62,56 +64,56 @@ describe "domains/show.html.haml" do
     end
 
     it "should offer to remove the domain" do
-      rendered.should have_tag( "a img[id$=delete-zone]" )
+      rendered.should have_css( "a img[id$=delete-zone]" )
     end
 
     it "should have have an additional warnings for removing" do
-      rendered.should have_tag('div#warning-message')
-      rendered.should have_tag('a[onclick*=deleteDomain]')
+      rendered.should have_css('div#warning-message')
+      rendered.should have_css('a[onclick*=deleteDomain]')
     end
   end
 
   context "for owners" do
     before(:each) do
-      quentin = FactoryGirl.create(:quentin)
-      view.stubs(:current_user).returns( quentin )
-      view.stubs(:current_token).returns( nil )
+      quentin = FactoryBot.create(:quentin)
+      allow(view).to receive(:current_user).and_return(quentin)
+      allow(view).to receive(:current_token).and_return(nil)
 
-      @domain = FactoryGirl.create(:domain, :user => quentin)
+      @domain = FactoryBot.create(:domain, :user => quentin)
       assign(:domain, @domain)
 
       render
     end
 
     it "should display the owner" do
-      rendered.should_not have_tag( "div#ownerinfo" )
+      rendered.should_not have_css( "div#ownerinfo" )
     end
 
     it "should allow for changing the SOA" do
-      rendered.should have_tag( "div#soa-form" )
+      rendered.should have_css( "div#soa-form" )
     end
 
     it "should have a form for adding new records" do
-      rendered.should have_tag( "div#record-form-div" )
+      rendered.should have_css( "div#record-form-div" )
     end
 
     it "should offer to remove the domain" do
-      rendered.should have_tag( "a img[id$=delete-zone]" )
+      rendered.should have_css( "a img[id$=delete-zone]" )
     end
 
     it "should have not have an additional warnings for removing" do
-      rendered.should_not have_tag('div#warning-message')
-      rendered.should_not have_tag('a[onclick*=deleteDomain]')
+      rendered.should_not have_css('div#warning-message')
+      rendered.should_not have_css('a[onclick*=deleteDomain]')
     end
   end
 
   context "for SLAVE domains" do
 
     before(:each) do
-      view.stubs(:current_user).returns( FactoryGirl.create(:admin) )
-      view.stubs(:current_token).returns( nil )
+      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
+      allow(view).to receive(:current_token).and_return(nil)
 
-      @domain = FactoryGirl.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
+      @domain = FactoryBot.create(:domain, :type => 'SLAVE', :master => '127.0.0.1')
       assign(:domain, @domain)
       assign(:users, User.active_owners)
 
@@ -119,50 +121,50 @@ describe "domains/show.html.haml" do
     end
 
     it "should show the master address" do
-      rendered.should have_tag('#domain-name td', :content => "Master server")
-      rendered.should have_tag('#domain-name td', :content => @domain.master)
+      rendered.should have_css('#domain-name td', :text => "Master server")
+      rendered.should have_css('#domain-name td', :text => @domain.master)
     end
 
     it "should not allow for changing the SOA" do
-      rendered.should_not have_tag( "div#soa-form" )
+      rendered.should_not have_css( "div#soa-form" )
     end
 
     it "should not have a form for adding new records" do
-      rendered.should_not have_tag( "div#record-form-div" )
+      rendered.should_not have_css( "div#record-form-div" )
     end
 
     it "should offer to remove the domain" do
-      rendered.should have_tag( "a img[id$=delete-zone]" )
+      rendered.should have_css( "a img[id$=delete-zone]" )
     end
   end
 
   context "for token users" do
     before(:each) do
-      @admin = FactoryGirl.create(:admin)
-      @domain = FactoryGirl.create(:domain)
+      @admin = FactoryBot.create(:admin)
+      @domain = FactoryBot.create(:domain)
       assign(:domain, @domain)
 
-      view.stubs(:current_token).returns( FactoryGirl.create(:auth_token, :user => @admin, :domain => @domain) )
-      view.stubs(:current_user).returns( nil )
+      allow(view).to receive(:current_token).and_return(FactoryBot.create(:auth_token, :user => @admin, :domain => @domain))
+      allow(view).to receive(:current_user).and_return(nil)
     end
 
     it "should not offer to remove the domain" do
       render
 
-      rendered.should_not have_tag( "a img[id$=delete-zone]" )
+      rendered.should_not have_css( "a img[id$=delete-zone]" )
     end
 
     it "should not offer to edit the SOA" do
       render
 
-      rendered.should_not have_tag( "a[onclick^=showSOAEdit]")
-      rendered.should_not have_tag( "div#soa-form" )
+      rendered.should_not have_css( "a[onclick^=showSOAEdit]")
+      rendered.should_not have_css( "div#soa-form" )
     end
 
     it "should only allow new record if permitted (FALSE)" do
       render
 
-      rendered.should_not have_tag( "div#record-form-div" )
+      rendered.should_not have_css( "div#record-form-div" )
     end
 
     it "should only allow new records if permitted (TRUE)" do
@@ -170,10 +172,10 @@ describe "domains/show.html.haml" do
         :domain => @domain
       )
       token.allow_new_records=( true )
-      view.stubs(:current_token).returns( token )
+      allow(view).to receive(:current_token).and_return(token)
       render
 
-      rendered.should have_tag( "div#record-form-div" )
+      rendered.should have_css( "div#record-form-div" )
     end
   end
 end

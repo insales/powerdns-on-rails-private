@@ -1,23 +1,27 @@
 !!!
-%html
+%html(lang="en")
   %head
     %title= page_title
+    %meta(name="description" content="PowerDNS admin panel")
+    %meta(name="viewport" content="width=device-width, initial-scale=1")
     = stylesheet_link_tag 'application', 'tipTip', 'bold-dark'
-    = javascript_include_tag :defaults, 'jquery.tipTip', 'humane'
+    -# TODO: assets
+    = javascript_include_tag '/javascripts/jquery.min', '/javascripts/jquery_ujs.js', '/javascripts/application', '/javascripts/jquery.tipTip', '/javascripts/humane'
     = csrf_meta_tag
   %body
     #Container
       #Header
         %h1
-          =t :layout_main_title
+          = link_to t(:layout_main_title), root_url, style: "text-decoration: none; color: white"
       - if current_user
         #search-bar{:style => "display: inline; float: right;"}
           = form_tag( { :controller => :search, :action => :results }, { :method => :get } ) do
+            = label_tag :q, "Domain:"
             = text_field_tag :q
             = submit_tag( t(:generic_search) )
         #Nav
           %ul
-            %li= link_to((t :layout_menu_home), root_url)
+            -# %li= link_to((t :layout_menu_home), root_url)
             %li= link_to((t :layout_menu_domains), domains_path)
             %li= link_to((t :layout_menu_templates), zone_templates_path)
             %li= link_to((t :layout_menu_macros), macros_path)
@@ -33,13 +37,7 @@
 
         = yield
       #Footer
-        = link_to "PowerDNS on Rails", "http://www.opensourcery.co.za/powerdns-on-rails", :target => '_blank'
-        \- &copy; Kenneth Kalmer
+        -# http://github.com/kennethkalmer/powerdns-on-rails
+        Based on PowerDNS on Rails &copy; Kenneth Kalmer
         %br
         Released under the MIT License.
-        %br
-        %br
-        = link_to "Report Bugs", "http://kennethkalmer.lighthouseapp.com/projects/11831-powerdns-on-rails", :target => '_blank'
-        \-
-        = link_to "Github", "http://github.com/kennethkalmer/powerdns-on-rails", :target => '_blank'
-

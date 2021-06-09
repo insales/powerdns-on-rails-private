@@ -3,10 +3,10 @@ require 'spec_helper'
 describe MacroStepsController do
 
   before(:each) do
-    sign_in(FactoryGirl.create(:admin))
+    sign_in(FactoryBot.create(:admin))
 
-    @macro = FactoryGirl.create(:macro)
-    @step = FactoryGirl.create(:macro_step_create,
+    @macro = FactoryBot.create(:macro)
+    @step = FactoryBot.create(:macro_step_create,
                     :macro => @macro,
                     :name => 'localhost',
                     :content => '127.0.0.1')
@@ -72,10 +72,12 @@ describe MacroStepsController do
   end
 
   it "should re-position existing steps" do
-    FactoryGirl.create(:macro_step_create, :macro => @macro)
+    FactoryBot.create(:macro_step_create, :macro => @macro)
 
-    put :update, :macro_id => @macro.id, :id => @step.id,
-    :macro_step => { :position => '2' }
+    xhr :put, :update, {
+      :macro_id => @macro.id, :id => @step.id,
+      :macro_step => { :position => '2' }
+    }
 
     @step.reload.position.should == 2
   end

@@ -19,6 +19,7 @@ class SOA < Record
     :greater_than_or_equal_to => 0,
     :less_than_or_equal_to => 10800
 
+  # FIXME: why disabled?
   #validates_uniqueness_of :domain_id
   validates_format_of :contact,
     with: /\A[a-zA-Z0-9\-\.]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,6}\z/,
