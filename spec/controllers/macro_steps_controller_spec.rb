@@ -20,7 +20,8 @@ describe MacroStepsController do
           :name => 'www',
           :content => '127.0.0.1'
         }, :format => 'js' }
-    }.to change(@macro.macro_steps(true), :count)
+        @macro.macro_steps.reload
+    }.to change(@macro.macro_steps, :count)
 
     response.should render_template('macro_steps/create')
   end
@@ -43,7 +44,8 @@ describe MacroStepsController do
           :position => '1',
           :record_type => 'A'
         }, :format => 'js' }
-    }.to_not change(@macro.macro_steps(true), :count)
+        @macro.macro_steps.reload
+    }.to_not change(@macro.macro_steps, :count)
 
     response.should render_template('macro_steps/create')
   end

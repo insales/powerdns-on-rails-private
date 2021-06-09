@@ -1,7 +1,7 @@
 class DomainsController < InheritedResources::Base
 
   # Keep token users in line
-  before_filter :restrict_token_movements, :except => :show
+  before_action :restrict_token_movements, :except => :show
 
   custom_actions :resource => :apply_macro
   respond_to :xml, :json, :js
