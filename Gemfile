@@ -26,7 +26,7 @@ end
 
 # for rails 3.2
 gem 'iconv'
-gem 'rake', '< 11.0'
+gem 'rake', '< 13.0'
 gem 'test-unit', '~> 3.0'
 # end
 
