@@ -33,7 +33,7 @@ describe DomainsController, "index" do
     get :index, :format => 'xml'
 
     assigns(:domains).should_not be_empty
-    response.should have_css('domains')
+    expect(Capybara.string(response.body)).to have_css('domains')
   end
 end
 
@@ -176,7 +176,7 @@ describe DomainsController, "should handle a REST client" do
       }, :format => "xml"
     }.to change( Domain, :count ).by( 1 )
 
-    response.should have_css( 'domain' )
+    expect(Capybara.string(response.body)).to have_css( 'domain' )
   end
 
   it "creating a zone with a template" do
@@ -187,7 +187,7 @@ describe DomainsController, "should handle a REST client" do
       :zone_template_id => zt.id },
       :format => "xml"
 
-    response.should have_css( 'domain' )
+    expect(Capybara.string(response.body)).to have_css( 'domain' )
   end
 
   it "creating a zone with a named template" do
@@ -198,7 +198,7 @@ describe DomainsController, "should handle a REST client" do
       :zone_template_name => zt.name },
       :format => "xml"
 
-    response.should have_css( 'domain' )
+    expect(Capybara.string(response.body)).to have_css( 'domain' )
   end
 
   it "creating a zone with invalid input" do
@@ -208,7 +208,7 @@ describe DomainsController, "should handle a REST client" do
       }, :format => "xml"
     }.to_not change( Domain, :count )
 
-    response.should have_css( 'errors' )
+    expect(Capybara.string(response.body)).to have_css( 'errors' )
   end
 
   it "removing zones" do
@@ -223,13 +223,13 @@ describe DomainsController, "should handle a REST client" do
   it "viewing a list of all zones" do
     get :index, :format => 'xml'
 
-    response.should have_selector('domains > domain')
+    expect(Capybara.string(response.body)).to have_selector('domains > domain')
   end
 
   it "viewing a zone" do
     get :show, :id => @domain.id, :format => 'xml'
 
-    response.should have_selector('domain > records')
+    expect(Capybara.string(response.body)).to have_selector('domain > records')
   end
 
   it "getting a list of macros to apply" do
@@ -237,7 +237,7 @@ describe DomainsController, "should handle a REST client" do
 
     get :apply_macro, :id => @domain.id, :format => 'xml'
 
-    response.should have_selector('macros > macro')
+    expect(Capybara.string(response.body)).to have_selector('macros > macro')
   end
 
   it "applying a macro to a domain" do
@@ -246,7 +246,7 @@ describe DomainsController, "should handle a REST client" do
     post :apply_macro, :id => @domain.id, :macro_id => macro.id, :format => 'xml'
 
     response.code.should == "202"
-    response.should have_css('domain')
+    expect(Capybara.string(response.body)).to have_css('domain')
   end
 
 end

@@ -34,12 +34,13 @@ describe AuthTokensController do
     sign_in(FactoryBot.create(:token_user))
 
     post :create, :auth_token => { :domain => domain.name }
-    response.should have_selector('error')
+    expect(Capybara.string(response.body)).to have_selector('error')
   end
 
   describe "generating tokens" do
 
     let(:domain) { FactoryBot.create(:domain) }
+    let(:parsed_body) { Capybara.string(response.body) }
     before(:each) do
       sign_in(FactoryBot.create(:token_user))
 
@@ -50,9 +51,9 @@ describe AuthTokensController do
     it "with allow_new set" do
       post :create, :auth_token => @params.merge(:allow_new => 'true')
 
-      response.should have_selector('token > expires')
-      response.should have_selector('token > auth_token')
-      response.should have_selector('token > url')
+      expect(parsed_body).to have_selector('token > expires')
+      expect(parsed_body).to have_selector('token > auth_token')
+      expect(parsed_body).to have_selector('token > url')
 
       assigns(:auth_token).should_not be_nil
       assigns(:auth_token).domain.should eql( @domain )
@@ -63,9 +64,9 @@ describe AuthTokensController do
       a = FactoryBot.create(:www, :domain => @domain)
       post :create, :auth_token => @params.merge(:remove => 'true', :record => ["www.#{domain.name}"])
 
-      response.should have_selector('token > expires')
-      response.should have_selector('token > auth_token')
-      response.should have_selector('token > url')
+      expect(parsed_body).to have_selector('token > expires')
+      expect(parsed_body).to have_selector('token > auth_token')
+      expect(parsed_body).to have_selector('token > url')
 
       assigns(:auth_token).remove_records?.should be_truthy
       assigns(:auth_token).can_remove?( a ).should be_truthy
@@ -74,9 +75,9 @@ describe AuthTokensController do
     it "with policy set" do
       post :create, :auth_token => @params.merge(:policy => 'allow')
 
-      response.should have_selector('token > expires')
-      response.should have_selector('token > auth_token')
-      response.should have_selector('token > url')
+      expect(parsed_body).to have_selector('token > expires')
+      expect(parsed_body).to have_selector('token > auth_token')
+      expect(parsed_body).to have_selector('token > url')
 
       assigns(:auth_token).policy.should eql(:allow)
     end
@@ -91,9 +92,9 @@ describe AuthTokensController do
         :policy => 'allow'
       )
 
-      response.should have_selector('token > expires')
-      response.should have_selector('token > auth_token')
-      response.should have_selector('token > url')
+      expect(parsed_body).to have_selector('token > expires')
+      expect(parsed_body).to have_selector('token > auth_token')
+      expect(parsed_body).to have_selector('token > url')
 
       assigns(:auth_token).should_not be_nil
       assigns(:auth_token).can_change?( a ).should be_falsey
