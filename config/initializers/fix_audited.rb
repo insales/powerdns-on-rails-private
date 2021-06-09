@@ -1,4 +1,4 @@
-Audit = Audited::Adapters::ActiveRecord::Audit
+Audit = Audited::Audit
 
 # пока не тащим миграцию из audited:upgrade, т.к. таблица там большая
 class Audit

@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.11.3'
+gem 'rails', '5.0.7.2'
 # ruby 2.3 - на проде (powerdnsapp3/6) уже есть (не забыть что нужен полный рестарт при смене рубей)
-# gem 'rails', '5.0.7.2'
 # gem 'rails', '5.1.7'
 # gem 'rails', '5.2.6'
 # ruby 2.5
@@ -33,20 +32,24 @@ gem 'test-unit', '~> 3.0'
 gem 'haml'
 gem 'jquery-rails'
 gem 'will_paginate', '~> 3.0.3'
-gem "audited-activerecord", "4.0"
-gem 'inherited_resources'
-gem 'devise', '~>3.0'
+gem "audited", '~>4.0'
+gem 'inherited_resources', '1.10.0' # remove version after ruby 2.4
+gem 'devise', '~>4.0'
 gem "devise-encryptable"
 gem 'devise-token_authenticatable'
 gem 'ruby-ldap'
 gem 'rabl'
 gem 'simpleidn'
 
-gem 'acts_as_list'
+gem 'acts_as_list', '~>0.9' # версия залочена до апгрейда ruby 2.4+
 gem 'state_machine'
 gem 'dynamic_form'
 
-gem 'protected_attributes' # attr_accessible backport
+gem 'protected_attributes_continued' # attr_accessible backport
+gem 'activemodel-serializers-xml'
+gem 'rails-controller-testing'
+
+gem 'nokogiri', '~>1.10.10' # до апгрейда ruby 2.5+
 
 group :development, :test do
   gem "rspec-rails"
@@ -60,12 +63,12 @@ group :test do
   gem "turnip" # run gherkin (cucumber) features in rspec
 
   gem 'pry', '~>0.11.0' # для старых рельсов
-  gem 'pry-byebug'
+  gem 'pry-byebug', '3.7.0' # разлочить версию после ruby 2.4+
 
-  gem 'capybara'
+  gem 'capybara', '3.15.1' # upgrade adter ruby
   gem 'database_cleaner'
 
-  gem 'simplecov', require: false
+  gem 'simplecov', '0.17.1', require: false # upgrade adter ruby
 end
 
 group :development, :deploy do

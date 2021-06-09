@@ -67,10 +67,13 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  def initialize(params = {})
-    params_sym = params.symbolize_keys
-    super self.class.const_defined?(:DOMAIN_DEFAULTS) ?
-      DOMAIN_DEFAULTS.merge(params_sym) : params_sym
+  attribute :type, :string, default: DOMAIN_DEFAULTS[:type]
+
+  after_initialize :set_defaults, unless: :persisted?
+  def set_defaults
+    DOMAIN_DEFAULTS.each_pair do |attr, value|
+      self.send(:"#{attr}=", value) if self.respond_to?(attr) && !self.send(attr).present?
+    end
   end
 
   def name=(val)
