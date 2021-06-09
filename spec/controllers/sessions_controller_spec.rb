@@ -80,7 +80,7 @@ describe SessionsController, "and auth tokens" do
   end
 
   xit 'accepts and redirects' do
-    post :token, :token => '5zuld3g9dv76yosy'
+    post :token, params: { :token => '5zuld3g9dv76yosy' }
     session[:token_id].should_not be_nil
     controller.send(:token_user?).should be_truthy
     response.should be_redirect
@@ -88,7 +88,7 @@ describe SessionsController, "and auth tokens" do
   end
 
   xit 'fails login and does not redirect' do
-    post :token, :token => 'bad_token'
+    post :token, params: { :token => 'bad_token' }
     session[:token_id].should be_nil
     response.should be_success
   end

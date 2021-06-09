@@ -11,21 +11,21 @@ describe SearchController, "for admins" do
   end
 
   it "should return results when searched legally" do
-    get :results, :q => 'exa'
+    get :results, params: { :q => 'exa' }
 
     assigns(:results).should_not be_nil
     response.should render_template('search/results')
   end
 
   it "should handle whitespace in the query" do
-    get :results, :q => ' exa '
+    get :results, params: { :q => ' exa ' }
 
     assigns(:results).should_not be_nil
     response.should render_template('results')
   end
 
   it "should redirect to the index page when nothing has been searched for" do
-    get :results, :q => ''
+    get :results, params: { :q => '' }
 
     response.should be_redirect
     response.should redirect_to( root_path )
@@ -34,7 +34,7 @@ describe SearchController, "for admins" do
   it "should redirect to the domain page if only one result is found" do
     domain = FactoryBot.create(:domain, :name => 'slave-example.com')
 
-    get :results, :q => 'slave-example.com'
+    get :results, params: { :q => 'slave-example.com' }
 
     response.should be_redirect
     response.should redirect_to( domain_path( domain ) )
@@ -51,7 +51,7 @@ describe SearchController, "for api clients" do
   end
 
   it "should return an empty JSON response for no results" do
-    get :results, :q => 'amazon', :format => 'json'
+    get :results, params: { :q => 'amazon', :format => 'json' }
 
     assigns(:results).should be_empty
 
@@ -59,7 +59,7 @@ describe SearchController, "for api clients" do
   end
 
   it "should return a JSON set of results" do
-    get :results, :q => 'example', :format => 'json'
+    get :results, params: { :q => 'example', :format => 'json' }
 
     assigns(:results).should_not be_empty
 

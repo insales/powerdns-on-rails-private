@@ -24,7 +24,7 @@ describe RecordsController, ", users, and non-SOA records" do
       pending "Still need test for #{record[:type]}" if record.delete(:pending)
 
       expect {
-        xhr :post, :create, :domain_id => @domain.id, :record => record
+        post :create, params: { :domain_id => @domain.id, :record => record }, xhr: true
       }.to change( @domain.records, :count ).by(1)
 
       assigns(:domain).should_not be_nil
@@ -40,7 +40,7 @@ describe RecordsController, ", users, and non-SOA records" do
       'content' => ""
     }
 
-    xhr :post, :create, :domain_id => @domain.id, :record => params
+    post :create, params: { domain_id: @domain.id, record: params }, xhr: true
 
     response.should render_template( 'records/create' )
   end
@@ -55,7 +55,7 @@ describe RecordsController, ", users, and non-SOA records" do
       'content' => "n4.example.com"
     }
 
-    xhr :put, :update, :id => record.id, :domain_id => @domain.id, :record => params
+    put :update, params: { :id => record.id, :domain_id => @domain.id, :record => params }, xhr: true
 
     response.should render_template("records/update")
   end
@@ -71,7 +71,7 @@ describe RecordsController, ", users, and non-SOA records" do
     }
 
     expect {
-      xhr :put, :update, :id => record.id, :domain_id => @domain.id, :record => params
+      put :update, params: { :id => record.id, :domain_id => @domain.id, :record => params }, xhr: true
       record.reload
     }.to_not change( record, :content )
 
@@ -80,7 +80,7 @@ describe RecordsController, ", users, and non-SOA records" do
   end
 
   it "should destroy when requested to do so" do
-    delete :destroy, :domain_id => @domain.id, :id => FactoryBot.create(:mx, :domain => @domain).id
+    delete :destroy, params: { :domain_id => @domain.id, :id => FactoryBot.create(:mx, :domain => @domain).id }
 
     response.should be_redirect
     response.should redirect_to( domain_path( @domain ) )
@@ -93,11 +93,14 @@ describe RecordsController, ", users, and SOA records" do
 
     target_soa = FactoryBot.create(:domain).soa_record
 
-    xhr :put, :update_soa, :id => target_soa.id, :domain_id => target_soa.domain.id,
+    put :update_soa, params: {
+      :id => target_soa.id,
+      :domain_id => target_soa.domain.id,
       :soa => {
         :primary_ns => 'ns1.example.com', :contact => 'dnsadmin@example.com',
         :refresh => "10800", :retry => "10800", :minimum => "10800", :expire => "604800"
       }
+    }, xhr: true
 
     target_soa.reload
     target_soa.contact.should eql('dnsadmin@example.com')
@@ -120,12 +123,14 @@ describe RecordsController, "and tokens" do
     target_soa = @domain.soa_record
 
     expect {
-      xhr :put, "update_soa", :id => target_soa.id, :domain_id => target_soa.domain.id,
+      put "update_soa", params: {
+        :id => target_soa.id, :domain_id => target_soa.domain.id,
         :soa => {
           :primary_ns => 'ns1.example.com', :contact => 'dnsadmin@example.com',
           :refresh => "10800", :retry => "10800", :minimum => "10800", :expire => "604800"
         }
-        target_soa.reload
+      }, xhr: true
+      target_soa.reload
     }.to_not change( target_soa, :contact )
   end
 
@@ -140,7 +145,7 @@ describe RecordsController, "and tokens" do
     }
 
     expect {
-      xhr :post, :create, :domain_id => @domain.id, :record => params
+      post :create, params: { :domain_id => @domain.id, :record => params }, xhr: true
     }.to_not change( @domain.records, :size )
 
     response.should_not be_success
@@ -160,7 +165,7 @@ describe RecordsController, "and tokens" do
     }
 
     expect {
-      xhr :put, :update, :id => record.id, :domain_id => @domain.id, :record => params
+      put :update, params: { :id => record.id, :domain_id => @domain.id, :record => params}, xhr: true
       record.reload
     }.to_not change( record, :content )
 
@@ -180,7 +185,7 @@ describe RecordsController, "and tokens" do
     }
 
     expect {
-      xhr :post, :create, :domain_id => @domain.id, :record => params
+      post :create, params: { :domain_id => @domain.id, :record => params }, xhr: true
     }.to change( @domain.records, :size )
 
     response.should be_success
@@ -204,7 +209,7 @@ describe RecordsController, "and tokens" do
     }
 
     expect {
-      xhr :post, :create, :domain_id => @domain.id, :record => params
+      post :create, params: { :domain_id => @domain.id, :record => params }, xhr: true
     }.to_not change( @domain.records, :size )
 
     response.should_not be_success
@@ -224,7 +229,7 @@ describe RecordsController, "and tokens" do
     }
 
     expect {
-      xhr :put, :update, :id => record.id, :domain_id => @domain.id, :record => params
+      put :update, params: { :id => record.id, :domain_id => @domain.id, :record => params }, xhr: true
       record.reload
     }.to change( record, :content )
 
@@ -244,7 +249,7 @@ describe RecordsController, "and tokens" do
     }
 
     expect {
-      xhr :put, :update, :id => record.id, :domain_id => @domain.id, :record => params
+      put :update, params: { :id => record.id, :domain_id => @domain.id, :record => params }, xhr: true
       record.reload
     }.to_not change( record, :content )
 
@@ -259,7 +264,7 @@ describe RecordsController, "and tokens" do
     allow(controller).to receive(:current_token).and_return(@token)
 
     expect {
-      delete :destroy, :domain_id => @domain.id, :id => record.id
+      delete :destroy, params: { :domain_id => @domain.id, :id => record.id }
     }.to change( @domain.records, :size ).by(-1)
 
     response.should be_redirect
@@ -271,7 +276,7 @@ describe RecordsController, "and tokens" do
     record = FactoryBot.create(:a, :domain => @domain)
 
     expect {
-      delete :destroy, :domain_id => @domain.id, :id => record.id
+      delete :destroy, params: { :domain_id => @domain.id, :id => record.id }
     }.to_not change( @domain.records, :count )
 
     response.should_not be_success
@@ -288,7 +293,10 @@ describe RecordsController, "and tokens" do
       'content' => '127.0.0.3'
     }
 
-    xhr :post, :create, :domain_id => FactoryBot.create(:domain, :name => 'example.net').id, :record => record
+    post :create, params: {
+      :domain_id => FactoryBot.create(:domain, :name => 'example.net').id,
+      :record => record
+    }, xhr: true
 
     response.code.should == "403"
   end

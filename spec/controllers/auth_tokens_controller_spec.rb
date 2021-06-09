@@ -23,7 +23,7 @@ describe AuthTokensController do
   it "should bail cleanly on missing domains" do
     sign_in(FactoryBot.create(:token_user))
 
-    post :create, :auth_token => { :domain => 'example.org' }
+    post :create, params: { :auth_token => { :domain => 'example.org' } }
 
     response.code.should eql("404")
   end
@@ -33,7 +33,7 @@ describe AuthTokensController do
 
     sign_in(FactoryBot.create(:token_user))
 
-    post :create, :auth_token => { :domain => domain.name }
+    post :create, params: { :auth_token => { :domain => domain.name } }
     expect(Capybara.string(response.body)).to have_selector('error')
   end
 
@@ -49,7 +49,7 @@ describe AuthTokensController do
     end
 
     it "with allow_new set" do
-      post :create, :auth_token => @params.merge(:allow_new => 'true')
+      post :create, params: { :auth_token => @params.merge(:allow_new => 'true') }
 
       expect(parsed_body).to have_selector('token > expires')
       expect(parsed_body).to have_selector('token > auth_token')
@@ -62,7 +62,7 @@ describe AuthTokensController do
 
     it "with remove set" do
       a = FactoryBot.create(:www, :domain => @domain)
-      post :create, :auth_token => @params.merge(:remove => 'true', :record => ["www.#{domain.name}"])
+      post :create, params: { :auth_token => @params.merge(:remove => 'true', :record => ["www.#{domain.name}"]) }
 
       expect(parsed_body).to have_selector('token > expires')
       expect(parsed_body).to have_selector('token > auth_token')
@@ -73,7 +73,7 @@ describe AuthTokensController do
     end
 
     it "with policy set" do
-      post :create, :auth_token => @params.merge(:policy => 'allow')
+      post :create, params: { :auth_token => @params.merge(:policy => 'allow') }
 
       expect(parsed_body).to have_selector('token > expires')
       expect(parsed_body).to have_selector('token > auth_token')
@@ -87,10 +87,10 @@ describe AuthTokensController do
       www = FactoryBot.create(:www, :domain => @domain)
       mx = FactoryBot.create(:mx, :domain => @domain)
 
-      post :create, :auth_token => @params.merge(
+      post :create, params: { :auth_token => @params.merge(
         :protect => ["#{domain.name}:A", "www.#{domain.name}"],
         :policy => 'allow'
-      )
+      ) }
 
       expect(parsed_body).to have_selector('token > expires')
       expect(parsed_body).to have_selector('token > auth_token')
@@ -105,7 +105,7 @@ describe AuthTokensController do
     it "with protected record types" do
       mx = FactoryBot.create(:mx, :domain => @domain)
 
-      post :create, :auth_token => @params.merge(:policy => 'allow', :protect_type => ['MX'])
+      post :create, params: { :auth_token => @params.merge(:policy => 'allow', :protect_type => ['MX']) }
 
       assigns(:auth_token).can_change?( mx ).should be_falsey
     end
@@ -115,7 +115,7 @@ describe AuthTokensController do
       www = FactoryBot.create(:www, :domain => @domain)
       mx = FactoryBot.create(:mx, :domain => @domain)
 
-      post :create, :auth_token => @params.merge(:record => [domain.name])
+      post :create, params: { :auth_token => @params.merge(:record => [domain.name]) }
 
       assigns(:auth_token).can_change?( www ).should be_falsey
       assigns(:auth_token).can_change?( a ).should be_truthy

@@ -35,7 +35,7 @@ describe ReportsController, "results" do
     FactoryBot.create(:aaron)
     FactoryBot.create(:api_client)
 
-    get 'results', :q => "a"
+    get 'results', params: { :q => "a" }
 
     response.should render_template('reports/results')
     assigns(:results).should_not be_empty
@@ -43,7 +43,7 @@ describe ReportsController, "results" do
   end
 
   it "should redirect to reports/index if the search query is empty" do
-    get 'results' , :q => ""
+    get 'results', params: { :q => "" }
 
     response.should be_redirect
     response.should redirect_to( reports_path )
@@ -57,7 +57,7 @@ describe ReportsController , "view" do
   end
 
   it "should show a user reports" do
-    get "view" , :id => FactoryBot.create(:aaron).id
+    get "view", params: { :id => FactoryBot.create(:aaron).id }
 
     response.should render_template("reports/view")
     assigns(:user).should_not be_nil

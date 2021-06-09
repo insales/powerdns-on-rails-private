@@ -24,7 +24,7 @@ describe UsersController do
     end
 
     it 'should load a users details' do
-      get 'show', :id => @admin.id
+      get 'show', params: { :id => @admin.id }
 
       response.should render_template( 'users/show' )
       assigns(:user).should_not be_nil
@@ -38,13 +38,13 @@ describe UsersController do
     end
 
     it "should create a new administrator" do
-      post :create, :user => {
+      post :create, params: { :user => {
           :login => 'someone',
           :email => 'someone@example.com',
           :password => 'secret',
           :password_confirmation => 'secret',
           :admin => 'true'
-        }
+        } }
 
       assigns(:user).should be_an_admin
 
@@ -53,14 +53,14 @@ describe UsersController do
     end
 
     it 'should create a new administrator with token privs' do
-      post :create, :user => {
+      post :create, params: { :user => {
           :login => 'someone',
           :email => 'someone@example.com',
           :password => 'secret',
           :password_confirmation => 'secret',
           :admin => '1',
           :auth_tokens => '1'
-        }
+        } }
 
       assigns(:user).admin?.should be_truthy
       assigns(:user).auth_tokens?.should be_truthy
@@ -70,12 +70,12 @@ describe UsersController do
     end
 
     it "should create a new owner" do
-      post :create, :user => {
+      post :create, params: { :user => {
           :login => 'someone',
           :email => 'someone@example.com',
           :password => 'secret',
           :password_confirmation => 'secret',
-        }
+        } }
 
       assigns(:user).should_not be_an_admin
 
@@ -84,13 +84,13 @@ describe UsersController do
     end
 
     it 'should create a new owner ignoring token privs' do
-      post :create, :user => {
+      post :create, params: { :user => {
           :login => 'someone',
           :email => 'someone@example.com',
           :password => 'secret',
           :password_confirmation => 'secret',
           :auth_tokens => '1'
-        }
+        } }
 
       assigns(:user).should_not be_an_admin
       assigns(:user).auth_tokens?.should be_falsey
@@ -103,11 +103,11 @@ describe UsersController do
       user = FactoryBot.create(:quentin)
 
       lambda {
-        post :update, :id => user.id, :user => {
+        post :update, params: { :id => user.id, :user => {
             :email => 'new@example.com',
             :password => '',
             :password_confirmation => ''
-          }
+          } }
         user.reload
       }.should change( user, :email )
 
@@ -117,7 +117,7 @@ describe UsersController do
 
     it 'should be able to suspend users' do
       @user = FactoryBot.create(:quentin)
-      put 'suspend', :id => @user.id
+      put 'suspend', params: { :id => @user.id }
 
       response.should be_redirect
       response.should redirect_to( users_path )
