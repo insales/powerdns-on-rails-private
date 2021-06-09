@@ -1,4 +1,4 @@
-PowerdnsOnRails::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -19,7 +19,7 @@ PowerdnsOnRails::Application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
-  # Raise an error on page load if there are pending migrations
+  # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
   # Debug mode disables concatenation and preprocessing of assets.
@@ -27,6 +27,11 @@ PowerdnsOnRails::Application.configure do
   # number of complex assets.
   config.assets.debug = true
   config.assets.debug = false
+
+  # Adds additional error checking when serving assets at runtime.
+  # Checks for improperly declared sprockets dependencies.
+  # Raises helpful error messages.
+  config.assets.raise_runtime_errors = true
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
@@ -42,9 +47,5 @@ PowerdnsOnRails::Application.configure do
 
   # Raise exception on mass assignment protection for Active Record models
   config.active_record.mass_assignment_sanitizer = :strict
-
-  # Log the query plan for queries taking more than this (works
-  # with SQLite, MySQL, and PostgreSQL)
-  config.active_record.auto_explain_threshold_in_seconds = 0.5
 end
 

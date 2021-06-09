@@ -1,9 +1,6 @@
 source 'https://rubygems.org'
 
-# gem 'rails', '3.2.22.5'
-# (ruby 2.0) (но 1.9.3 уже можно на 4, вероятно сначала до 4.2 и максимум тестов, а потом уже руби)
-gem 'rails', '4.0.13'
-# gem 'rails', '4.1.16'
+gem 'rails', '4.1.16'
 # gem 'rails', '4.2.11.3'
 # ruby 2.3 - на проде (powerdnsapp3/6) уже есть (не забыть что нужен полный рестарт при смене рубей)
 # gem 'rails', '5.0.7.2'
@@ -24,7 +21,7 @@ group :assets do
 end
 
 platforms :ruby do
-  gem 'pg', '>= 0.9.0'
+  gem 'pg', '~> 0.11'
   # gem 'therubyracer'
 end
 
