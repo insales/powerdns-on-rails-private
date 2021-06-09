@@ -51,7 +51,7 @@ module MacroDefinitionSteps
   end
 
   step "the domain should have (a/an) :type record for :name with :content" do |type, name, content|
-    records = @domain.send("#{type.downcase}_records", true)
+    records = @domain.send("#{type.downcase}_records").reload
 
     records.should_not be_empty
 
@@ -59,7 +59,7 @@ module MacroDefinitionSteps
   end
 
   step "the domain should have (a/an) :type record with priority :priority" do |type, prio|
-    records = @domain.send("#{type.downcase}_records", true)
+    records = @domain.send("#{type.downcase}_records").reload
 
     records.should_not be_empty
 
@@ -67,13 +67,13 @@ module MacroDefinitionSteps
   end
 
   step "the domain should not have (an) :type record for :name with :content" do |type, name, content|
-    records = @domain.send("#{type.downcase}_records", true)
+    records = @domain.send("#{type.downcase}_records").reload
 
     records.detect { |r| r.name =~ /^#{name}\./ && r.content == content }.should be_nil
   end
 
   step "the domain should not have an :type record for :name" do |type, name|
-    records = @domain.send("#{type.downcase}_records", true)
+    records = @domain.send("#{type.downcase}_records").reload
 
     records.detect { |r| r.name =~ /^#{name}\./ }.should be_nil
   end
