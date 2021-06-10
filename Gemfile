@@ -6,24 +6,10 @@ gem 'rails', '5.2.6'
 
 gem 'unicorn'
 
-group :assets do
-  # asset pipeline же не используется?
-  # gem 'sass-rails'
-  # gem 'coffee-rails'
-  # gem 'uglifier'
-end
+# gem 'sass-rails'
+# gem 'uglifier'
 
-platforms :ruby do
-  gem 'pg', '~> 0.11'
-  # gem 'therubyracer'
-end
-
-# for rails 3.2
-gem 'iconv'
-gem 'rake', '< 11.0'
-gem 'test-unit', '~> 3.0'
-# end
-
+gem 'pg', '~> 1.1.4'
 gem 'haml'
 gem 'jquery-rails'
 gem 'will_paginate', '~> 3.3'
