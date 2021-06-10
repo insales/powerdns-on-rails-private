@@ -1,11 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.0.7.2'
-# ruby 2.3 - на проде (powerdnsapp3/6) уже есть (не забыть что нужен полный рестарт при смене рубей)
-# gem 'rails', '5.1.7'
+gem 'rails', '5.1.7'
 # gem 'rails', '5.2.6'
 # ruby 2.5
-# ruby 2.6 - тоже есть на проде
+# ruby 2.6 - тоже есть на проде (не забыть рестарт)
 # gem 'rails', '6.0.3.7'
 # gem 'rails', '6.1.3.2'
 
@@ -58,7 +56,7 @@ group :development, :test do
 end
 
 group :test do
-  gem "factory_bot_rails", "~> 4.9"
+  gem "factory_bot_rails"
 
   gem "turnip" # run gherkin (cucumber) features in rspec
 

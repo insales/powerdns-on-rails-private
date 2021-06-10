@@ -26,7 +26,7 @@ class Macro < ActiveRecord::Base
   validates_uniqueness_of :name
 
   has_many :macro_steps, ->{ order('position') }, dependent: :destroy
-  belongs_to :user
+  belongs_to :user, optional: true
 
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
 
