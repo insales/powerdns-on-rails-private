@@ -10,8 +10,6 @@
 #
 ################################################################################
 
-require 'iconv'
-
 namespace :migrate do
 
   desc 'Migrate an existing PowerDNS database into a clean copy'
