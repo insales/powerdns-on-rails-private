@@ -28,7 +28,7 @@ gem 'haml'
 gem 'jquery-rails'
 gem 'will_paginate', '~> 3.3'
 gem "audited", '~>4.0'
-gem 'inherited_resources', '1.10.0' # remove version after ruby 2.4
+gem 'inherited_resources'
 gem 'devise', '~>4.0'
 gem "devise-encryptable"
 gem 'devise-token_authenticatable'
@@ -36,7 +36,7 @@ gem 'ruby-ldap'
 gem 'rabl'
 gem 'simpleidn'
 
-gem 'acts_as_list', '~>0.9' # версия залочена до апгрейда ruby 2.4+
+gem 'acts_as_list'
 gem 'state_machine'
 gem 'dynamic_form'
 
@@ -44,7 +44,7 @@ gem 'protected_attributes_continued' # attr_accessible backport
 gem 'activemodel-serializers-xml'
 gem 'rails-controller-testing'
 
-gem 'nokogiri', '~>1.10.10' # до апгрейда ruby 2.5+
+gem 'nokogiri'
 
 gem 'bootsnap'
 
@@ -61,13 +61,13 @@ group :test do
 
   gem "turnip" # run gherkin (cucumber) features in rspec
 
-  gem 'pry', '~>0.11.0' # для старых рельсов
-  gem 'pry-byebug', '3.7.0' # разлочить версию после ruby 2.4+
+  gem 'pry'
+  gem 'pry-byebug'
 
-  gem 'capybara', '3.15.1' # upgrade adter ruby
+  gem 'capybara'
   gem 'database_cleaner'
 
-  gem 'simplecov', '0.17.1', require: false # upgrade adter ruby
+  gem 'simplecov', require: false
 end
 
 group :development, :deploy do
