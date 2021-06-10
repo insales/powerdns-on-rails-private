@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.1.7'
-# gem 'rails', '5.2.6'
+gem 'rails', '5.2.6'
 # ruby 2.5
 # ruby 2.6 - тоже есть на проде (не забыть рестарт)
 # gem 'rails', '6.0.3.7'
@@ -29,7 +28,7 @@ gem 'test-unit', '~> 3.0'
 
 gem 'haml'
 gem 'jquery-rails'
-gem 'will_paginate', '~> 3.0.3'
+gem 'will_paginate', '~> 3.3'
 gem "audited", '~>4.0'
 gem 'inherited_resources', '1.10.0' # remove version after ruby 2.4
 gem 'devise', '~>4.0'
@@ -48,6 +47,8 @@ gem 'activemodel-serializers-xml'
 gem 'rails-controller-testing'
 
 gem 'nokogiri', '~>1.10.10' # до апгрейда ruby 2.5+
+
+gem 'bootsnap'
 
 group :development, :test do
   gem "rspec-rails"
