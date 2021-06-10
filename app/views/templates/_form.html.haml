@@ -3,7 +3,7 @@
   #zone-ttl
 
 = form_for( @zone_template ) do |f|
-  = error_messages_for :zone_template
+  = error_messages_for @zone_template
   %table
     %tr
       %td= t :label_template_zone_name

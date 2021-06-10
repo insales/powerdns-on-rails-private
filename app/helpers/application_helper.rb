@@ -53,4 +53,26 @@ module ApplicationHelper
 
     content_tag(:a, name, html_options.merge(:href => href, :onclick => onclick))
   end
+
+  def error_messages_for(object)
+    count = object.errors.count
+    return if count.zero?
+
+    html = { id: 'errorExplanation', class: 'errorExplanation' }
+    object_name = object.class.name
+
+    I18n.with_options scope: [:activerecord, :errors, :template] do |locale|
+      header_message = locale.t :header, count: count, model: object_name.to_s.gsub('_', ' ')
+
+      error_messages = object.errors.full_messages.map do |msg|
+        content_tag(:li, msg)
+      end.join.html_safe
+
+      contents = ''
+      contents << content_tag(:h2, header_message) unless header_message.blank?
+      contents << content_tag(:ul, error_messages)
+
+      content_tag(:div, contents.html_safe, html)
+    end
+  end
 end

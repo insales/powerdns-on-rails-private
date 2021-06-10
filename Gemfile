@@ -22,7 +22,6 @@ gem 'simpleidn'
 
 gem 'acts_as_list'
 gem 'state_machine'
-gem 'dynamic_form' # TODO: выпилить
 
 gem 'protected_attributes_continued' # attr_accessible backport
 gem 'activemodel-serializers-xml'

@@ -11,8 +11,10 @@ class MacrosController < InheritedResources::Base
   end
 
   def macro_params
-    params.require(:macro).permit(:name, :description, :active)
-      # :user_id ?
+    fields = [:name, :description, :active]
+    fields << :user_id if current_user.admin?
+
+    params.require(:macro).permit(*fields)
   end
 
   public
@@ -41,6 +43,6 @@ class MacrosController < InheritedResources::Base
 
   protected
   def macro_owner_from_params
-    current_user.admin? ? User.find(params[:macro][:user_id] || current_user.id) : current_user
+    current_user.admin? ? User.find(params[:macro][:user_id].presence || current_user.id) : current_user
   end
 end
