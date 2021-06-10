@@ -39,7 +39,9 @@ class MacroStep < ActiveRecord::Base
 
     record = build
 
-    record.errors.each do |k,v|
+    record.errors.each do |error|
+      k = error.attribute
+      v = error.message
       next if k == :domain_id || k == :domain || k == :ttl
       next if k == :content || k == :prio unless content_required?
 

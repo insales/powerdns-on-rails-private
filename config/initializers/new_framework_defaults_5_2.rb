@@ -23,14 +23,6 @@
 # instead of AES-256-CBC, when use_authenticated_message_encryption is set to true.
 # Rails.application.config.active_support.use_authenticated_message_encryption = true
 
-# Add default protection from forgery to ActionController::Base instead of in
-# ApplicationController.
-# Rails.application.config.action_controller.default_protect_from_forgery = true
-
-# Store boolean values are in sqlite3 databases as 1 and 0 instead of 't' and
-# 'f' after migrating old data.
-# Rails.application.config.active_record.sqlite3.represent_boolean_as_integer = true
-
 # Use SHA-1 instead of MD5 to generate non-sensitive digests, such as the ETag header.
 # Rails.application.config.active_support.use_sha1_digests = true
 

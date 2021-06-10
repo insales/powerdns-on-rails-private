@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '6.0.3.7'
-# gem 'rails', '6.1.3.2'
+gem 'rails', '6.1.3.2'
 
 gem 'unicorn'
 
@@ -23,7 +22,7 @@ gem 'simpleidn'
 
 gem 'acts_as_list'
 gem 'state_machine'
-gem 'dynamic_form'
+gem 'dynamic_form' # TODO: выпилить
 
 gem 'protected_attributes_continued' # attr_accessible backport
 gem 'activemodel-serializers-xml'
