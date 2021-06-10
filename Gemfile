@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'rails', '5.2.6'
-# ruby 2.5
-# ruby 2.6 - тоже есть на проде (не забыть рестарт)
 # gem 'rails', '6.0.3.7'
 # gem 'rails', '6.1.3.2'
 
