@@ -4,9 +4,8 @@
     %title= page_title
     %meta(name="description" content="PowerDNS admin panel")
     %meta(name="viewport" content="width=device-width, initial-scale=1")
-    = stylesheet_link_tag 'application', 'tipTip', 'bold-dark'
-    -# TODO: assets
-    = javascript_include_tag '/javascripts/jquery.min', '/javascripts/jquery_ujs.js', '/javascripts/application', '/javascripts/jquery.tipTip', '/javascripts/humane'
+    = stylesheet_link_tag 'application'
+    = javascript_include_tag 'application'
     = csrf_meta_tag
   %body
     #Container

@@ -46,7 +46,6 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
-  config.assets.digest = false # пока не мигрируем на нормальные ассеты
   config.assets.raise_runtime_errors = true
 
   # Raises error for missing translations

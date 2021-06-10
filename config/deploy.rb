@@ -46,6 +46,14 @@ namespace :deploy do
   desc "Deploy"
   task :default do
     update
+    # bundle install делаем перед прекомпиляцией ассетов, т.к. иначе будет ошибка
+    # на чистой системе из-за отсутствующего rake
+    bundle_install
+
+    # создавать линки надо до прекомпиляции ассетов, т.к. rake не запустится без database.yml
+    symlink_shared
+
+    assets_precompile
     finalize_update
     restart
 #    cleanup
@@ -84,6 +92,14 @@ namespace :deploy do
       ln -s #{shared_path}/system #{latest_release}/public/system &&
       ln -s #{shared_path}/pids #{latest_release}/tmp/pids
     CMD
+  end
+
+  task :bundle_install do
+   run "cd #{current_path} && bundle install --quiet --frozen --without development test integration"
+  end
+
+  task :assets_precompile do
+    run "cd #{current_path} && RAILS_ENV=production bundle exec rake assets:precompile"
   end
 
   task :symlink_shared do

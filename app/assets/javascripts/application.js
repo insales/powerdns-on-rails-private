@@ -1,5 +1,7 @@
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
+//= require 'jquery'
+//= require 'jquery_ujs'
+//= require 'jquery.tipTip'
+//= require 'humane'
 
 $(document).ready(function() {
   // AJAX activity indicator
@@ -51,8 +53,8 @@ $(document).ready(function() {
 });
 
 // Ajax activity indicator bound to ajax start/stop document events
-$(document).ajaxStart(function(){ 
-  $('#ajaxBusy').show(); 
-}).ajaxStop(function(){ 
+$(document).ajaxStart(function(){
+  $('#ajaxBusy').show();
+}).ajaxStop(function(){
   $('#ajaxBusy').hide();
 });
