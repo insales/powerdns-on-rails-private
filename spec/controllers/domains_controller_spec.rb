@@ -160,6 +160,21 @@ describe DomainsController, "and macros" do
 
 end
 
+describe DomainsController, "update_note" do
+  let!(:domain) { FactoryBot.create(:domain)}
+
+  before do
+    sign_in(FactoryBot.create(:admin))
+  end
+
+  it "updates note" do
+    expect do
+      put :update_note, params: { id: domain.id, domain: { notes: "lala" } }, xhr: true
+      domain.reload
+    end.to change(domain, :notes).to("lala")
+  end
+end
+
 describe DomainsController, "should handle a REST client" do
 
   let(:domain) { FactoryBot.create(:domain) }

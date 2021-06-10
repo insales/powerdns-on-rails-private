@@ -4,8 +4,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       devise_for :api_clients, skip: [:sessions, :registrations, :confirmations]
-      resources :domains do
-        resources :records do
+      resources :domains, only: %i[create show update destroy] do
+        resources :records, only: %i[index create show update destroy] do
           delete '/', on: :collection, action: :delete_all
         end
       end
