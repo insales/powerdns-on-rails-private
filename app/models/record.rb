@@ -25,7 +25,7 @@ class Record < ActiveRecord::Base
     self.class.sti_name.downcase
   end
 
-  belongs_to :domain #, required: true
+  belongs_to :domain
   validates_presence_of :domain_id
 
   validates_presence_of :name

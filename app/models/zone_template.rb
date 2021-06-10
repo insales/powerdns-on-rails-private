@@ -1,6 +1,6 @@
 class ZoneTemplate < ActiveRecord::Base
 
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :record_templates
 
   validates_presence_of :name

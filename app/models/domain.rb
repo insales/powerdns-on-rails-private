@@ -11,7 +11,7 @@ class Domain < ActiveRecord::Base
   audited :allow_mass_assignment => true
   has_associated_audits
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   has_many :records, :dependent => :destroy
 
