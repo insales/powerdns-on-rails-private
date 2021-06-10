@@ -44,7 +44,7 @@ end
 
 describe SearchController, "for api clients" do
   before(:each) do
-    sign_in(FactoryBot.create(:api_client))
+    sign_in(FactoryBot.create(:api_client_user))
 
     FactoryBot.create(:domain, :name => 'example.com')
     FactoryBot.create(:domain, :name => 'example.net')

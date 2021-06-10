@@ -57,7 +57,7 @@ end
 
 describe TemplatesController, "should handle a REST client" do
   before(:each) do
-    sign_in(FactoryBot.create(:api_client))
+    sign_in(FactoryBot.create(:api_client_user))
   end
 
   it "asking for a list of templates" do

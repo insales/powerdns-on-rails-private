@@ -33,7 +33,7 @@ describe ReportsController, "results" do
 
   it "should display a list of users for a search hit" do
     FactoryBot.create(:aaron)
-    FactoryBot.create(:api_client)
+    FactoryBot.create(:api_client_user)
 
     get 'results', params: { :q => "a" }
 

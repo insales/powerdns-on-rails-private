@@ -164,7 +164,7 @@ describe DomainsController, "should handle a REST client" do
 
   let(:domain) { FactoryBot.create(:domain) }
   before(:each) do
-    sign_in(FactoryBot.create(:api_client))
+    sign_in(FactoryBot.create(:api_client_user))
 
     @domain = domain
   end
