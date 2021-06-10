@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 # As described in RFC 4255 ( http://tools.ietf.org/html/rfc4255 ), an SSHFP
 # record consists of three parts: an algorithm number, fingerprint type and the
