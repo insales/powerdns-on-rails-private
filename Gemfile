@@ -53,6 +53,8 @@ group :development, :test do
   gem "rspec-rails"
   gem 'rspec-collection_matchers'
   gem 'rspec-html-matchers' # legacy matchers
+
+  gem 'listen'
 end
 
 group :test do
