@@ -62,7 +62,7 @@ describe Record, "during updates" do
     # Implement some cheap DNS load balancing
     Record.batch do
 
-      record = A.new(
+      record = Record::A.new(
         :domain => domain,
         :name => 'app',
         :content => '10.0.0.5',
@@ -70,7 +70,7 @@ describe Record, "during updates" do
       )
       record.save.should be_truthy
 
-      record = A.new(
+      record = Record::A.new(
         :domain => domain,
         :name => 'app',
         :content => '10.0.0.6',
@@ -78,7 +78,7 @@ describe Record, "during updates" do
       )
       record.save.should be_truthy
 
-      record = A.new(
+      record = Record::A.new(
         :domain => domain,
         :name => 'app',
         :content => '10.0.0.7',
@@ -104,7 +104,7 @@ describe Record, "when created" do
   it "should update the serial on the SOA" do
     serial = @soa.serial
 
-    record = A.new(
+    record = Record::A.new(
       :domain => @domain,
       :name => 'admin',
       :content => '10.0.0.5',
@@ -117,7 +117,7 @@ describe Record, "when created" do
   end
 
   it "should inherit the name from the parent domain if not provided" do
-    record = A.new(
+    record = Record::A.new(
       :domain => @domain,
       :content => '10.0.0.6'
     )
@@ -127,7 +127,7 @@ describe Record, "when created" do
   end
 
   it "should append the domain name to the name if not present" do
-    record = A.new(
+    record = Record::A.new(
       :domain => @domain,
       :name => 'test',
       :content => '10.0.0.6'
@@ -142,7 +142,7 @@ describe Record, "when created" do
     ttl = @domain.ttl
     ttl.should be( 86400 )
 
-    record = A.new(
+    record = Record::A.new(
       :domain => @domain,
       :name => 'ftp',
       :content => '10.0.0.6'
@@ -153,7 +153,7 @@ describe Record, "when created" do
   end
 
   it "should prefer own TTL over that of parent domain" do
-    record = A.new(
+    record = Record::A.new(
       :domain => @domain,
       :name => 'ftp',
       :content => '10.0.0.6',

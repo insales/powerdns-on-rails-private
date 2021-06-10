@@ -13,6 +13,18 @@ class Record < ActiveRecord::Base
     []
   end
 
+  def self.find_sti_class(type_name)
+    super("Record::#{type_name}")
+  end
+
+  def self.sti_name
+    self.name.sub(/^.*:/, "")
+  end
+
+  def haml_object_ref
+    self.class.sti_name.downcase
+  end
+
   belongs_to :domain #, required: true
   validates_presence_of :domain_id
 
@@ -53,9 +65,14 @@ class Record < ActiveRecord::Base
       self.batch_soa_updates = nil
     end
 
+    def record_class(type)
+      "Record::#{type}".constantize
+    end
+
     # Make some ammendments to the acts_as_audited assumptions
     def configure_audits
-      record_types.map(&:constantize).each do |klass|
+      record_types.each do |type|
+        klass = record_class(type)
         defaults = [klass.non_audited_columns ].flatten
         defaults.delete( klass.inheritance_column )
         defaults.push( :change_date )

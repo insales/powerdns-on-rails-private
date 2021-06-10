@@ -6,7 +6,7 @@
 #
 # Including draft extension for SHA2 and ECDSA. See https://tools.ietf.org/html/draft-os-ietf-sshfp-ecdsa-sha2-04
 
-class SSHFP < Record
+class Record::SSHFP < Record
 
   validates_format_of :content, :with => /\A[1-3] [1-2] ([0-9a-fA-F]{40}|[0-9a-fA-F]{64})\z/
 

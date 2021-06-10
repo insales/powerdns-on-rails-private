@@ -15,7 +15,7 @@ class MacroStep < ActiveRecord::Base
 
   # Convert this step into a valid #Record
   def build( domain = nil )
-    record_class = self.record_type.constantize
+    record_class = Record.record_class(self.record_type)
 
     # make a clean copy of ourself
     attrs = self.attributes.dup

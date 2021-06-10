@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe TXT, "when new" do
+describe Record::TXT, "when new" do
   before(:each) do
-    @txt = TXT.new
+    @txt = described_class.new
   end
 
   it "should be invalid by default" do

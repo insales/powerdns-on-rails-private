@@ -73,7 +73,7 @@ class Macro < ActiveRecord::Base
       next unless record.shortname == step.name
 
       record.content = step.content.gsub('%ZONE%', domain.name)
-      record.prio = step.prio if record.is_a?( MX )
+      record.prio = step.prio if record.is_a?( Record::MX )
       record.save
 
       changed = true

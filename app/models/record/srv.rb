@@ -11,7 +11,7 @@
 #
 # See also http://www.zytrax.com/books/dns/ch8/srv.html
 #
-class SRV < Record
+class Record::SRV < Record
 
   validates_numericality_of :prio,
     :greater_than_or_equal_to => 0

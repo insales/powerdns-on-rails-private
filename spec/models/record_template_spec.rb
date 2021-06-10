@@ -106,7 +106,7 @@ describe RecordTemplate, "when building" do
     record = template.build( 'example.org' )
 
     record.should_not be_nil
-    record.should be_a_kind_of( SOA )
+    record.should be_a_kind_of(Record::SOA)
     record.primary_ns.should eql('ns1.example.org')
   end
 
@@ -115,7 +115,7 @@ describe RecordTemplate, "when building" do
     record = template.build( 'example.org' )
 
     record.should_not be_nil
-    record.should be_a_kind_of( NS )
+    record.should be_a_kind_of( Record::NS )
     record.content.should eql('ns1.example.org')
   end
 
@@ -124,7 +124,7 @@ describe RecordTemplate, "when building" do
     record = template.build( 'example.org' )
 
     record.should_not be_nil
-    record.should be_a_kind_of( MX )
+    record.should be_a_kind_of( Record::MX )
     record.content.should eql('mail.example.org')
   end
 end

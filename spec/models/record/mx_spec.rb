@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MX, "when new" do
+describe Record::MX, "when new" do
   before(:each) do
-    @mx = MX.new
+    @mx = described_class.new
   end
 
   it "should be invalid by default" do

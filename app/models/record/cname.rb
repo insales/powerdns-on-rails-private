@@ -7,7 +7,7 @@
 #
 # Obtained from http://www.zytrax.com/books/dns/ch8/cname.html
 #
-class CNAME < Record
+class Record::CNAME < Record
 
   validates :content, :presence => true, :hostname => true
 

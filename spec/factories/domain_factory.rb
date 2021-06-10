@@ -22,7 +22,7 @@ FactoryBot.define do
   factory :record do
     domain
 
-    #factory(:soa, :class => 'SOA') do |f|
+    #factory(:soa, :class => 'Record::SOA') do |f|
     #  name { |r| r.domain.name }
     #  ttl 86400
     #  #content { |r| "ns1.#{r.domain.name} admin@#{r.domain.name} 2008040101 10800 7200 604800 10800" }
@@ -34,38 +34,38 @@ FactoryBot.define do
     #  minimum 10800
     #end
 
-    factory(:ns, :class => NS) do
+    factory(:ns, :class => Record::NS) do
       ttl { 86400 }
       name { |r| r.domain.name }
       content { |r| "ns1.#{r.domain.name}" }
     end
 
-    factory(:ns_a, :class => A) do
+    factory(:ns_a, :class => Record::A) do
       ttl  { 86400 }
       name { |r| "ns1.#{r.domain.name}" }
       content { "10.0.0.1" }
     end
 
-    factory(:a, :class => A) do
+    factory(:a, :class => Record::A) do
       ttl { 86400 }
       name { |r| r.domain.name }
       content { '10.0.0.3' }
     end
 
-    factory(:www, :class => A) do
+    factory(:www, :class => Record::A) do
       ttl { 86400 }
       name { |r| "www.#{r.domain.name}" }
       content { '10.0.0.3' }
     end
 
-    factory(:mx, :class => MX) do
+    factory(:mx, :class => Record::MX) do
       ttl { 86400 }
       name { |r| r.domain.name }
       content { |r| "mail.#{r.domain.name}" }
       prio { 10 }
     end
 
-    factory(:mx_a, :class => A) do
+    factory(:mx_a, :class => Record::A) do
       ttl { 86400 }
       name { |r| "mail.#{r.domain.name}" }
       content { '10.0.0.4' }

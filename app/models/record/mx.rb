@@ -6,7 +6,7 @@
 #
 # Obtained from http://www.zytrax.com/books/dns/ch8/mx.html
 #
-class MX < Record
+class Record::MX < Record
 
   validates_numericality_of :prio,
     :greater_than_or_equal_to => 0,

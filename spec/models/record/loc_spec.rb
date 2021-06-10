@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LOC do
+describe Record::LOC do
   
   it "should have tests" 
   

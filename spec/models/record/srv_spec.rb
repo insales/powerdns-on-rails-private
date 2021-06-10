@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe SRV do
+describe Record::SRV do
   before(:each) do
-    @srv = SRV.new
+    @srv = described_class.new
   end
   
   it "should have tests" 

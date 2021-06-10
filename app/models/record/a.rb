@@ -10,7 +10,7 @@
 #
 # Obtained from http://www.zytrax.com/books/dns/ch8/a.html
 #
-class A < Record
+class Record::A < Record
   # Only accept valid IPv4 addresses
   validates :content, :presence => true, :ip_address => true
 end

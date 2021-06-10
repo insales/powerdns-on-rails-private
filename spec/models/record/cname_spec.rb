@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe CNAME, "when new" do
+describe Record::CNAME, "when new" do
   before(:each) do
-    @cname = CNAME.new
+    @cname = described_class.new
   end
 
   it "should be invalid by default" do

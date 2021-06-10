@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe SOA, "when new" do
+describe Record::SOA, "when new" do
 
   before(:each) do
-    @soa = SOA.new
+    @soa = described_class.new
   end
 
   it "should be invalid by default" do
@@ -125,12 +125,12 @@ describe SOA, "when new" do
 
 end
 
-describe SOA, "when created" do
+describe Record::SOA, "when created" do
   before(:each) do
     @domain = FactoryBot.create(:domain)
     @domain.soa_record.destroy
 
-    @soa = SOA.new(
+    @soa = described_class.new(
       :domain => @domain,
       :primary_ns => 'ns1.example.com',
       :contact => 'dnsadmin@example.com',
@@ -153,7 +153,7 @@ describe SOA, "when created" do
 
 end
 
-describe SOA, "and serial numbers" do
+describe Record::SOA, "and serial numbers" do
   before(:each) do
     @soa = FactoryBot.create(:domain).soa_record
   end
@@ -195,7 +195,7 @@ describe SOA, "and serial numbers" do
   end
 end
 
-describe SOA, "when serializing to XML" do
+describe Record::SOA, "when serializing to XML" do
   before(:each) do
     @soa = FactoryBot.create(:domain).soa_record
   end

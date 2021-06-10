@@ -7,7 +7,7 @@
 #
 # Obtained from http://www.zytrax.com/books/dns/ch8/ptr.html
 #
-class PTR < Record
+class Record::PTR < Record
 
   validates :content, :presence => true, :hostname => true
 

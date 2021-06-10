@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe AAAA, "when new" do
+describe Record::AAAA, "when new" do
 
   before(:each) do
-    @aaaa = AAAA.new
+    @aaaa = described_class.new
   end
 
   it "should be invalid by default" do

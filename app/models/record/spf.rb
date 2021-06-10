@@ -10,7 +10,7 @@
 #
 # Obtained from http://en.wikipedia.org/wiki/Sender_Policy_Framework
 #
-class SPF < Record
+class Record::SPF < Record
 
   validates_presence_of :content
 

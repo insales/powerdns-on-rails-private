@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PTR do
+describe Record::PTR do
   
   it "should have tests"
   

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe NS, "when new" do
+describe Record::NS, "when new" do
   before(:each) do
-    @ns = NS.new
+    @ns = described_class.new
   end
 
   it "should be invalid by default" do

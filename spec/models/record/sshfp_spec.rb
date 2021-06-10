@@ -6,9 +6,9 @@ require 'spec_helper'
 # (value: 2), there is currently only SHA-1 (value: 1) available as fingerprint
 # type. A Fingerprint is hex number with 40 digits.
 
-describe SSHFP, "when new" do
+describe Record::SSHFP, "when new" do
   before(:each) do
-    @sshfp = SSHFP.new
+    @sshfp = described_class.new
   end
 
   it "should be invalid by default" do

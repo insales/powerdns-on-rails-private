@@ -8,7 +8,7 @@
 # standard.
 # 
 # Obtained from http://www.zytrax.com/books/dns/ch8/txt.html
-class TXT < Record
+class Record::TXT < Record
   
   validates_presence_of :content
   

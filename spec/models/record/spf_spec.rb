@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SPF do
+describe Record::SPF do
   
   it "should have tests" 
   

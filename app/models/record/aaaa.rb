@@ -10,7 +10,7 @@
 #
 # Obtained from http://www.zytrax.com/books/dns/ch8/aaaa.html
 #
-class AAAA < Record
+class Record::AAAA < Record
 
   # Only accept valid IPv6 addresses
   validates :content, :presence => true, :ip_address => { :ipv6 => true }

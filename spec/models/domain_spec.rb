@@ -81,7 +81,7 @@ describe Domain, "when loaded" do
   end
 
   it "should have an SOA record" do
-    @domain.soa_record.should be_a_kind_of( SOA )
+    @domain.soa_record.should be_a_kind_of(Record::SOA)
   end
 
   it "should have NS records" do
@@ -110,7 +110,7 @@ describe Domain, "when loaded" do
   it "should give access to all records excluding the SOA" do
     FactoryBot.create(:a, :domain => @domain)
     @domain.records_without_soa.size.should eq 1 #be( @domain.records.size - 1 )
-    expect(@domain.records_without_soa.map(&:class)).not_to include(SOA)
+    expect(@domain.records_without_soa.map(&:class)).not_to include(Record::SOA)
   end
 
   it "should not complain about missing SOA fields" do

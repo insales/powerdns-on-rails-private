@@ -16,8 +16,8 @@ class RecordTemplate < ActiveRecord::Base
   attr_accessible :zone_template # для тестов
 
   # We need to cope with the SOA convenience
-  attr_accessor *SOA::SOA_FIELDS
-  attr_accessible *SOA::SOA_FIELDS
+  attr_accessor *Record::SOA::SOA_FIELDS
+  attr_accessible *Record::SOA::SOA_FIELDS
 
   class << self
     def record_types
@@ -34,7 +34,7 @@ class RecordTemplate < ActiveRecord::Base
   # attributes of the template copied over to the instance
   def build( domain_name = nil )
     # get the class of the record_type
-    record_class = self.record_type.constantize
+    record_class = Record.record_class(self.record_type)
     white_list = record_class.accessible_attributes
 
     # duplicate our own attributes, strip out the ones the destination doesn't
@@ -56,7 +56,7 @@ class RecordTemplate < ActiveRecord::Base
 
     # Handle SOA convenience fields if needed
     if soa?
-      SOA::SOA_FIELDS.each do |soa_field|
+      Record::SOA::SOA_FIELDS.each do |soa_field|
         attrs[soa_field] = instance_variable_get("@#{soa_field}")
       end
       attrs[:serial] = 0
@@ -71,7 +71,7 @@ class RecordTemplate < ActiveRecord::Base
   end
 
   def content
-    soa? ? SOA::SOA_FIELDS.map{ |f| instance_variable_get("@#{f}") || 0 }.join(' ') : self[:content]
+    soa? ? Record::SOA::SOA_FIELDS.map{ |f| instance_variable_get("@#{f}") || 0 }.join(' ') : self[:content]
   end
 
   # Manage TTL inheritance here

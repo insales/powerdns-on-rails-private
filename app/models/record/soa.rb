@@ -6,7 +6,7 @@
 #
 # Obtained from http://www.zytrax.com/books/dns/ch8/soa.html
 #
-class SOA < Record
+class Record::SOA < Record
   validates_presence_of :primary_ns, :content, :serial, :refresh, :retry,
     :expire, :minimum
 
@@ -31,7 +31,7 @@ class SOA < Record
   after_initialize :update_convenience_accessors
 
   # The portions of the +content+ column that make up our SOA fields
-  SOA_FIELDS = %w(primary_ns contact serial refresh retry expire minimum).map(&:to_sym).freeze
+  SOA_FIELDS = %i[primary_ns contact serial refresh retry expire minimum].freeze
 
   attr_accessible *SOA_FIELDS
   attr_accessor :serial

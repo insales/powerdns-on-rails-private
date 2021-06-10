@@ -184,7 +184,7 @@ class AuthToken < ActiveRecord::Base
     name, type =
       case record
       when Record
-        [ record.name, record.class.to_s ]
+        [ record.name, record.class.sti_name ]
       else
         type = type.nil? ? '*' : type
         [ record, type ]
