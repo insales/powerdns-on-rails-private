@@ -109,7 +109,7 @@ describe ZoneTemplate, "when used to build a zone" do
   it "should create a SOA record" do
     soa = @domain.soa_record
     soa.should_not be_nil
-    soa.should be_a_kind_of( SOA )
+    soa.should be_a_kind_of(Record::SOA)
     soa.primary_ns.should eql('ns1.example.org')
   end
 
@@ -118,7 +118,7 @@ describe ZoneTemplate, "when used to build a zone" do
     # ns.should be_a_kind_of( Array )
     ns.size.should be(2)
 
-    ns.each { |r| r.should be_a_kind_of( NS ) }
+    ns.each { |r| r.should be_a_kind_of( Record::NS ) }
   end
 
 end
@@ -153,7 +153,7 @@ describe ZoneTemplate, "when used to build a zone for a user" do
   it "should create a SOA record" do
     soa = @domain.soa_record
     soa.should_not be_nil
-    soa.should be_a_kind_of( SOA )
+    soa.should be_a_kind_of(Record::SOA)
     soa.primary_ns.should eql('ns1.example.org')
   end
 
@@ -162,7 +162,7 @@ describe ZoneTemplate, "when used to build a zone for a user" do
     # ns.should be_a_kind_of( Array )
     ns.size.should be(2)
 
-    ns.each { |r| r.should be_a_kind_of( NS ) }
+    ns.each { |r| r.should be_a_kind_of( Record::NS ) }
   end
 
   it "should create the correct CNAME's from the template" do

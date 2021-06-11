@@ -15,7 +15,7 @@ class TemplatesController < InheritedResources::Base
     @zone_template = ZoneTemplate.new(params[:zone_template])
     @zone_template.user = current_user unless current_user.admin?
 
-    create! { zone_template_path( @zone_template ) }
+    create! { zone_template_path( @zone_template ) if @zone_template.persisted? }
   end
 
 end

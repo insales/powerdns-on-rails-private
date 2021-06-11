@@ -19,7 +19,7 @@ describe MacrosController, "for admins" do
   end
 
   it "should have a detailed view of a macro" do
-    get :show, :id => @macro.id
+    get :show, params: { :id => @macro.id }
 
     assigns(:macro).should == @macro
 
@@ -36,11 +36,11 @@ describe MacrosController, "for admins" do
 
   it "should create valid macros" do
     expect {
-      post :create, :macro => {
+      post :create, params: { :macro => {
         :name => 'Test Macro',
         :active => '0'
 
-      }
+      } }
     }.to change(Macro, :count).by(1)
 
     flash[:notice].should_not be_nil
@@ -49,9 +49,9 @@ describe MacrosController, "for admins" do
   end
 
   it "should render the form on invalid macros" do
-    post :create, :macro => {
+    post :create, params: { :macro => {
       :name => ''
-    }
+    } }
 
     flash[:info].should be_nil
     response.should_not be_redirect
@@ -59,7 +59,7 @@ describe MacrosController, "for admins" do
   end
 
   it "should have an edit form for macros" do
-    get :edit, :id => @macro.id
+    get :edit, params: { :id => @macro.id }
 
     assigns(:macro).should == @macro
 
@@ -68,7 +68,7 @@ describe MacrosController, "for admins" do
 
   it "should accept valid updates to macros" do
     expect {
-      put :update, :id => @macro.id, :macro => { :name => 'Foo Macro' }
+      put :update, params: { :id => @macro.id, :macro => { :name => 'Foo Macro' } }
       @macro.reload
     }.to change(@macro, :name)
 
@@ -79,7 +79,7 @@ describe MacrosController, "for admins" do
 
   it "should reject invalid updates" do
     expect {
-      put :update, :id => @macro.id, :macro => { :name => '' }
+      put :update, params: { :id => @macro.id, :macro => { :name => '' } }
       @macro.reload
     }.to_not change(@macro, :name)
 
@@ -89,7 +89,7 @@ describe MacrosController, "for admins" do
   end
 
   it "should remove a macro if asked to" do
-    delete :destroy, :id => @macro.id
+    delete :destroy, params: { :id => @macro.id }
 
     assigns(:macro).should be_frozen
     flash[:notice].should_not be_nil

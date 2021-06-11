@@ -123,7 +123,7 @@ describe MacroStep, "when building records" do
     }
 
     record = @macro_step.build
-    record.should be_an_instance_of( A )
+    record.should be_an_instance_of( Record::A )
   end
 
 end

@@ -34,7 +34,7 @@ FactoryBot.define do
       auth_tokens { true }
     end
 
-    factory :api_client do
+    factory :api_client_user do
       login { 'api' }
       email { 'api@example.com' }
       admin { true }

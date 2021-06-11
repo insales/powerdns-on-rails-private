@@ -85,6 +85,9 @@ describe AuditsHelper, "link_to_record_audit" do
       record = FactoryBot.create(:a, :domain => domain)
       audit = record.audits.first
 
+      # make sure sti is not leaking (TODO: move to other test)
+      expect(audit.auditable_type).to eq 'Record'
+
       result = helper.link_to_record_audit( audit )
       result.should match(/A \(example\.com\) 1 create by admin/)
     end

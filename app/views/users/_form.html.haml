@@ -4,7 +4,7 @@
   #token-user-help= t :help_user_token_info
 
 = form_for( @user ) do |f|
-  = error_messages_for( :user )
+  = error_messages_for @user
 
   %table
     %tr

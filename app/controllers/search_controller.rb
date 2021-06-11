@@ -1,5 +1,10 @@
 class SearchController < ApplicationController
 
+  def show
+    results
+    render 'results'
+  end
+
   def results
     if params[:q].chomp.blank?
       respond_to do |format|

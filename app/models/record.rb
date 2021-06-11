@@ -13,7 +13,19 @@ class Record < ActiveRecord::Base
     []
   end
 
-  belongs_to :domain #, required: true
+  def self.find_sti_class(type_name)
+    super("Record::#{type_name}")
+  end
+
+  def self.sti_name
+    self.name.sub(/^.*:/, "")
+  end
+
+  def haml_object_ref
+    self.class.sti_name.downcase
+  end
+
+  belongs_to :domain
   validates_presence_of :domain_id
 
   validates_presence_of :name
@@ -53,9 +65,14 @@ class Record < ActiveRecord::Base
       self.batch_soa_updates = nil
     end
 
+    def record_class(type)
+      "Record::#{type}".constantize
+    end
+
     # Make some ammendments to the acts_as_audited assumptions
     def configure_audits
-      record_types.map(&:constantize).each do |klass|
+      record_types.each do |type|
+        klass = record_class(type)
         defaults = [klass.non_audited_columns ].flatten
         defaults.delete( klass.inheritance_column )
         defaults.push( :change_date )
@@ -73,10 +90,10 @@ class Record < ActiveRecord::Base
   end
 
   # Nicer representation of the domain as XML
-  def to_xml_with_cleanup(options = {}, &block)
-    to_xml_without_cleanup(options, &block)
+  def to_xml(options = {}, &block)
+    # no difference?
+    super(options, &block)
   end
-  alias_method_chain :to_xml, :cleanup
 
   # Pull in the name & TTL from the domain if missing
   def inherit_attributes_from_domain #:nodoc:

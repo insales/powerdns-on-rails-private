@@ -18,7 +18,7 @@ class MacroStepsController < InheritedResources::Base
   end
 
   def macro_step_params
-    return {} unless params[:macro_step].any?
+    return {} unless params[:macro_step].present?
 
     params.require(:macro_step).permit(
       :action,

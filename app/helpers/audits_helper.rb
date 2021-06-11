@@ -12,7 +12,7 @@ module AuditsHelper
 
   def link_to_record_audit( audit )
     caption = audit.audited_changes['type']
-    caption ||= (audit.auditable.nil? ? '[UNKNOWN]' : audit.auditable.class.to_s )
+    caption ||= (audit.auditable.nil? ? '[UNKNOWN]' : audit.auditable.class.sti_name )
     unless audit.audited_changes['name'].nil?
       name = audit.audited_changes['name'].is_a?( Array ) ? audit.audited_changes['name'].pop : audit.audited_changes['name']
       caption += " (#{name})"

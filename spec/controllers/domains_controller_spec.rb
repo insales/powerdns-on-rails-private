@@ -58,7 +58,7 @@ describe DomainsController, "when creating" do
     FactoryBot.create(:zone_template, :name => 'No SOA')
 
     expect {
-      post 'create', :domain => { :name => 'example.org' }, :zone_template => { :id => "" }
+      post 'create', params: { :domain => { :name => 'example.org' }, :zone_template => { :id => "" } }
     }.to_not change( Domain, :count )
 
     response.should_not be_redirect
@@ -70,7 +70,7 @@ describe DomainsController, "when creating" do
     FactoryBot.create(:template_soa, :zone_template => zone_template)
 
     expect {
-      post 'create', :domain => { :name => 'example.org', :zone_template_id => zone_template.id }
+      post 'create', params: { :domain => { :name => 'example.org', :zone_template_id => zone_template.id } }
     }.to change( Domain, :count ).by(1)
 
     assigns(:domain).should_not be_nil
@@ -80,10 +80,10 @@ describe DomainsController, "when creating" do
 
   it "should be redirected to the zone details after a successful save" do
     expect {
-      post 'create', :domain => {
+      post 'create', params: { :domain => {
         :name => 'example.org', :primary_ns => 'ns1.example.org',
         :contact => 'admin@example.org', :refresh => 10800, :retry => 7200,
-        :expire => 604800, :minimum => 10800, :zone_template_id => "" }
+        :expire => 604800, :minimum => 10800, :zone_template_id => "" } }
     }.to change( Domain, :count ).by(1)
 
     response.should be_redirect
@@ -95,12 +95,12 @@ describe DomainsController, "when creating" do
     zone_template = FactoryBot.create(:zone_template)
 
     expect {
-      post 'create', :domain => {
+      post 'create', params: { :domain => {
         :name => 'example.org',
         :type => 'SLAVE',
         :master => '127.0.0.1',
         :zone_template_id => zone_template.id
-      }
+      } }
     }.to change( Domain, :count ).by(1)
 
     domain = assigns(:domain)
@@ -122,7 +122,9 @@ describe DomainsController do
     domain = FactoryBot.create(:domain)
 
     expect {
-      xhr :put, :change_owner, :id => domain.id, :domain => { :user_id => FactoryBot.create(:quentin).id }
+      put :change_owner, params: {
+        :id => domain.id, :domain => { :user_id => FactoryBot.create(:quentin).id }
+      }, xhr: true
       domain.reload
     }.to change( domain, :user_id )
 
@@ -140,7 +142,7 @@ describe DomainsController, "and macros" do
   end
 
   it "should have a selection for the user" do
-    get :apply_macro, :id => @domain.id
+    get :apply_macro, params: { :id => @domain.id }
 
     assigns(:domain).should_not be_nil
     assigns(:macros).should_not be_empty
@@ -149,7 +151,7 @@ describe DomainsController, "and macros" do
   end
 
   it "should apply the selected macro" do
-    post :apply_macro, :id => @domain.id, :macro_id => @macro.id
+    post :apply_macro, params: { :id => @domain.id, :macro_id => @macro.id }
 
     flash[:notice].should_not be_blank
     response.should be_redirect
@@ -158,22 +160,37 @@ describe DomainsController, "and macros" do
 
 end
 
+describe DomainsController, "update_note" do
+  let!(:domain) { FactoryBot.create(:domain)}
+
+  before do
+    sign_in(FactoryBot.create(:admin))
+  end
+
+  it "updates note" do
+    expect do
+      put :update_note, params: { id: domain.id, domain: { notes: "lala" } }, xhr: true
+      domain.reload
+    end.to change(domain, :notes).to("lala")
+  end
+end
+
 describe DomainsController, "should handle a REST client" do
 
   let(:domain) { FactoryBot.create(:domain) }
   before(:each) do
-    sign_in(FactoryBot.create(:api_client))
+    sign_in(FactoryBot.create(:api_client_user))
 
     @domain = domain
   end
 
   it "creating a new zone without a template" do
     expect {
-      post 'create', :domain => {
+      post 'create', params: { :domain => {
         :name => 'example.org', :primary_ns => 'ns1.example.org',
         :contact => 'admin@example.org', :refresh => 10800, :retry => 7200,
         :expire => 604800, :minimum => 10800
-      }, :format => "xml"
+      }, :format => "xml" }
     }.to change( Domain, :count ).by( 1 )
 
     expect(Capybara.string(response.body)).to have_css( 'domain' )
@@ -183,9 +200,8 @@ describe DomainsController, "should handle a REST client" do
     zt = FactoryBot.create(:zone_template)
     FactoryBot.create(:template_soa, :zone_template => zt)
 
-    post 'create', :domain => { :name => 'example.org',
-      :zone_template_id => zt.id },
-      :format => "xml"
+    post 'create', params: { :domain => { :name => 'example.org',
+      :zone_template_id => zt.id }, :format => "xml" }
 
     expect(Capybara.string(response.body)).to have_css( 'domain' )
   end
@@ -194,25 +210,24 @@ describe DomainsController, "should handle a REST client" do
     zt = FactoryBot.create(:zone_template)
     FactoryBot.create(:template_soa, :zone_template => zt)
 
-    post 'create', :domain => { :name => 'example.org',
-      :zone_template_name => zt.name },
-      :format => "xml"
+    post 'create', params: { :domain => { :name => 'example.org',
+      :zone_template_name => zt.name }, :format => "xml" }
 
     expect(Capybara.string(response.body)).to have_css( 'domain' )
   end
 
   it "creating a zone with invalid input" do
     expect {
-      post 'create', :domain => {
+      post 'create', params: { :domain => {
         name: domain.name # non-unique name
-      }, :format => "xml"
+      }, :format => "xml" }
     }.to_not change( Domain, :count )
 
     expect(Capybara.string(response.body)).to have_css( 'errors' )
   end
 
   it "removing zones" do
-    delete :destroy, :id => @domain.id, :format => "xml"
+    delete :destroy, params: { :id => @domain.id, :format => "xml" }
 
     expect {
       @domain.reload
@@ -227,7 +242,7 @@ describe DomainsController, "should handle a REST client" do
   end
 
   it "viewing a zone" do
-    get :show, :id => @domain.id, :format => 'xml'
+    get :show, params: { :id => @domain.id, :format => 'xml' }
 
     expect(Capybara.string(response.body)).to have_selector('domain > records')
   end
@@ -235,7 +250,7 @@ describe DomainsController, "should handle a REST client" do
   it "getting a list of macros to apply" do
     FactoryBot.create(:macro)
 
-    get :apply_macro, :id => @domain.id, :format => 'xml'
+    get :apply_macro, params: { :id => @domain.id, :format => 'xml' }
 
     expect(Capybara.string(response.body)).to have_selector('macros > macro')
   end
@@ -243,7 +258,7 @@ describe DomainsController, "should handle a REST client" do
   it "applying a macro to a domain" do
     macro = FactoryBot.create(:macro)
 
-    post :apply_macro, :id => @domain.id, :macro_id => macro.id, :format => 'xml'
+    post :apply_macro, params: { :id => @domain.id, :macro_id => macro.id, :format => 'xml' }
 
     response.code.should == "202"
     expect(Capybara.string(response.body)).to have_css('domain')
@@ -261,13 +276,13 @@ describe DomainsController, "and auth tokens" do
   end
 
   xit "should display the domain in the token" do
-    get :show, :id => @domain.id
+    get :show, params: { :id => @domain.id }
 
     response.should render_template('domains/show')
   end
 
   xit "should restrict the domain to that of the token" do
-    get :show, :id => rand(1_000_000)
+    get :show, params: { :id => rand(1_000_000) }
 
     assigns(:domain).should eql(@domain)
   end
@@ -279,7 +294,7 @@ describe DomainsController, "and auth tokens" do
   end
 
   xit "should not accept updates to the domain" do
-    put :update, :id => @domain, :domain => { :name => 'hack' }
+    put :update, params: { :id => @domain, :domain => { :name => 'hack' } }
 
     response.should be_redirect
   end

@@ -1,6 +1,6 @@
 class ZoneTemplate < ActiveRecord::Base
 
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :record_templates
 
   validates_presence_of :name
@@ -18,12 +18,12 @@ class ZoneTemplate < ActiveRecord::Base
 
   #   # Custom find that takes one additional parameter, :require_soa (bool), for
   #   # restricting the returned resultset to only instances that #has_soa?
-  #   def find_with_validations( *args )
+  #   def find( *args )
   #     options = args.extract_options!
   #     valid_soa = options.delete( :require_soa ) || false
 
   #     # find as per usual
-  #     records = find_without_validations( *args << options )
+  #     records = super( *args << options )
 
   #     if valid_soa
   #       records.delete_if { |z| !z.has_soa? }
@@ -31,7 +31,6 @@ class ZoneTemplate < ActiveRecord::Base
 
   #     records # give back
   #   end
-  #   alias_method_chain :find, :validations
   # end
 
   # Build a new zone using +self+ as a template. +domain+ should be valid domain
@@ -42,7 +41,7 @@ class ZoneTemplate < ActiveRecord::Base
   # transaction to complete/rollback the operation.
   def build( domain_name, user = nil )
     soa_template = record_templates.detect { |r| r.record_type == 'SOA' }
-    soa_args = soa_template && Hash[SOA::SOA_FIELDS.map { |f| [f, soa_template.send(f)] }] || {}
+    soa_args = soa_template && Hash[Record::SOA::SOA_FIELDS.map { |f| [f, soa_template.send(f)] }] || {}
     # TODO: более аккуратно разложить, например сделать record_template#build_attributes
     soa_args.each_pair { |k,v| soa_args[k] = v.gsub('%ZONE%', domain_name) if v.is_a?(String) }
 

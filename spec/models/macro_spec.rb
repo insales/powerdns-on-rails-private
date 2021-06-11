@@ -58,11 +58,11 @@ describe Macro, "when applied" do
 
   it "should remove existing RR's (wild card)" do
     FactoryBot.create(:mx, :domain => @target)
-    @target.mx_records(true).should_not be_empty
+    @target.mx_records.reload.should_not be_empty
 
     @macro.apply_to( @target )
 
-    @target.mx_records(true).should be_empty
+    @target.mx_records.reload.should be_empty
   end
 
   it "should not create RR's that were supposed to be updated but doesn't exist" do

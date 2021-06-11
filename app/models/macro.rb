@@ -26,7 +26,7 @@ class Macro < ActiveRecord::Base
   validates_uniqueness_of :name
 
   has_many :macro_steps, ->{ order('position') }, dependent: :destroy
-  belongs_to :user
+  belongs_to :user, optional: true
 
   scope :user, lambda { |user| user.admin? ? nil : where(:user_id => user.id) }
 
@@ -73,7 +73,7 @@ class Macro < ActiveRecord::Base
       next unless record.shortname == step.name
 
       record.content = step.content.gsub('%ZONE%', domain.name)
-      record.prio = step.prio if record.is_a?( MX )
+      record.prio = step.prio if record.is_a?( Record::MX )
       record.save
 
       changed = true

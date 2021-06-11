@@ -17,4 +17,9 @@ FactoryBot.define do
     } }
     expires_at { 3.hours.since }
   end
+
+  factory :api_client do
+    name { "Some api client" }
+    authentication_token { "124783tsdjfhgsdjk" }
+  end
 end

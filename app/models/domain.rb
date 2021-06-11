@@ -11,22 +11,22 @@ class Domain < ActiveRecord::Base
   audited :allow_mass_assignment => true
   has_associated_audits
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   has_many :records, :dependent => :destroy
 
-  has_one  :soa_record,    :class_name => 'SOA'
-  has_many :ns_records,    :class_name => 'NS'
-  has_many :mx_records,    :class_name => 'MX'
-  has_many :a_records,     :class_name => 'A'
-  has_many :txt_records,   :class_name => 'TXT'
-  has_many :cname_records, :class_name => 'CNAME'
-  has_one  :loc_record,    :class_name => 'LOC'
-  has_many :aaaa_records,  :class_name => 'AAAA'
-  has_many :spf_records,   :class_name => 'SPF'
-  has_many :srv_records,   :class_name => 'SRV'
-  has_many :sshfp_records, :class_name => 'SSHFP'
-  has_many :ptr_records,   :class_name => 'PTR'
+  has_one  :soa_record,    :class_name => 'Record::SOA'
+  has_many :ns_records,    :class_name => 'Record::NS'
+  has_many :mx_records,    :class_name => 'Record::MX'
+  has_many :a_records,     :class_name => 'Record::A'
+  has_many :txt_records,   :class_name => 'Record::TXT'
+  has_many :cname_records, :class_name => 'Record::CNAME'
+  has_one  :loc_record,    :class_name => 'Record::LOC'
+  has_many :aaaa_records,  :class_name => 'Record::AAAA'
+  has_many :spf_records,   :class_name => 'Record::SPF'
+  has_many :srv_records,   :class_name => 'Record::SRV'
+  has_many :sshfp_records, :class_name => 'Record::SSHFP'
+  has_many :ptr_records,   :class_name => 'Record::PTR'
 
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -45,10 +45,10 @@ class Domain < ActiveRecord::Base
 
   # Virtual attributes that ease new zone creation. If present, they'll be
   # used to create an SOA for the domain
-  attr_accessor *SOA::SOA_FIELDS
-  attr_accessible *SOA::SOA_FIELDS
+  attr_accessor *Record::SOA::SOA_FIELDS
+  attr_accessible *Record::SOA::SOA_FIELDS
 
-  SOA::SOA_FIELDS.each do |f|
+  Record::SOA::SOA_FIELDS.each do |f|
     next if :serial == f # serial is generated in soa
     validates_presence_of f, :on => :create, :unless => :slave?
   end
@@ -67,10 +67,13 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  def initialize(params = {})
-    params_sym = params.symbolize_keys
-    super self.class.const_defined?(:DOMAIN_DEFAULTS) ?
-      DOMAIN_DEFAULTS.merge(params_sym) : params_sym
+  attribute :type, :string, default: DOMAIN_DEFAULTS[:type]
+
+  after_initialize :set_defaults, unless: :persisted?
+  def set_defaults
+    DOMAIN_DEFAULTS.each_pair do |attr, value|
+      self.send(:"#{attr}=", value) if self.respond_to?(attr) && !self.send(attr).present?
+    end
   end
 
   def name=(val)
@@ -89,15 +92,15 @@ class Domain < ActiveRecord::Base
 
   # return the records, excluding the SOA record
   def records_without_soa
-    records.includes(:domain).to_a.select { |r| !r.is_a?( SOA ) }.sort_by {|r| [r.shortname, r.type]}
+    records.includes(:domain).to_a.select { |r| !r.is_a?( Record::SOA ) }.sort_by {|r| [r.shortname, r.type]}
   end
 
   # Setup an SOA if we have the requirements
   def build_soa_record #:nodoc:
     return if self.slave?
 
-    soa_args = Hash[SOA::SOA_FIELDS.map { |f| [f, send(f)] }]
-    self.records << soa = SOA.new(soa_args)
+    soa_args = Hash[Record::SOA::SOA_FIELDS.map { |f| [f, send(f)] }]
+    self.records << soa = Record::SOA.new(soa_args)
     self.soa_record = soa
     soa.domain = self
   end

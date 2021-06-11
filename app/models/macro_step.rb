@@ -15,7 +15,7 @@ class MacroStep < ActiveRecord::Base
 
   # Convert this step into a valid #Record
   def build( domain = nil )
-    record_class = self.record_type.constantize
+    record_class = Record.record_class(self.record_type)
 
     # make a clean copy of ourself
     attrs = self.attributes.dup
@@ -39,8 +39,10 @@ class MacroStep < ActiveRecord::Base
 
     record = build
 
-    record.errors.each do |k,v|
-      next if k == :domain_id || k == :ttl
+    record.errors.each do |error|
+      k = error.attribute
+      v = error.message
+      next if k == :domain_id || k == :domain || k == :ttl
       next if k == :content || k == :prio unless content_required?
 
       # Since we don't have a domain, blank name validations will

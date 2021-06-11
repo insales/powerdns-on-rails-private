@@ -209,7 +209,7 @@ describe AuthToken, "and permissions" do
     @auth_token.allow_new_records = true
     @auth_token.protect_type 'MX'
 
-    @auth_token.can_add?( MX.new( :name => '', :domain => @domain ) ).should be_falsey
+    @auth_token.can_add?( Record::MX.new( :name => '', :domain => @domain ) ).should be_falsey
   end
 
   it "should always protect NS records" do

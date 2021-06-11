@@ -2,7 +2,7 @@ class RecordsController < InheritedResources::Base
   belongs_to :domain
   respond_to :xml, :json, :js
 
-  before_filter :restrict_token_movements, :except => [:create, :update, :destroy]
+  before_action :restrict_token_movements, :except => [:create, :update, :destroy]
 
   rescue_from AuthToken::Denied do
     render :text => t(:message_token_not_authorized), :status => 403

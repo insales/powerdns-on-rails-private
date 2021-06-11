@@ -1,6 +1,6 @@
 class SessionsController < Devise::SessionsController
 
-  skip_before_filter :login_required, :except => [ :destroy ]
+  # skip_before_action :login_required, :except => [ :destroy ]
 
   #def show
   #  render :action => :new

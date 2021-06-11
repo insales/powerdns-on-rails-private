@@ -1,6 +1,6 @@
 class AuthTokensController < ApplicationController
 
-  before_filter do
+  before_action do
     unless current_user.auth_tokens?
       redirect_to root_url
     end
@@ -51,7 +51,7 @@ EOS
     # Get our domain
     domain = Domain.find_by_name( params[:auth_token][:domain] )
     if domain.nil?
-      render :text => t(:message_domain_not_found), :status => 404
+      render plain: t(:message_domain_not_found), :status => 404
       return
     end
 
@@ -101,7 +101,7 @@ EOS
     else
       render :status => 500, :xml => <<-EOF
         <error>
-          #{@auth_token.errors.to_xml}
+          #{@auth_token.errors.full_messages.to_xml(root: "errors", skip_types: true)}
         </error>
       EOF
     end

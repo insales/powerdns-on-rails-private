@@ -15,7 +15,7 @@ describe TemplatesController, "and admins" do
   end
 
   it "should have a detailed view of a template" do
-    get :show, :id => FactoryBot.create(:zone_template).id
+    get :show, params: { :id => FactoryBot.create(:zone_template).id }
 
     assigns(:zone_template).should_not be_nil
 
@@ -24,7 +24,7 @@ describe TemplatesController, "and admins" do
 
   it "should redirect to the template on create" do
     expect {
-      post :create, :zone_template => { :name => 'Foo' }
+      post :create, params: { :zone_template => { :name => 'Foo' } }
     }.to change( ZoneTemplate, :count ).by(1)
 
     response.should redirect_to( zone_template_path( assigns(:zone_template) ) )
@@ -57,7 +57,7 @@ end
 
 describe TemplatesController, "should handle a REST client" do
   before(:each) do
-    sign_in(FactoryBot.create(:api_client))
+    sign_in(FactoryBot.create(:api_client_user))
   end
 
   it "asking for a list of templates" do

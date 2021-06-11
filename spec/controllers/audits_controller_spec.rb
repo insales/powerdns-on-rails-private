@@ -13,7 +13,7 @@ describe AuditsController do
   end
 
   it "should have a domain details page" do
-    get :domain, :id => FactoryBot.create(:domain).id
+    get :domain, params: { :id => FactoryBot.create(:domain).id }
 
     assigns(:domain).should_not be_nil
 

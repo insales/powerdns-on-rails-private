@@ -31,10 +31,8 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  config.include Devise::TestHelpers, :type => :controller
-  # config.include Devise::TestHelpers, type: :view
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include SignInHelpers, :type => :controller
-  # config.include Webrat::HaveTagMatcher
 
   config.infer_spec_type_from_file_location!
 

@@ -1,13 +1,12 @@
 Rails.application.routes.draw do
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   namespace :api do
     namespace :v1 do
       devise_for :api_clients, skip: [:sessions, :registrations, :confirmations]
-      resources :domains do
-        resources :records do
-          delete on: :collection, action: :delete_all
+      resources :domains, only: %i[create show update destroy] do
+        resources :records, only: %i[index create show update destroy] do
+          delete '/', on: :collection, action: :delete_all
         end
       end
     end
@@ -39,8 +38,23 @@ Rails.application.routes.draw do
     resources :macro_steps
   end
 
-  get '/audits(/:action(/:id))' => 'audits#index', :as => :audits
-  get '/reports(/:action)' => 'reports#index', :as => :reports
+  # get '/audits(/:action(/:id))' => 'audits#index', :as => :audits
+  resources :audits, only: :index do
+    get "/domain/:id", action: :domain, on: :collection
+  end
+
+  resources :reports, only: :index do
+    collection do
+      get :results
+      get :view
+    end
+  end
+
+  # get '/search(/:action)' => 'search#results', :as => :search
+  resource :search, controller: :search, only: :show do
+    get :results
+  end
+
 
   resource :auth_token
   post '/token/:token' => 'sessions#token', :as => :token
@@ -55,9 +69,5 @@ Rails.application.routes.draw do
 
   resources :api_clients
 
-  get '/search(/:action)' => 'search#results', :as => :search
-
-  #resource :session
   #match '/logout' => 'sessions#destroy', :as => :logout
-  #match '/:controller(/:action(/:id))'
 end
