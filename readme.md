@@ -38,7 +38,6 @@ bundle exec cap production deploy:migrate
 ### Локальная разработка
 
 database.yml
-generate config/initializers/secret_token.rb
 
 создать юзера:
 ```ruby
