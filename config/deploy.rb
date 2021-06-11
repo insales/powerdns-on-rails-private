@@ -50,9 +50,6 @@ namespace :deploy do
     # на чистой системе из-за отсутствующего rake
     bundle_install
 
-    # создавать линки надо до прекомпиляции ассетов, т.к. rake не запустится без database.yml
-    symlink_shared
-
     assets_precompile
     finalize_update
     restart
@@ -111,7 +108,7 @@ namespace :deploy do
   end
 end
 
-after "deploy:finalize_update", "deploy:symlink_shared"
+after "deploy:update", "deploy:symlink_shared"
 
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems')].each do |vendored_notifier|
   $: << File.join(vendored_notifier, 'lib')
