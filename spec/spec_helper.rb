@@ -6,8 +6,11 @@ if ENV['COVERAGE']
   SimpleCov.start 'rails'
 end
 
+
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+
+Rails.application.eager_load!
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
