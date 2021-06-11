@@ -37,8 +37,8 @@ set :use_sudo, false
 set :deploy_to, "/projects/cap/#{application}"
 
 shared_links = {
-    'config/initializers/secret_token.rb' => 'config/initializers/secret_token.rb',
     'config/database.yml'             => 'config/database.yml',
+    'config/secrets.yml'             => 'config/secrets.yml',
     'locks'                           => 'locks'
 }.freeze
 
