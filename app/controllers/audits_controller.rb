@@ -7,7 +7,7 @@ class AuditsController < ApplicationController
   end
 
   def index
-
+    @audits = Audit.reorder(id: :desc).includes(:user, auditable: :domain).page(params[:page])
   end
 
   # Retrieve the audit details for a domain

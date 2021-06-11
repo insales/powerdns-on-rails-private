@@ -1,5 +1,0 @@
-%tr[ api_client, :show ]
-  %td= link_to api_client.name, api_client_path( api_client )
-  %td
-    = link_to info_icon('user_edit.png', "edit-api-client-#{api_client.id}"), edit_api_client_path( api_client )
-    = link_to info_icon('user_delete.png', "delete-api-client-#{api_client.id}"), api_client_path( api_client ), method: :delete

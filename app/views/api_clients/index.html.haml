@@ -1,10 +1,18 @@
-#new-user{ :style => 'display: none' }= t :help_api_client_add
+#new-user{ style: 'display: none' }= t :help_api_client_add
 
 %h2.underline= t :title_api_clients
 
-%table.gridwide
+%table.table
   %tr
-    %td{ :colspan => 5 }
-      = link_to info_icon('user_add.png', 'new-api-client'), new_api_client_path
-      = link_to t(:label_api_client_create), new_api_client_path
-  = render :partial => 'api_client', :collection => @api_clients
+    %th
+    %td
+      = link_to new_api_client_path, class: 'btn btn-success' do
+        = fa_icon 'plus'
+        = t(:label_api_client_create)
+
+  - @api_clients.each do |api_client|
+    %tr[ api_client, :show ]
+      %td= link_to api_client.name, api_client_path(api_client)
+      %td
+        = link_to fa_icon('edit fw'), edit_api_client_path( api_client ), class: 'btn btn-primary', title: 'Edit', "aria-label" => "Edit"
+        = link_to fa_icon('trash fw'), api_client_path( api_client ), method: :delete, data: { confirm: t('confirm_api_client_remove') }, class: 'btn btn-danger'

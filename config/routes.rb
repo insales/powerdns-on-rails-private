@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users, :controllers => { :sessions => "sessions" }, :path => "sessions"
+  devise_for :users, controllers: { sessions: "sessions" }, path: "sessions"
 
   root :to => 'dashboard#index'
 

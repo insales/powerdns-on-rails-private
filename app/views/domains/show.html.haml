@@ -45,7 +45,7 @@
       %td{ :width => "100" }
         - if current_user
           = link_to info_icon('table_edit.png', 'zone-edit'), edit_domain_path(@domain)
-          = link_to info_icon('report_magnify.png', 'audits'), audits_path(:action => :domain, :id => @domain)
+          = link_to info_icon('report_magnify.png', 'audits'), domain_audits_path(@domain)
           - unless @domain.slave?
             = link_to info_icon('brick_go.png', 'macro'), apply_macro_domain_path( @domain )
           - if current_user.admin? && @domain.user

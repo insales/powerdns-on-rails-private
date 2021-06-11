@@ -1,4 +1,6 @@
 - css_class = cycle('even', 'odd')
+- if params[:rhighlight].to_i == record.id
+  - css_class = 'bg-success'
 
 %tr[ record, :marker ]
 %tr[ record, :show ]{:class => css_class}

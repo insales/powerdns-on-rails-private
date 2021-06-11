@@ -23,26 +23,23 @@
             %li.nav-item= link_to t(:layout_menu_domains), domains_path, class: ['nav-link', ('active' if controller_name == 'domains')]
             %li.nav-item= link_to t(:layout_menu_templates), zone_templates_path, class: ['nav-link', ('active' if controller_name == 'templates')]
             %li.nav-item= link_to t(:layout_menu_macros), macros_path, class: ['nav-link', ('active' if controller_name == 'macros')]
-            - if current_user.admin?
+            - if current_user&.admin?
               %li.nav-item= link_to t(:layout_menu_logs), audits_path, class: ['nav-link', ('active' if controller_name == 'audits')]
               %li.nav-item= link_to t(:layout_menu_users), users_path, class: ['nav-link', ('active' if controller_name == 'users')]
               %li.nav-item= link_to t(:layout_menu_api_clients), api_clients_path, class: ['nav-link', ('active' if controller_name == 'api_clients')]
               %li.nav-item= link_to t(:layout_menu_reports), reports_path, class: ['nav-link', ('active' if controller_name == 'reports')]
-            %li.nav-item= link_to t(:layout_menu_logout), destroy_user_session_path, class: 'nav-link'
+            %li.nav-item= link_to t(:layout_menu_logout), destroy_user_session_path, class: 'nav-link', method: :delete
           - if current_user
-            = form_tag( { :controller => :search, :action => :results }, method: :get, class: 'd-flex') do
-              -# = label_tag :q, "Domain:"
-              .input-group<
+            = form_tag( { controller: :search, action: :results }, method: :get, class: 'd-flex') do
+              .input-group.flex-nowrap<
                 = text_field_tag :q, {}, class: 'form-control', placeholder: 'Search', 'aria-label'=>"Search", "aria-describedby"=>"navbar-search-btn"
                 = submit_tag t(:generic_search), class: 'btn btn-outline-success', id: 'navbar-search-btn'
 
+    .container
+      = show_flash
+      = yield
 
-    .container#Container
-      #Body
-        = show_flash
-
-        = yield
-      %footer#Footer
+      %footer.text-center.text-muted.fw-light.fs-6
         -# http://github.com/kennethkalmer/powerdns-on-rails
         Based on PowerDNS on Rails &copy; Kenneth Kalmer
         %br
