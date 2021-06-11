@@ -37,7 +37,8 @@ module ApplicationHelper
   end
 
   def help_icon( dom_id )
-    image_tag('help.png', :id => "help-icn-#{dom_id}", :class => 'help-icn', "data-help" => dom_id )
+    # image_tag('help.png', :id => "help-icn-#{dom_id}", :class => 'help-icn', "data-help" => dom_id )
+    fa_icon 'info-circle', id: "help-icn-#{dom_id}", class: 'help-icn', "data-help" => dom_id
   end
 
   def info_icon( image, dom_id )
@@ -73,6 +74,37 @@ module ApplicationHelper
       contents << content_tag(:ul, error_messages)
 
       content_tag(:div, contents.html_safe, html)
+    end
+  end
+
+  # from font-awesome-rails 4.7
+  def fa_icon(names = "flag", original_options = {})
+    options = original_options.deep_dup
+    classes = ["fa"]
+    classes.concat Private.icon_names(names)
+    classes.concat Array(options.delete(:class))
+    text = options.delete(:text)
+    right_icon = options.delete(:right)
+    icon = content_tag(:i, nil, options.merge(:class => classes))
+    Private.icon_join(icon, text, right_icon)
+  end
+
+  module Private
+    extend ActionView::Helpers::OutputSafetyHelper
+
+    def self.icon_join(icon, text, reverse_order = false)
+      return icon if text.blank?
+      elements = [icon, ERB::Util.html_escape(text)]
+      elements.reverse! if reverse_order
+      safe_join(elements, " ")
+    end
+
+    def self.icon_names(names = [])
+      array_value(names).map { |n| "fa-#{n}" }
+    end
+
+    def self.array_value(value = [])
+      value.is_a?(Array) ? value : value.to_s.split(/\s+/)
     end
   end
 end

@@ -4,12 +4,14 @@ gem 'rails', '6.1.3.2'
 
 gem 'unicorn'
 
-# gem 'sass-rails'
 # gem 'uglifier'
 
 gem 'pg', '~> 1.1.4'
 gem 'haml'
 gem 'jquery-rails'
+gem 'sass-rails'
+gem 'font-awesome-sass', '~>5.15'
+gem 'bootstrap', '~>5.0'
 gem 'will_paginate', '~> 3.3'
 gem "audited", '~>4.0'
 gem 'inherited_resources'
@@ -37,6 +39,7 @@ group :development, :test do
   gem 'rspec-html-matchers' # legacy matchers
 
   gem 'listen'
+  gem 'puma'
 end
 
 group :test do
