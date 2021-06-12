@@ -17,7 +17,7 @@ describe "macros/index.html.haml" do
 
     render
 
-    rendered.should have_css('em', :text => "don't have any macros")
+    rendered.should have_css('td', text: "don't have any macros")
   end
 
 end
