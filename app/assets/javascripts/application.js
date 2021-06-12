@@ -71,6 +71,19 @@ $(document).ready(function() {
   $('#record-form #macro_step_record_type').change(function() {
     toggleRecordFields( $(this).val() );
   });
+
+});
+
+$(document).on('click', '[data-form-submit]', function(e) {
+  e.preventDefault();
+  var form;
+  if(e.target.getAttribute('form')) {
+    form = document.findElementById(e.target.getAttribute('form'));
+  } else {
+    form = $(this).closest('form')[0];
+  }
+  Rails.fire(form, 'submit');
+  // .trigger('submit.rails');
 });
 
 // Ajax activity indicator bound to ajax start/stop document events

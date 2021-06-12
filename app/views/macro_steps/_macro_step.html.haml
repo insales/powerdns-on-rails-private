@@ -1,14 +1,31 @@
 %tr[ macro_step, :marker ]
 %tr[ macro_step, :show ]
   %td{ :width => 50 }= macro_step.position
-  %td{ :width => 90 }= macro_step.action
+  %td{ :width => 90 }
+    - if macro_step.action == 'create'
+      .badge.bg-success
+        = macro_step.action
+    - elsif macro_step.action == 'update'
+      .badge.bg-warning
+        = macro_step.action
+    - elsif macro_step.action == 'create_update'
+      .badge.bg-warning
+        = macro_step.action
+    - elsif macro_step.action == 'remove'
+      .badge.bg-warning
+        = macro_step.action
+    - else
+      = macro_step.action
   %td{ :width => 80 }= macro_step.record_type
-  %td{ :width => 230 }= macro_step.name
+  %td{ :width => 230 }
+    %code= macro_step.name
   %td{ :width => 30 }= macro_step.prio
-  %td{ :width => 230 }= macro_step.content
-  %td{ :width => 40 }
-    = link_to_function info_icon('table_edit.png', 'edit-step'), "editRecordTemplate(#{macro_step.id})"
-    = link_to info_icon('table_delete.png', 'delete-step'), macro_macro_step_path(@macro, macro_step), :method => :delete, data: { confirm: t(:confirm_macro_step_delte) }
+  %td{ :width => 230 }
+    %code= macro_step.content
+  %td{ :width => 100 }
+    = link_to_function fa_icon("edit fw"), "editRecordTemplate(#{macro_step.id})", title: t(:help_macro_step_edit), "aria-label" => t(:generic_edit)
+    = link_to fa_icon("trash fw", class: 'text-danger'), macro_macro_step_path(@macro, macro_step), method: :delete, data: { confirm: t(:confirm_macro_step_delte) }, title: t(:help_macro_delete), "aria-label" => t(:generic_remove)
+
 %tr[ macro_step, :edit ]{ :style => 'display: none' }
   %td{ :colspan => 7 }
     = form_for( [@macro, macro_step], :remote => true ) do |f|
@@ -24,5 +41,5 @@
               = f.text_field :prio, :size => 2
           %td{ :width => 220 }= f.text_field :content, :size => 15
           %td{ :width => 44 }
-            = image_submit_tag "table_save.png", { :class => 'nb' }
-            = link_to_function image_tag('cancel.png'), "hideRecordTemplate(#{macro_step.id})"
+            = link_to fa_icon('save fw'), '#', data: { 'form-submit' => true }
+            = link_to_function fa_icon('window-close fw', class: 'text-secondary'), "hideRecordTemplate(#{macro_step.id})"

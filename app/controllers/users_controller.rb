@@ -1,6 +1,10 @@
 class UsersController < InheritedResources::Base
   allow_admin_only!
 
+  def collection
+    @users ||= super.reorder(email: :asc)
+  end
+
   def update
     # strip out blank params
     params[:user].delete_if { |k,v| v.blank? }

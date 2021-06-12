@@ -40,15 +40,14 @@ group :development, :test do
 
   gem 'listen'
   gem 'puma'
+
+  gem 'pry'
+  gem 'pry-byebug'
 end
 
 group :test do
   gem "factory_bot_rails"
-
   gem "turnip" # run gherkin (cucumber) features in rspec
-
-  gem 'pry'
-  gem 'pry-byebug'
 
   gem 'capybara'
   gem 'database_cleaner'

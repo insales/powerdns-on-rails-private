@@ -107,6 +107,7 @@ en:
   generic_remove: "Remove"
   generic_create: "Create"
   generic_update: "Update"
+  generic_edit: "Edit"
   generic_yes: "Yes"
   generic_no: "No"
 

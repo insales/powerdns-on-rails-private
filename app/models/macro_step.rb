@@ -18,9 +18,8 @@ class MacroStep < ActiveRecord::Base
     record_class = Record.record_class(self.record_type)
 
     # make a clean copy of ourself
-    attrs = self.attributes.dup
+    attrs = self.attributes.dup.except("id", "created_at", "updated_at")
     attrs.delete_if { |k,_| !record_class.columns.map(&:name).include?( k ) }
-    attrs.delete(:id)
 
     # parse each attribute for %ZONE%
     unless domain.nil?

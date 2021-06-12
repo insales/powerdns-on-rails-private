@@ -2,35 +2,32 @@
   = @macro.new_record? ? t(:title_macro_new) : t(:title_macro_update)
 
 %div{ :style => "display:none" }
-  #macro-name= t :help_macro_name
   #macro-active= t :help_macro_active
 
 = form_for( @macro ) do |f|
-  = error_messages_for @macro
+  .form-group.row.mb-3
+    = error_messages_for @macro
 
-  %table
-    %tr
-      %td= t(:label_macro_name)
-      %td &nbsp;
-      %td
-        = f.text_field :name
-        = help_icon('macro-name')
-    %tr
-      %td.top= t(:label_macro_description)
-      %td &nbsp;
-      %td= f.text_area :description, :size => '35x2'
-    - if current_user.admin? && !possible_owners.empty?
-      %tr
-        %td= t(:label_macro_owner)
-        %td &nbsp;
-        %td= f.collection_select :user_id, possible_owners, :id, :login, :include_blank => true
-    %tr
-      %td= t(:label_macro_active)
-      %td &nbsp;
-      %td
-        = f.check_box :active
-        = help_icon('macro-active')
-    %tr
-      %td.right= link_to_cancel @macro
-      %td &nbsp;
-      %td= submit_tag t(:generic_save)
+  .form-group.row.mb-3
+    = f.label :name, t(:label_macro_name), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_field :name, class: 'form-control', placeholder: "Name", title: t(:help_macro_name)
+
+  .form-group.row.mb-3
+    = f.label :description, t(:label_macro_description), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_area :description, class: 'form-control', placeholder: "Description"
+
+  - if current_user.admin? && !possible_owners.empty?
+    .form-group.row.mb-3
+      = f.label :user_id, t(:label_macro_owner), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.collection_select :user_id, possible_owners, :id, :login, { include_blank: true }, class: 'form-select'
+
+  .form-group.row.mb-3
+    .col-sm-10.offset-sm-2
+      = f.check_box :active, class: 'form-check-input'
+      = f.label :admin, t(:label_macro_active), class: 'form-check-label'
+      = help_icon('macro-active')
+
+  .form-group.row.mb-3
+    .col-sm-10.offset-sm-2
+      = submit_tag t(:generic_save), class: 'btn btn-primary'
+      = link_to t(:generic_cancel), @macro.new_record? ? macros_path : macro_path(@macro), class: 'btn btn-secondary'

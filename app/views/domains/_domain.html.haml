@@ -3,17 +3,4 @@
     = link_to domain_name_with_encoded(domain.name), domain_path(domain)
   %td &nbsp;
   %td
-    -# info_icon('table_edit.png', 'zone-edit'),
-    = link_to fa_icon('edit fw'), edit_domain_path(domain), title: t('help_zone_edit'), 'aria-label'=> "Edit"
-    -# = info_icon('report_magnify.png', 'audits')
-    = link_to fa_icon("history fw", style: "color: gray"), domain_audits_path(domain), title: t('help_zone_edit'), 'aria-label'=> "History"
-
-    - unless domain.slave?
-      = link_to apply_macro_domain_path(domain), title: t("help_audits"), 'aria-label' => t("label_macro_apply") do
-        = fa_icon "cubes fw", style: "color: gray"
-
-    - if current_user.admin? && domain.user
-      -# info_icon('database_delete.png', 'delete-zone')
-      = link_to_function fa_icon('trash fw'), "deleteDomain();" , id: "delete-link-buffer"
-    - elsif !current_token
-      = link_to fa_icon('trash fw', style: 'color: red'), domain_path( domain ), method: :delete, data: { confirm: t(:confirm_domain_delete, domain: domain.name) }, title: t('help_delete_domain'), 'aria-label' => t('help_delete_domain')
+    = render partial: 'domain_actions', locals: { domain: domain }

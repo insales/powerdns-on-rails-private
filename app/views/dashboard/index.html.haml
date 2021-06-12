@@ -1,11 +1,11 @@
 %h1.underline
-  =t :label_last_x_domains, :value => 5
+  =t :label_last_x_domains, value: @latest_domains_limit
 
 %table
-  = render :partial => '/domains/domain', :collection => @latest_domains
+  = render partial: '/domains/domain', collection: @latest_domains
 
 &nbsp;
 %h1.underline
   = t :label_new_domain
 
-= render :partial => '/domains/new'
+= render partial: '/domains/new'

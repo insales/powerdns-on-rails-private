@@ -21,7 +21,6 @@ module PowerdnsOnRails
 
     config.paths.add "lib", eager_load: true
 
-    config.active_record.whitelist_attributes = false
     config.action_controller.default_protect_from_forgery = false
   end
 end

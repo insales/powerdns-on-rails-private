@@ -1,55 +1,46 @@
 %div{ :style => "display:none" }
-  #new-step=t :help_macro_step_new
   #edit-macro=t :help_macro_edit
   #delete-macro=t :help_macro_delete
   #edit-step=t :help_macro_step_edit
   #delete-step=t :help_macro_step_delete
-  #actions=t :help_macro_actions
-  #content-field=t :help_macro_content_field
-  #name-field=t :help_macro_name_field
 
 %h1.underline
   = @macro.name
-  &nbsp;
-  = link_to edit_macro_path( @macro ) do
-    = info_icon( 'brick_edit.png', 'edit-macro' )
+  %span.fs-5
+    = link_to edit_macro_path(@macro), title: t(:help_macro_edit) do
+      = fa_icon "edit"
+      = t(:generic_edit)
 
-%table.grid
-  %tr
-    %td= t :label_macro_name
-    %td &nbsp;
-    %td= @macro.name
-  %tr
-    %td.top= t :label_macro_description
-    %td &nbsp;
-    %td= @macro.description
-  %tr
-    %td= t :label_macro_owner
-    %td &nbsp;
-    %td= @macro.user.nil? ? '-' : link_to(@macro.user.login, user_path(@macro.user))
-  %tr
-    %td= t :label_macro_active
-    %td &nbsp;
-    %td= @macro.active? ? t(:generic_yes) : t(:generic_no)
 
-%p &nbsp;
+.row.mt-1
+  .col-sm-2.fw-bold.me-2= t(:label_macro_name)
+  .col-sm-auto= @macro.name
+.row.mt-1
+  .col-sm-2.fw-bold.me-2= t(:label_macro_description)
+  .col-sm-auto= @macro.description
+.row.mt-1
+  .col-sm-2.fw-bold.me-2= t(:label_macro_owner)
+  .col-sm-auto= @macro.user.nil? ? '-' : link_to(@macro.user.login, user_path(@macro.user))
+.row.mt-1
+  .col-sm-2.fw-bold.me-2= t(:label_macro_active)
+  .col-sm-auto= @macro.active? ? t(:generic_yes) : t(:generic_no)
 
-%h1.underline=t :title_macro_steps
+%h1.underline.mt-4=t :title_macro_steps
 
-%table#steps-table.gridwide
+%table.table#steps-table
   %tr
-    %td.small=t :label_macro_step_position
-    %td.small=t :label_macro_step_action
-    %td.small=t :label_macro_step_type
-    %td.small=t :label_macro_step_name
-    %td.small=t :label_macro_step_priority
-    %td.small=t :label_macro_step_content
+    %th=t :label_macro_step_position
+    %th=t :label_macro_step_action
+    %th=t :label_macro_step_type
+    %th=t :label_macro_step_name
+    %th=t :label_macro_step_priority
+    %th=t :label_macro_step_content
+    %th
   = render :partial => @macro.macro_steps
 
-%p &nbsp;
-
-= link_to_function info_icon('table_add.png', 'new-step'), "displayRecordForm()"
-= link_to_function t(:label_macro_step_create_new), "displayRecordForm()"
+= link_to '#', onclick:'displayRecordForm(); return false' do
+  = fa_icon('plus', class: 'text-success')
+  = t(:label_macro_step_create_new)
 
 #record-form-div{ :style => 'display:none' }
   = form_for( [@macro, @macro.macro_steps.build], :remote => true, :html => { :id => 'record-form' } ) do |f|
@@ -62,7 +53,7 @@
         %td= t :label_macro_step_action
         %td
           = f.select :action, MacroStep.valid_actions.map { |a| [ a.humanize, a ] }
-          = info_icon( 'help.png', 'actions' )
+          = fa_icon 'info-circle', title: t(:help_macro_actions)
       %tr.all
         %td= t :label_domain_record_type
         %td
@@ -71,7 +62,7 @@
         %td= t :label_domain_record_host
         %td
           = f.text_field :name
-          = info_icon( 'help.png', 'name-field' )
+          = fa_icon 'info-circle', title: t(:help_macro_name_field)
       %tr.rt-mx.rt-srv{ :style => 'display :none' }
         %td= t :label_domain_record_priority
         %td= f.text_field :prio, :size => 6
@@ -79,7 +70,7 @@
         %td= t :label_domain_record_data
         %td
           = f.text_field :content
-          = info_icon( 'help.png', 'content-field' )
+          = fa_icon 'info-circle', title: t(:help_macro_content_field)
       %tr.all
         %td.right= link_to_function t(:generic_cancel), "hideAll()"
         %td= submit_tag t(:generic_save)
