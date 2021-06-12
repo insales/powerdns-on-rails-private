@@ -1,85 +1,72 @@
-/ These divs contain the help information.
-%div{ :style => 'display: none' }
-  #help-domain=t :help_domain_fqdn
-  #help-primary-ns=t :help_domain_primary_ns
-  #help-contact=t :help_domain_contact
-  #help-refresh=t :help_domain_refresh
-  #help-retry=t :help_domain_retry
-  #help-expire=t :help_domain_expire
-  #help-minimum=t :help_domain_minimum
-  #help-type=t :help_domain_type
-  #help-master=t :help_domain_master
-
 %p=t :label_create_new_domain_note
 
 = form_for( @domain || Domain.new ) do |f|
-  = error_messages_for f.object
-  %p &nbsp;
-  %table.grid
-    %tr
-      %td{:width => "300"}= f.label :name, t(:label_domain_name)
-      %td= f.text_field :name
-      %td= help_icon('help-domain')
-    %tr
-      %td= f.label :type, t(:label_domain_type)
-      %td
-        = f.select :type, ['NATIVE','MASTER','SLAVE']
-      %td= help_icon('help-type')
-    %tr#master-address{ :style => 'display: none' }
-      %td= f.label :master, t(:label_domain_master_address)
-      %td= f.text_field :master
-      %td= help_icon('help-master')
-    %tr#zone-templates
-      %td= f.label :zone_template_id, t(:label_domain_zone_template)
-      %td
-        - if ZoneTemplate.with_soa.user( current_user ).size > 0
-          = f.collection_select( :zone_template_id, ZoneTemplate.with_soa.user( current_user ), :id, :name, :include_blank => true )
-        - else
-          %em
-            =link_to((t :label_create_zone_templates), new_zone_template_path)
-            =t :label_zone_for_eazy_management
-      %td &nbsp;
+  .form-group.row.mb-3
+    = error_messages_for f.object
+
+  .form-group.row.mb-3
+    = f.label :name, t(:label_domain_name), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_field :name, class: 'form-control', placeholder: "FDQN", title: t(:help_domain_fqdn)
+
+  .form-group.row.mb-3
+    = f.label :type, t(:label_domain_type), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.select :type, Domain::TYPES, {}, class: 'form-select', title: t(:help_domain_type)
+
+  .form-group.row.mb-3#master-address{ :style => 'display: none' }
+    = f.label :master, t(:label_domain_master_address), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_field :master, class: 'form-control', placeholder: "Master", title: t(:help_domain_master)
+
+  .form-group.row.mb-3
+    = f.label :zone_template_id, t(:label_domain_zone_template), class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      - templates_with_soa = ZoneTemplate.with_soa.user(current_user).to_a
+      - if templates_with_soa.size > 0
+        = f.collection_select :zone_template_id, templates_with_soa, :id, :name, { include_blank: true }, class: 'form-select'
+      - else
+        %em
+          =link_to((t :label_create_zone_templates), new_zone_template_path)
+          =t :label_zone_for_eazy_management
 
 
+  -# SOA part:
   #no-template-input
-    %table.grid
-      %tr
-        %td{:width => "300"}= f.label :primary_ns, t(:label_domain_primary_name_server)
-        %td= f.text_field :primary_ns
-        %td= help_icon('help-primary-ns')
-      %tr
-        %td= f.label :contact, t(:label_domain_contact)
-        %td= f.text_field :contact
-        %td= help_icon('help-contact')
-      %tr
-        %td= f.label :refresh, t(:label_domain_refresh)
-        %td
-          = f.text_field :refresh, :size => 6
-          = help_icon('help-refresh')
-        %td &nbsp;
+    .form-group.row.mb-3
+      = f.label :primary_ns, t(:label_domain_primary_name_server), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.text_field :primary_ns, class: 'form-control', placeholder: "Primary NS FDQN", title: t(:help_domain_primary_ns)
 
-      %tr
-        %td= f.label :retry, t(:label_domain_retry)
-        %td
-          = f.text_field :retry, :size => 6
-          = help_icon('help-retry')
-        %td &nbsp;
-      %tr
-        %td= f.label :expire, t(:label_domain_expire)
-        %td
-          = f.text_field :expire, :size => 6
-          = help_icon('help-expire')
-        %td &nbsp;
-      %tr
-        %td= f.label :minimum, t(:label_domain_minimum)
-        %td
-          = f.text_field :minimum, :size => 6
-          = help_icon('help-minimum')
-        %td &nbsp;
-  %table.grid
-    %tr
-      %td.right{:width => "300"}
-        - if @domain
-          = link_to_cancel @domain
-      %td= submit_tag((t :generic_save))
-      %td &nbsp;
+    .form-group.row.mb-3
+      = f.label :contact, t(:label_domain_contact), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.text_field :contact, class: 'form-control', placeholder: "Primary NS FDQN", title: t(:help_domain_contact)
+
+
+    .form-group.row.mb-3
+      = f.label :refresh, t(:label_domain_refresh), class: 'col-sm-2 col-form-label'
+      .col-sm-10
+        .input-group
+          = f.text_field :refresh, class: 'form-control', title: t(:help_domain_refresh)
+          .input-group-text seconds
+    .form-group.row.mb-3
+      = f.label :retry, t(:label_domain_retry), class: 'col-sm-2 col-form-label'
+      .col-sm-10
+        .input-group
+          = f.text_field :retry, class: 'form-control', title: t(:help_domain_retry)
+          .input-group-text seconds
+    .form-group.row.mb-3
+      = f.label :expire, t(:label_domain_expire), class: 'col-sm-2 col-form-label'
+      .col-sm-10
+        .input-group
+          = f.text_field :expire, class: 'form-control', title: t(:help_domain_expire)
+          .input-group-text seconds
+    .form-group.row.mb-3
+      = f.label :minimum, t(:label_domain_minimum), class: 'col-sm-2 col-form-label'
+      .col-sm-10
+        .input-group
+          = f.text_field :minimum, class: 'form-control', title: t(:help_domain_minimum)
+          .input-group-text seconds
+
+  .form-group.row.mb-3
+    .col-sm-10.offset-sm-2
+      = submit_tag t(:generic_save), class: 'btn btn-primary'
+      - if @domain
+        = link_to t(:generic_cancel), @domain.new_record? ? domains_path : domain_path(@domain), class: 'btn btn-secondary'
+
