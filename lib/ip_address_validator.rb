@@ -6,6 +6,8 @@ class IpAddressValidator < ActiveModel::EachValidator
   end
 
   def valid?( ip )
+    return ipv6?(ip) if options[:ipv6] == :strict
+
     ( options[:ipv6] && ipv6?( ip ) ) || ipv4?( ip )
   end
 end

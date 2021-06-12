@@ -1,5 +1,11 @@
 require 'spec_helper'
 
 describe ApiClient do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:params) { { name: 'SomeClient'} }
+  let(:client) { described_class.new(params)}
+
+  it "generates token" do
+    client.save!
+    expect(client.authentication_token).to be_present
+  end
 end

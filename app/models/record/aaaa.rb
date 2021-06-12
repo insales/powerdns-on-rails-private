@@ -13,6 +13,6 @@
 class Record::AAAA < Record
 
   # Only accept valid IPv6 addresses
-  validates :content, :presence => true, :ip_address => { :ipv6 => true }
+  validates :content, :presence => true, :ip_address => { :ipv6 => :strict }
 
 end
