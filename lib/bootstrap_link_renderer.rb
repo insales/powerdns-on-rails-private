@@ -6,7 +6,7 @@ ActiveSupport.on_load :action_view do
 
     def html_container(html)
       tag :nav,
-        tag(:ul, html, container_attributes)
+        tag(:ul, html, container_attributes.merge(class: "pagination justify-content-center"))
     end
 
     def page_number(page)
@@ -14,6 +14,7 @@ ActiveSupport.on_load :action_view do
         link(page, page, rel: rel_value(page), class: 'page-link'),
         class: [
           'page-item',
+          ('d-none d-sm-block' unless page == current_page), # hide on mobiles
           ('active' if page == current_page)
         ].compact.join(' ')
     end
@@ -25,7 +26,7 @@ ActiveSupport.on_load :action_view do
         :class => [classname[0..3], classname, ('disabled' unless page)].join(' ')
     end
     def gap
-      tag :li, link(super, '#', class: 'page-link'), class: 'page-item disabled'
+      tag :li, link(super, '#', class: 'page-link d-none d-sm-block'), class: 'page-item disabled'
     end
   end
 end

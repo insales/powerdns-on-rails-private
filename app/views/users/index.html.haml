@@ -5,26 +5,24 @@
 %table.table
   %tr
     %th Name
-    %th Email
-    %th
-    %th
-    %td
-      = link_to new_user_path, class: 'btn', title: t(:help_user_create) do
+    -# %th Email
+    %td{colspan: 2}
+      = link_to new_user_path, class: 'btn float-end', title: t(:help_user_create) do
         = fa_icon 'plus'
         = t(:label_user_create)
   - @users.each do |user|
     %tr[ user, :show ]
       %td= link_to user.login, user_path( user )
-      %td= user.email
+      -# %td= user.email
       %td
         - if user.admin?
-          .badge.bg-warning= t("label_user_role.admin")
+          .badge{class: (user.suspended? && 'bg-secondary' || 'bg-warning')}= t("label_user_role.admin")
         - else
           .badge.bg-light= t("label_user_role.user")
-      %td
+
         - if user.suspended?
           .badge.bg-secondary{title: t(:help_user_is_suspended)} Suspended
-        - else
+        -# else
           .badge.bg-success{title: t(:help_user_is_active)} Active
       %td
         = link_to fa_icon('edit fw'), edit_user_path(user), class: 'btn btn-primary', title: t(:help_user_details_edit), "aria-label" => t(:generic_change)
