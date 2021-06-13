@@ -19,6 +19,8 @@ class RecordTemplate < ActiveRecord::Base
   attr_accessor *Record::SOA::SOA_FIELDS
   attr_accessible *Record::SOA::SOA_FIELDS
 
+  scope :ordered, ->{ order(Arel.sql("record_type='SOA' DESC, name ASC, record_type ASC, id ASC")) }
+
   class << self
     def record_types
       Record.record_types

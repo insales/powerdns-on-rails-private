@@ -1,23 +1,21 @@
-%div{:style => "display: none;"}
-  #zone-name= t :help_template_name
-  #zone-ttl
-
 = form_for( @zone_template ) do |f|
-  = error_messages_for @zone_template
-  %table
-    %tr
-      %td= t :label_template_zone_name
-      %td &nbsp;
-      %td= f.text_field :name
-    %tr
-      %td= t :label_template_zone_ttl
-      %td &nbsp;
-      %td= f.text_field :ttl, :size => 6
-    - if User.active_owners.any?
-      %tr
-        %td= t :label_template_zone_owner
-        %td &nbsp;
-        %td= f.collection_select :user_id, User.active_owners, :id, :login, :include_blank => true
-    %tr
-      %td= link_to_cancel @zone_template
-      %td= submit_tag t(:generic_save)
+  .form-group.row.mb-3
+    = error_messages_for @zone_template
+
+  .form-group.row.mb-3
+    = f.label :name, t(:label_template_zone_name), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_field :name, class: 'form-control', placeholder: "Template name", title: t(:help_template_name)
+
+  .form-group.row.mb-3
+    = f.label :ttl, t(:label_template_zone_ttl), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_field :ttl, class: 'form-control'
+
+  - if User.active_owners.any?
+    .form-group.row.mb-3
+      = f.label :ttl, t(:label_template_zone_owner), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.collection_select :user_id, User.active_owners, :id, :login, { include_blank: true }, class: 'form-select'
+
+  .form-group.row.mb-3
+    .col-sm-10.offset-sm-2
+      = submit_tag t(:generic_save), class: 'btn btn-primary'
+      = link_to_cancel @zone_template, class: 'btn btn-secondary'

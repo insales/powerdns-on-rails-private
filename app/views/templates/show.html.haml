@@ -39,7 +39,7 @@
     = t :message_template_cannot_use_no_soa
   &nbsp;
 
-%table#record-table.gridwide
+%table.table#record-table.gridwide
   %tr
     %td.small= t :label_domain_record_host
     %td.small= t :label_domain_record_ttl
@@ -47,7 +47,7 @@
     %td.small= t :label_domain_record_priority
     %td.small= t :label_domain_record_data
     %td
-  = render :partial => "record_template", :collection => @zone_template.record_templates
+      = render partial: "record_template", collection: @zone_template.record_templates.ordered
 
 %p &nbsp;
 

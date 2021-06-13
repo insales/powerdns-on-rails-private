@@ -26,8 +26,10 @@ class Record < ActiveRecord::Base
   end
 
   belongs_to :domain
-  validates_presence_of :domain_id
 
+  scope :ordered, ->{ order(Arel.sql("record_type='SOA' DESC, name ASC, id ASC")) }
+
+  validates_presence_of :domain_id
   validates_presence_of :name
   validates_numericality_of :ttl,
     :greater_than_or_equal_to => 0,
