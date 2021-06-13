@@ -1,6 +1,13 @@
 class MacroStep < ActiveRecord::Base
 
-  @@valid_actions = %w{ create update remove create_update }
+  ACTION_TYPES = {
+    create: "Create",
+    update: "Update existing",
+    remove: "Remove",
+    create_update: "Create or update existing"
+  }.freeze
+
+  @@valid_actions = ACTION_TYPES.keys.map(&:to_s).freeze
   cattr_reader :valid_actions
 
   validates_presence_of :macro_id

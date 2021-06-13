@@ -43,37 +43,38 @@
   = t(:label_macro_step_create_new)
 
 #record-form-div{ :style => 'display:none' }
-  = form_for( [@macro, @macro.macro_steps.build], :remote => true, :html => { :id => 'record-form' } ) do |f|
-    = f.hidden_field( :macro_id )
-    %table.grid
-      %tr.all
-        %td= t :label_macro_step_position
-        %td= f.text_field :position, :size => 5
-      %tr.all
-        %td= t :label_macro_step_action
-        %td
-          = f.select :action, MacroStep.valid_actions.map { |a| [ a.humanize, a ] }
-          = fa_icon 'info-circle', title: t(:help_macro_actions)
-      %tr.all
-        %td= t :label_domain_record_type
-        %td
-          = f.select :record_type, Macro.record_types.map { |t| [t,t] }
-      %tr.all
-        %td= t :label_domain_record_host
-        %td
-          = f.text_field :name
-          = fa_icon 'info-circle', title: t(:help_macro_name_field)
-      %tr.rt-mx.rt-srv{ :style => 'display :none' }
-        %td= t :label_domain_record_priority
-        %td= f.text_field :prio, :size => 6
-      %tr.all
-        %td= t :label_domain_record_data
-        %td
-          = f.text_field :content
-          = fa_icon 'info-circle', title: t(:help_macro_content_field)
-      %tr.all
-        %td.right= link_to_function t(:generic_cancel), "hideAll()"
-        %td= submit_tag t(:generic_save)
+  = form_for( [@macro, @macro.macro_steps.build], remote: true, html: { id: 'record-form' } ) do |f|
+    = f.hidden_field :macro_id
+
+    .form-group.row.mb-3.all
+      = f.label :position, t(:label_macro_step_position), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.text_field :position, class: 'form-control', placeholder: @macro.macro_steps.size
+
+    .form-group.row.mb-3.all
+      = f.label :action, t(:label_macro_step_action), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.select :action, MacroStep::ACTION_TYPES.invert, {}, class: 'form-select', title: t(:help_macro_actions)
+
+    .form-group.row.mb-3.all
+      = f.label :record_type, t(:label_domain_record_type), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.select :record_type, Macro.record_types.map { |t| [t,t] }, {}, class: 'form-select'
+
+    .form-group.row.mb-3.all
+      = f.label :name, t(:label_domain_record_host), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.text_field :name, class: 'form-control', placeholder: "", title: t(:help_macro_name_field)
+
+    .form-group.row.mb-3.rt-mx.rt-srv{ style: 'display: none' }
+      = f.label :prio, t(:label_domain_record_priority), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.text_field :prio, class: 'form-control', placeholder: ""
+
+    .form-group.row.mb-3.all
+      = f.label :content, t(:label_domain_record_data), class: 'col-sm-2 col-form-label'
+      .col-sm-10= f.text_field :content, class: 'form-control', title: t(:help_macro_content_field)
+
+    .form-group.row.mb-3.all
+      .col-sm-10.offset-sm-2
+        = submit_tag t(:generic_save), class: 'btn btn-primary'
+        = link_to_function t(:generic_cancel), "hideAll()", class: 'btn btn-secondary'
+
 
 :javascript
   // Blatantly copied from record templates, needs to be unified
@@ -93,7 +94,7 @@
   }
   function toggleRecordFields(v){
     t = 'rt-' + v.toLowerCase();
-    $('#record-form-div tr').each(function(){
+    $('#record-form-div .form-group').each(function(){
       if($(this).hasClass(t) || $(this).hasClass('all'))
         $(this).show();
       else
