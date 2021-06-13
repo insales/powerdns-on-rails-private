@@ -1,6 +1,7 @@
 %li
-  = link_to_domain_audit( domain_audit )
-  %div[ domain_audit ]{ :style => 'display: none' }
+  - id = "domain_audit_details_#{domain_audit.id}"
+  = link_to_domain_audit(domain_audit, id)
+  .collapse{ id: id }
     %strong= t :label_audit_time
     = domain_audit.created_at
     %br

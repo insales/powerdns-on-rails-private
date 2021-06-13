@@ -1,6 +1,7 @@
 %li
-  = link_to_record_audit( record_audit )
-  %div[ record_audit ]{ :style => 'display: none' }
+  - id = "record_audit_details_#{record_audit.id}"
+  = link_to_record_audit(record_audit, id)
+  .collapse{ id: id }
     %strong= t :label_audit_time
     = record_audit.created_at
     %br
