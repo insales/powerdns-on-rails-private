@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users, :controllers => { :sessions => "sessions" }, :path => "sessions"
+  devise_for :users, controllers: { sessions: "sessions" }, path: "sessions"
 
   root :to => 'dashboard#index'
 
@@ -40,7 +40,7 @@ Rails.application.routes.draw do
 
   # get '/audits(/:action(/:id))' => 'audits#index', :as => :audits
   resources :audits, only: :index do
-    get "/domain/:id", action: :domain, on: :collection
+    get "/domain/:id", action: :domain, on: :collection, as: :domain
   end
 
   resources :reports, only: :index do

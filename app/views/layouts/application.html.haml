@@ -2,41 +2,46 @@
 %html(lang="en")
   %head
     %title= page_title
+    %meta(charset="utf-8")
     %meta(name="description" content="PowerDNS admin panel")
     %meta(name="viewport" content="width=device-width, initial-scale=1")
+    %link{rel: "preload", as:"font", crossOrigin: "anonymous", href: asset_path("font-awesome/fa-solid-900.woff2")}
     = stylesheet_link_tag 'application'
-    = javascript_include_tag 'application'
     = csrf_meta_tag
+    = favicon_link_tag 'favicon.ico', rel: 'shortcut icon', skip_pipeline: true
   %body
-    #Container
-      #Header
-        %h1
-          = link_to t(:layout_main_title), root_url, style: "text-decoration: none; color: white"
-      - if current_user
-        #search-bar{:style => "display: inline; float: right;"}
-          = form_tag( { :controller => :search, :action => :results }, { :method => :get } ) do
-            = label_tag :q, "Domain:"
-            = text_field_tag :q
-            = submit_tag( t(:generic_search) )
-        #Nav
-          %ul
-            -# %li= link_to((t :layout_menu_home), root_url)
-            %li= link_to((t :layout_menu_domains), domains_path)
-            %li= link_to((t :layout_menu_templates), zone_templates_path)
-            %li= link_to((t :layout_menu_macros), macros_path)
-            - if current_user.admin?
-              %li= link_to((t :layout_menu_logs), audits_path)
-              %li= link_to((t :layout_menu_users), users_path)
-              %li= link_to((t :layout_menu_api_clients), api_clients_path)
-              %li= link_to((t :layout_menu_reports), reports_path)
-            %li= link_to((t :layout_menu_logout), destroy_user_session_path)
+    %nav.navbar.navbar-expand-md.navbar-light.bg-light
+      .container
+        -# t(:layout_main_title)
+        = link_to "PowerDNS", root_path, class: 'navbar-brand'
 
-      #Body
-        = show_flash
+        %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-bs-target" => "#navbarSupportedContent", "data-bs-toggle" => "collapse", :type => "button"}
+          %span.navbar-toggler-icon
 
-        = yield
-      #Footer
+        #navbarSupportedContent.collapse.navbar-collapse
+          %ul.navbar-nav.me-auto.mb-2.mb-lg-0.text-nowrap
+            %li.nav-item= link_to t(:layout_menu_domains), domains_path, class: ['nav-link', ('active' if controller_name == 'domains')]
+            %li.nav-item= link_to t(:layout_menu_templates), zone_templates_path, class: ['nav-link', ('active' if controller_name == 'templates')]
+            %li.nav-item= link_to t(:layout_menu_macros), macros_path, class: ['nav-link', ('active' if controller_name == 'macros')]
+            - if current_user&.admin?
+              %li.nav-item= link_to t(:layout_menu_logs), audits_path, class: ['nav-link', ('active' if controller_name == 'audits')]
+              %li.nav-item= link_to t(:layout_menu_users), users_path, class: ['nav-link', ('active' if controller_name == 'users')]
+              %li.nav-item= link_to t(:layout_menu_api_clients), api_clients_path, class: ['nav-link', ('active' if controller_name == 'api_clients')]
+              %li.nav-item= link_to t(:layout_menu_reports), reports_path, class: ['nav-link', ('active' if controller_name == 'reports')]
+            %li.nav-item= link_to t(:layout_menu_logout), destroy_user_session_path, class: 'nav-link', method: :delete
+          - if current_user
+            = form_tag( { controller: :search, action: :results }, method: :get, class: 'd-flex') do
+              .input-group.flex-nowrap<
+                = text_field_tag :q, {}, class: 'form-control', placeholder: 'Search', 'aria-label'=>"Search", "aria-describedby"=>"navbar-search-btn"
+                = submit_tag t(:generic_search), class: 'btn btn-outline-success', id: 'navbar-search-btn'
+
+    .container
+      = show_flash
+      = yield
+
+      %footer.text-center.text-muted.fw-light.fs-6
         -# http://github.com/kennethkalmer/powerdns-on-rails
         Based on PowerDNS on Rails &copy; Kenneth Kalmer
         %br
         Released under the MIT License.
+  = javascript_include_tag 'application'

@@ -10,7 +10,10 @@ describe Record::AAAA, "when new" do
     @aaaa.should_not be_valid
   end
 
-  it "should only accept IPv6 address as content"
+  it "should only accept IPv6 address as content" do
+    @aaaa.content = '123.123.123.123'
+    @aaaa.should have(1).error_on(:content)
+  end
 
   it "should not act as a CNAME" do
     @aaaa.content = 'google.com'

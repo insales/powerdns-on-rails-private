@@ -1,3 +1,41 @@
 %h1.underline= t :title_audit_search_logs
 
-%em= t :text_audit_comming_soon
+%h2 Recent changes
+
+%table.table
+  %tr
+    %th Time
+    %th User
+    %th Object
+    %th Action
+    %th Changes
+
+  - @audits.each do |audit|
+    %tr
+      %td
+        = audit.created_at
+      %td
+        - if audit.user.is_a?(ApiClient)
+          = link_to "#{audit.user.name} (API)", api_client_path(audit.user)
+        - elsif audit.user.is_a?(User)
+          = link_to audit.user.email, user_path(audit.user)
+        - else
+          = audit.user_type
+          = audit.user_id
+      %td
+        - if audit.auditable.is_a?(Domain)
+          = link_to audit.auditable.name, domain_path(audit.auditable)
+        - elsif audit.auditable.is_a?(Record)
+          %b= audit.auditable.type
+          %span.text-nowrap
+            %i= audit.auditable.shortname
+            = link_to audit.auditable.domain.name, domain_path(audit.auditable.domain, rhighlight: audit.auditable.id)
+        - else
+          = audit.auditable_type
+          = audit.auditable_id
+      %td
+        .badge{class: {"create" => 'bg-success', "update" => "bg-primary", "destroy" => "bg-danger"}[audit.action]}= audit.action
+      %td
+        = audit.audited_changes
+
+= will_paginate @audits

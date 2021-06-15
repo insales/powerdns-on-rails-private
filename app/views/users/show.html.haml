@@ -1,31 +1,30 @@
 %h1.underline
   = t(:title_user_detail_for, :user => @user.login)
 
-%table.grid
-  %tr
-    %td= t :label_user_name
-    %td= @user.login
-  %tr
-    %td= t :label_user_email
-    %td= @user.email
-  %tr
-    %td= t :label_user_admin
-    %td= @user.admin? ? 'Yes' : 'No'
-  %tr
-    %td= t :label_user_auth_tokens
-    %td= @user.auth_tokens? ? 'Yes' : 'No'
-  %tr
-    %td &nbsp;
-    %td &nbsp;
-  %tr
-    %td &nbsp;
-    %td
-      = link_to image_tag('user_edit.png'), edit_user_path( @user )
-      = link_to t(:generic_change), edit_user_path( @user )
-      &nbsp;&nbsp;&nbsp;
-      = link_to image_tag('user_delete.png'), user_path( @user ), :method => :delete, data: { confirm: t(:confirm_user_remove) }
-      = link_to t(:generic_remove), user_path( @user ), :method => :delete, data: { confirm: t(:confirm_user_remove) }
-      - unless @user.admin?
-        &nbsp;&nbsp;&nbsp;
-        = link_to image_tag('help.png') , :controller => :reports , :action => :view , :id => @user
-        = link_to t(:label_user_detail) , :controller => :reports , :action => :view , :id => @user
+.row.p-2
+  %label.col-sm-2= t :label_user_name
+  .col-sm-10= @user.login
+
+.row.p-2
+  %label.col-sm-2= t :label_user_email
+  .col-sm-10= @user.email
+.row.p-2
+  %label.col-sm-2= t :label_user_admin
+  .col-sm-10= @user.admin? ? 'Yes' : 'No'
+.row.p-2
+  %label.col-sm-2= t :label_user_auth_tokens
+  .col-sm-10= @user.auth_tokens? ? 'Yes' : 'No'
+
+.row.p-2
+  .col-sm-10.offset-sm-2
+    = link_to edit_user_path(@user), class: 'btn btn-primary me-2' do
+      = fa_icon 'edit'
+      = t(:generic_change)
+
+    = link_to user_path(@user), method: :delete, data: { confirm: t(:confirm_user_remove) }, class: 'btn btn-danger me-2' do
+      = fa_icon 'trash'
+      = t(:generic_remove)
+
+    - unless false && @user.admin?
+      = link_to view_reports_path(id: @user), class: 'btn btn-secondary' do
+        = t(:label_user_detail)

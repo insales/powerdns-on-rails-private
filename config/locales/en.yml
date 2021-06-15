@@ -107,6 +107,7 @@ en:
   generic_remove: "Remove"
   generic_create: "Create"
   generic_update: "Update"
+  generic_edit: "Edit"
   generic_yes: "Yes"
   generic_no: "No"
 
@@ -544,14 +545,16 @@ en:
 
 # api_client index
   help_api_client_add:
-    Add a new api_client to PowerDNS on Rails
-  title_api_clients: "api_clients"
+    Add a new api client to PowerDNS on Rails
+  title_api_clients: "Api Clients"
 
 # api_client show
   title_api_client_details_for: " Details for %{name}"
   label_api_client_create: "New api_client"
   confirm_api_client_remove: "Are you sure you want to remove this api_client?"
   label_api_client_detail: "More Detail"
+  label_api_client_name: "Name"
+  label_api_client_token: "Token"
 
 
 ### Controllers

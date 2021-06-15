@@ -1,6 +1,13 @@
 class MacroStep < ActiveRecord::Base
 
-  @@valid_actions = %w{ create update remove create_update }
+  ACTION_TYPES = {
+    create: "Create",
+    update: "Update existing",
+    remove: "Remove",
+    create_update: "Create or update existing"
+  }.freeze
+
+  @@valid_actions = ACTION_TYPES.keys.map(&:to_s).freeze
   cattr_reader :valid_actions
 
   validates_presence_of :macro_id
@@ -18,9 +25,8 @@ class MacroStep < ActiveRecord::Base
     record_class = Record.record_class(self.record_type)
 
     # make a clean copy of ourself
-    attrs = self.attributes.dup
+    attrs = self.attributes.dup.except("id", "created_at", "updated_at")
     attrs.delete_if { |k,_| !record_class.columns.map(&:name).include?( k ) }
-    attrs.delete(:id)
 
     # parse each attribute for %ZONE%
     unless domain.nil?

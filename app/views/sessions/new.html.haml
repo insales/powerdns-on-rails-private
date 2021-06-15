@@ -1,0 +1,24 @@
+.p-5.mb-4.bg-light.rounded-3
+  = form_for resource, as: resource_name, url: session_path(resource_name) do |f|
+    .form-group.row.mb-3
+      .col-sm-8.offset-sm-2
+        %h1 Sign in
+
+    .form-group.row.mb-3
+      = f.label :email, class: 'col-sm-2 col-form-label'
+      .col-sm-8
+        = f.email_field :email, class: "form-control", placeholder: "Login"
+    .form-group.row.mb-3
+      = f.label :password, class: 'col-sm-2 col-form-label'
+      .col-sm-8
+        = f.password_field :password, class: "form-control", placeholder: "Password"
+
+    - if devise_mapping.rememberable?
+      .form-group.row.mb-3
+        .col-sm-8.offset-sm-2
+          = f.check_box :remember_me, class: 'form-check-input'
+          = f.label :remember_me, class: 'form-check-label'
+
+    .form-group.row.mb-3
+      .col-sm-8.offset-sm-2
+        = f.submit "Sign in", class: 'btn btn-primary col-sm-12'

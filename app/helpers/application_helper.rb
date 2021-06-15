@@ -26,22 +26,18 @@ module ApplicationHelper
 
   # Add a cancel link for shared forms. Looks at the provided object and either
   # creates a link to the index or show actions.
-  def link_to_cancel( object )
+  def link_to_cancel( object, options={})
     path = object.class.name.tableize
     path = if object.new_record?
              send( path.pluralize + '_path' )
            else
              send( path.singularize + '_path', object )
            end
-    link_to "Cancel", path
+    link_to "Cancel", path, options
   end
 
   def help_icon( dom_id )
-    image_tag('help.png', :id => "help-icn-#{dom_id}", :class => 'help-icn', "data-help" => dom_id )
-  end
-
-  def info_icon( image, dom_id )
-    image_tag( image , :id => "help-icn-#{dom_id}", :class => 'help-icn', "data-help" => dom_id )
+    fa_icon 'info-circle', id: "help-icn-#{dom_id}", class: 'help-icn', "data-help" => dom_id
   end
 
   def link_to_function(name, function, html_options={})
@@ -74,5 +70,45 @@ module ApplicationHelper
 
       content_tag(:div, contents.html_safe, html)
     end
+  end
+
+  # from font-awesome-rails 4.7
+  def fa_icon(names = "flag", original_options = {})
+    options = original_options.deep_dup
+    classes = ["fa"]
+    classes.concat Private.icon_names(names)
+    classes.concat Array(options.delete(:class))
+    text = options.delete(:text)
+    right_icon = options.delete(:right)
+    icon = content_tag(:i, nil, options.merge(:class => classes))
+    Private.icon_join(icon, text, right_icon)
+  end
+
+  module Private
+    extend ActionView::Helpers::OutputSafetyHelper
+
+    def self.icon_join(icon, text, reverse_order = false)
+      return icon if text.blank?
+      elements = [icon, ERB::Util.html_escape(text)]
+      elements.reverse! if reverse_order
+      safe_join(elements, " ")
+    end
+
+    def self.icon_names(names = [])
+      array_value(names).map { |n| "fa-#{n}" }
+    end
+
+    def self.array_value(value = [])
+      value.is_a?(Array) ? value : value.to_s.split(/\s+/)
+    end
+  end
+
+  # change the default link renderer for will_paginate
+  def will_paginate(collection_or_options = nil, options = {})
+    if collection_or_options.is_a? Hash
+      options, collection_or_options = collection_or_options, nil
+    end
+    options = options.merge renderer: BootstrapLinkRenderer unless options[:renderer]
+    super *[collection_or_options, options].compact
   end
 end

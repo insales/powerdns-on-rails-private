@@ -1,0 +1,65 @@
+a {
+  img { border: none; }
+}
+
+div.padded { margin: 5px 0; }
+table.grid { width: 400px; }
+table.gridwide { width: 100%; }
+
+.small { font-size: 90%; }
+.top { vertical-align: top; }
+.underline { border-bottom: 1px solid #777; margin: 10px 0 5px 0; }
+
+.center { text-align: center; }
+.right { text-align: right; }
+.left { text-align: left; }
+
+.flash-notice, .flash-info, .flash-error, .flash-warning, .errorExplanation, .generic-warning {
+  padding: 5px;
+  padding-left: 30px;
+  background-position: 5px 5px;
+  background-repeat: no-repeat;
+}
+.flash-info, .flash-notice { border: 1px solid #97FF97; background-color: #DFD; background-image: url(../images/accept.png); }
+.flash-error, .errorExplanation { border: 1px solid #F66; background-color: #FFC; background-image: url(../images/exclamation.png); }
+.flash-warning {border: 1px solid #FF6; background-color: #FFC; background-image: url(../images/error.png); }
+
+.errorExplanation { margin: 5px 0; }
+.errorExplanation h2 { border-bottom: none; margin-top: 0; }
+
+.generic-warning {
+  border: 1px solid #F66;
+  background-color: #FFC;
+  img { margin-left: -25px; }
+}
+
+input.nb, textarea.nb { border: none; }
+
+ul.start {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+
+  li {
+    display: inline;
+    padding: 0;
+    padding-right: 10px;
+    margin: 0;
+    vertical-align: middle;
+  }
+}
+
+#ajaxBusy {
+  display: none;
+  margin: 0;
+  margin-left: -50px;
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 100px;
+  background-color: #F9D955;
+  z-index: 1;
+}
+
+.odd {background-color: #F0F0F0; }

@@ -34,27 +34,29 @@ describe "domains/show.html.haml" do
     end
 
     it "should display the owner" do
-      rendered.should have_css( "div#owner-info" )
+      rendered.should have_css( "#owner-info" )
     end
 
     it "should allow changing the SOA" do
-      rendered.should have_css( "div#soa-form")
+      rendered.should have_css( "#soa-form")
     end
 
     it "should have a form for adding new records" do
-      rendered.should have_css( "div#record-form-div" )
+      rendered.should have_css( "#record-form-div" )
     end
 
     it "should have not have an additional warnings for removing" do
-      rendered.should_not have_css('div#warning-message')
+      rendered.should_not have_css('#warning-message')
       rendered.should_not have_css('a[onclick*=deleteDomain]')
     end
   end
 
   context "for admins and domains with owners" do
 
+    let(:admin) { FactoryBot.create(:admin) }
+
     before(:each) do
-      allow(view).to receive(:current_user).and_return(FactoryBot.create(:admin))
+      allow(view).to receive(:current_user).and_return(admin)
       allow(view).to receive(:current_token).and_return(nil)
       @domain = FactoryBot.create(:domain, :user => FactoryBot.create(:quentin))
       assign(:domain, @domain)
@@ -64,7 +66,7 @@ describe "domains/show.html.haml" do
     end
 
     it "should offer to remove the domain" do
-      rendered.should have_css( "a img[id$=delete-zone]" )
+      rendered.should have_css('a[data-confirm*="remove domain"]')
     end
 
     it "should have have an additional warnings for removing" do
@@ -98,7 +100,7 @@ describe "domains/show.html.haml" do
     end
 
     it "should offer to remove the domain" do
-      rendered.should have_css( "a img[id$=delete-zone]" )
+      rendered.should have_css('a[data-confirm*="remove domain"]')
     end
 
     it "should have not have an additional warnings for removing" do
@@ -134,7 +136,7 @@ describe "domains/show.html.haml" do
     end
 
     it "should offer to remove the domain" do
-      rendered.should have_css( "a img[id$=delete-zone]" )
+      rendered.should have_css('a[data-confirm*="remove domain"]')
     end
   end
 
@@ -151,7 +153,7 @@ describe "domains/show.html.haml" do
     it "should not offer to remove the domain" do
       render
 
-      rendered.should_not have_css( "a img[id$=delete-zone]" )
+      rendered.should_not have_css('a[data-confirm*="remove domain"]')
     end
 
     it "should not offer to edit the SOA" do

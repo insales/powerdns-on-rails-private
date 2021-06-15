@@ -2,10 +2,36 @@
 
 %h2.underline= t :title_users
 
-%table.gridwide
+%table.table
   %tr
-    %td{ :colspan => 5 }
-      = link_to info_icon('user_add.png', 'new-user'), new_user_path
-      = link_to t(:label_user_create), new_user_path
-  = render :partial => 'user', :collection => @users
+    %th Name
+    -# %th Email
+    %td{colspan: 2}
+      = link_to new_user_path, class: 'btn float-end', title: t(:help_user_create) do
+        = fa_icon 'plus'
+        = t(:label_user_create)
+  - @users.each do |user|
+    %tr[ user, :show ]
+      %td= link_to user.login, user_path( user )
+      -# %td= user.email
+      %td
+        - if user.admin?
+          .badge{class: (user.suspended? && 'bg-secondary' || 'bg-warning')}= t("label_user_role.admin")
+        - else
+          .badge.bg-light= t("label_user_role.user")
 
+        - if user.suspended?
+          .badge.bg-secondary{title: t(:help_user_is_suspended)} Suspended
+        -# else
+          .badge.bg-success{title: t(:help_user_is_active)} Active
+      %td
+        = link_to fa_icon('edit fw'), edit_user_path(user), class: 'btn btn-primary', title: t(:help_user_details_edit), "aria-label" => t(:generic_change)
+
+        - unless user.suspended?
+          = link_to fa_icon('ban fw'), suspend_user_path(user), method: :put, class: 'btn btn-warning', title: t(:help_user_suspend), "aria-label" => t(:help_user_suspend)
+        - else
+          = link_to fa_icon('play fw'), unsuspend_user_path(user), method: :put, class: 'btn btn-success', title: t(:help_user_activate), "aria-label" => t(:help_user_activate)
+
+        - unless user.eql?(current_user)
+          -# TODO: why "purge", not restful
+          = link_to fa_icon('trash fw'), purge_user_path(user), method: :delete, data: { confirm: t('confirm_api_client_remove') }, class: 'btn btn-danger', title: t(:help_user_delete), "aria-label" => t(:generic_remove)

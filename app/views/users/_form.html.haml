@@ -3,44 +3,45 @@
   #domain-owner= t :help_user_is_user
   #token-user-help= t :help_user_token_info
 
-= form_for( @user ) do |f|
-  = error_messages_for @user
+= form_for(@user) do |f|
+  .form-group.row.mb-3
+    = error_messages_for @user
 
-  %table
-    %tr
-      %td= t :label_user_name
-      %td= f.text_field :login
-    %tr
-      %td= t :label_user_email
-      %td= f.text_field :email
-    %tr
-      %td.top= t :label_user_password
-      %td
-        = f.password_field :password
-        - unless @user.new_record?
-          %br
-          %em= t :text_user_password_edit_notice
-    %tr
-      %td.top= t :label_user_password_again
-      %td= f.password_field :password_confirmation
-    %tr
-      %td.top= t :label_user_role_sign
-      %td
-        = f.radio_button :admin, true
-        = t "label_user_roles.admin"
-        = help_icon('admin-user')
-        %br
-        = f.radio_button :admin, false
-        = t "label_user_roles.domain_owner"
-        = help_icon('domain-owner')
-        %br
-        = f.check_box 'auth_tokens'
-        = t :text_user_manage_token
-        = help_icon('token-user-help')
-    %tr
-      %td &nbsp;
-      %td &nbsp;
-    %tr
-      %td.right= link_to t(:generic_cancel), users_path
-      %td= submit_tag t(:generic_save)
+  .form-group.row.mb-3
+    = f.label :login, t(:label_user_name), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_field :login, class: 'form-control', placeholder: "Login"
 
+  .form-group.row.mb-3
+    = f.label :email, t(:label_user_email), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.text_field :email, class: 'form-control', placeholder: "Email"
+
+  .form-group.row.mb-3
+    = f.label :password, t(:label_user_password), class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = f.password_field :password, class: 'form-control'
+      - unless @user.new_record?
+        %br
+        %em= t :text_user_password_edit_notice
+  .form-group.row.mb-3
+    = f.label :password_confirmation, t(:label_user_password_again), class: 'col-sm-2 col-form-label'
+    .col-sm-10= f.password_field :password_confirmation, class: 'form-control'
+
+  .form-group.row.mb-3
+    %label.col-sm-2.col-form-label= t(:label_user_role_sign)
+    .col-sm-10
+      = f.radio_button :admin, true, class: 'form-check-input'
+      = f.label :admin, t("label_user_roles.admin"), value: true, class: 'form-check-label'
+      = help_icon('admin-user')
+      %br
+      = f.radio_button :admin, false, class: 'form-check-input'
+      = f.label :admin, t("label_user_roles.domain_owner"), value: false, class: 'form-check-label'
+      = help_icon('domain-owner')
+      %br
+      = f.check_box :auth_tokens, class: 'form-check-input'
+      = f.label :auth_tokens, t(:text_user_manage_token), class: 'form-check-label'
+      = help_icon('token-user-help')
+
+  .form-group.row.mb-3
+    .col-sm-10.offset-sm-2
+      = submit_tag t(:generic_save), class: 'btn btn-primary'
+      = link_to t(:generic_cancel), users_path, class: 'btn btn-secondary'

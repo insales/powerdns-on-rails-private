@@ -60,6 +60,8 @@ Rails.application.configure do
   config.assets.debug = true
   config.assets.debug = false
 
+  config.assets.css_compressor = :sass
+
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 

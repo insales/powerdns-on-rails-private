@@ -4,13 +4,14 @@ module AuditsHelper
     "(#{text})"
   end
 
-  def link_to_domain_audit( audit )
+  def link_to_domain_audit( audit, id="test")
     caption = "#{audit.version} #{audit.action} by "
     caption << audit_user( audit )
-    link_to_function caption, "toggleDomainAudit(#{audit.id})"
+    link_to caption, "##{id}", "data-bs-toggle" => "collapse", role: :button, "data-bs-target" => "##{id}",
+      "aria-expanded"=>"false", "aria-controls"=>id
   end
 
-  def link_to_record_audit( audit )
+  def link_to_record_audit(audit, id="test")
     caption = audit.audited_changes['type']
     caption ||= (audit.auditable.nil? ? '[UNKNOWN]' : audit.auditable.class.sti_name )
     unless audit.audited_changes['name'].nil?
@@ -19,7 +20,8 @@ module AuditsHelper
     end
     caption += " #{audit.version} #{audit.action} by "
     caption += audit_user( audit )
-    link_to_function caption, "toggleRecordAudit(#{audit.id})"
+    link_to caption, "##{id}", "data-bs-toggle" => "collapse", role: :button, "data-bs-target" => "##{id}",
+      "aria-expanded"=>"false", "aria-controls"=>id
   end
 
   def display_hash( hash )
@@ -34,7 +36,7 @@ module AuditsHelper
 
         "<em>#{k}</em>: #{v}"
       end
-    end.compact.join('<br />')
+    end.compact.join('<br />').html_safe
   end
 
   def sort_audits_by_date( collection )
@@ -43,7 +45,7 @@ module AuditsHelper
 
   def audit_user( audit )
     if audit.user.is_a?( User )
-      audit.user.login
+      audit.user.login || audit.user.email
     else
       audit.username || 'UNKNOWN'
     end

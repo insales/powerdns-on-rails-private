@@ -1,8 +1,6 @@
 - @page_title = @domain.name
 
 %div{ :style => "display: none;" }
-  #record-template-new=t :help_record_template_new
-  #soa-record-edit=t :help_soa_record_edit
   #zone-edit=t :help_zone_edit
   #note-new=t :note_new
   #note-edit=t :note_edit
@@ -17,8 +15,6 @@
   #help-expire=t :help_domain_expire
   #help-minimum=t :help_domain_minimum
   #delete-reset=t :help_delete_reset
-  #record-template-edit= t :label_domain_edit_record
-  #record-template-delete= t :label_domain_delete_record
 
 - if current_user && current_user.admin? && @domain.user
   #warning-message.flash-warning{ :style => 'display: none' }
@@ -27,12 +23,12 @@
     %br
     %br
     = t :warning_this_domain_has_owner
-    = link_to info_icon('database_delete.png', 'delete-zone'), domain_path( @domain ),  :method => :delete, data: { confirm: t(:confirm_domain_delete, :domain => @domain.name) }
+    = link_to fa_icon('trash', class: 'text-danger'), domain_path( @domain ),  method: :delete, data: { confirm: t(:confirm_domain_delete, domain: @domain.name) }
     %br
     or
     %br
     = t :confirm_delete_this_domain
-    = link_to_function info_icon('cancel.png', 'delete-reset'), "deleteDomain();"
+    = link_to_function fa_icon('window-close', class: 'text-secondary'), "deleteDomain();"
 
 %h1.underline
   = @domain.name
@@ -42,16 +38,7 @@
     %tr
       %td{ :width => "100" }= t :label_domain_name
       %td= domain_name_with_encoded @domain.name
-      %td{ :width => "100" }
-        - if current_user
-          = link_to info_icon('table_edit.png', 'zone-edit'), edit_domain_path(@domain)
-          = link_to info_icon('report_magnify.png', 'audits'), audits_path(:action => :domain, :id => @domain)
-          - unless @domain.slave?
-            = link_to info_icon('brick_go.png', 'macro'), apply_macro_domain_path( @domain )
-          - if current_user.admin? && @domain.user
-            = link_to_function info_icon('database_delete.png', 'delete-zone'), "deleteDomain();" , :id => "delete-link-buffer"
-          - elsif !current_token
-            = link_to info_icon('database_delete.png', 'delete-zone'), domain_path( @domain ), :method => :delete, data: { confirm: t(:confirm_domain_delete, :domain => @domain.name) }
+      %td{ :width => "100" }= render partial: 'domain_actions', locals: { domain: @domain }
     %tr
       %td=t :label_domain_type
       %td= @domain.type.humanize
@@ -63,30 +50,26 @@
         %td= @domain.master
         %td &nbsp;
 
-    - if current_user && current_user.admin?
+    - if current_user&.admin?
       %tr
         %td=t :label_domain_owner
         %td
-          #owner-info
-            - if @domain.user
-              = @domain.user.login
-            - else
-              \-
-          #owner-edit{ :style => 'display: none' }
-            = form_for( @domain, :url => change_owner_domain_path( @domain, :remote => true ) ) do |f|
+          %span#owner-info
+            %span.value= @domain.user&.login || '-'
+            = link_to_function fa_icon('edit'), "changeOwner()"
+          %span#owner-edit{ style: 'display: none' }
+            = form_for @domain, url: change_owner_domain_path(@domain), remote: true, method: :put do |f|
               = f.collection_select "user_id", @users, :id, :login, :include_blank => true
               = submit_tag(t(:generic_save))
-        %td= link_to_function info_icon('user_edit.png', 'change-owner'), "changeOwner()"
       %tr
         %td{ :valign => 'top' }=t :label_domain_notes
         %td{ :colspan => 2 }
           #note
             #note-text= @domain.notes
-            %br
-            = link_to_function info_icon('note_edit.png', 'note-edit'), "showNoteForm()"
+            = link_to_function fa_icon('edit'), "showNoteForm()"
 
           #note-form{ :style => "display: none;" }
-            = form_for( @domain, :url => update_note_domain_path( @domain ), :remote => true ) do |f|
+            = form_for @domain, url: update_note_domain_path(@domain), remote: true, method: :put do |f|
               = f.text_area :notes, :rows => 4, :cols => 30
               %br
               = link_to_function t(:generic_cancel), "hideNoteForm()"
@@ -97,7 +80,7 @@
     = t :title_soa_record
     &nbsp;
     - if current_user
-      = link_to_function info_icon('database_edit.png', 'soa-record-edit'), "showSOAEdit()"
+      = link_to_function fa_icon('edit'), "showSOAEdit()", title: t(:help_soa_record_edit)
   - if @domain.soa_record.nil?
     %p
       %em= t :label_soa_record_yet_propagated_from_master
@@ -114,12 +97,13 @@
       %td.small= t :label_domain_record_priority
       %td.small= t :label_domain_record_data
       %td &nbsp;
-    = render :partial => 'record', :collection => @domain.records_without_soa
+    = render partial: 'record', collection: @domain.records_without_soa
 
 - unless @domain.slave?
   - if current_user || current_token.allow_new_records?
-    = link_to_function info_icon('database_add.png', 'record-template-new'), "displayRecordForm()"
-    = link_to_function t(:label_domain_record_new), "displayRecordForm()"
+    = link_to '#', onclick: "displayRecordForm(); return false;", title: t(:help_record_template_new) do
+      = fa_icon('plus')
+      = t(:label_domain_record_new)
 
     #record-form-div{ :style => "display: none;" }
       = form_for( :record, :url => domain_records_path( @domain ), :remote => true, :html => { :id => 'record-form' } ) do |f|

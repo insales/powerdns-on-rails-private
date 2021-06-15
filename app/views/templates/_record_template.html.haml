@@ -1,23 +1,17 @@
 %tr[ record_template, :marker ]
 %tr[ record_template, :show ]
-  %td{ :width => 250 }= record_template.name
+  %td{ :width => 250 }
+    %code= record_template.name
   %td{ :width => 50 }= record_template.ttl
   %td{ :width => 30 }= record_template.record_type
-  %td{ :width => 30 }= record_template.prio
-  %td{ :width => 250 }= record_template.content unless record_template.soa?
-  %td{ :width => 36 }
-    = link_to_function info_icon('table_edit.png', 'edit-record-template'), "editRecordTemplate(#{record_template.id})"
-    = link_to info_icon('table_delete.png', 'delete-record-template'), record_template_path( record_template ), :method => :delete, data: { confirm: t(:confirm_template_record_delete) }
-- if record_template.soa?
-  %tr[ record_template, 'show-soa' ]
-    %td{ :colspan => 2 } &nbsp;
-    %td{ :colspan => 4 }
-      %small
+  - if record_template.soa?
+    %td{colspan: 2}
+      %small[record_template, 'show-soa']
         = t :label_template_primary_nameserver
-        = record_template.primary_ns
+        %code= record_template.primary_ns
         %br
         = t :label_template_primary_contact
-        = record_template.contact
+        %code= record_template.contact
         %br
         = t :label_template_refresh
         = record_template.refresh
@@ -30,6 +24,13 @@
         %br
         = t :label_template_minimum
         = record_template.minimum
+  - else
+    %td{ :width => 30 }= record_template.prio
+    %td{ :width => 250 }
+      %code= record_template.content
+  %td.text-nowrap{ :width => 36 }
+    = link_to_function fa_icon('edit fw'), "editRecordTemplate(#{record_template.id})", title: t(:help_template_record_edit)
+    = link_to fa_icon('trash fw', class: 'text-danger'), record_template_path( record_template ), :method => :delete, data: { confirm: t(:confirm_template_record_delete) }, title: t(:help_template_record_delete)
 
 %tr[ record_template, :edit ]{ :style => 'display: none' }
   %td{ :colspan => 6 }
@@ -84,5 +85,5 @@
           %td{ :width => 250 }= f.text_field :content, :size => 15
 
         %td.top{ :width => 39 }
-          = image_submit_tag "table_save.png", { :class => 'nb' }
-          = link_to_function image_tag("cancel.png"), "hideRecordTemplate(#{record_template.id})"
+          = link_to fa_icon('save fw'), '#', data: { 'form-submit' => true }
+          = link_to_function fa_icon('window-close fw', class: 'text-secondary'), "hideRecordTemplate(#{record_template.id})"

@@ -31,7 +31,7 @@ describe "domains/_record" do
 
     it "should have links to edit/remove the record" do
       rendered.should have_css("a[onclick^=editRecord]")
-      rendered.should have_css("a > img[src*=database_delete]")
+      rendered.should have_css("a > i[class*=trash]")
     end
   end
 
@@ -64,7 +64,7 @@ describe "domains/_record" do
 
     it "should not have links to edit/remove the record" do
       rendered.should_not have_css("a[onclick^=editRecord]")
-      rendered.should_not have_css("a > img[src*=database_delete]")
+      rendered.should_not have_css("a > i[class*=trash]")
     end
   end
 
@@ -91,7 +91,7 @@ describe "domains/_record" do
 
       render :partial => 'domains/record', :object => record
 
-      rendered.should_not have_css("a > img[src*=database_delete]")
+      rendered.should_not have_css("a > i[class*=trash]")
     end
 
     it "should allow edit records that aren't protected" do
@@ -101,7 +101,7 @@ describe "domains/_record" do
 
       # binding.pry
       rendered.should have_css("a[onclick^=editRecord]")
-      rendered.should_not have_css("a > img[src*=database_delete]")
+      rendered.should_not have_css("a > i[class*=trash]")
       rendered.should have_css("tr#edit_a_#{record.id}")
     end
 
@@ -116,7 +116,7 @@ describe "domains/_record" do
 
       render :partial => 'domains/record', :object => record
 
-      rendered.should have_css("a > img[src*=database_delete]")
+      rendered.should have_css("a > i[class*=trash]")
     end
   end
 end

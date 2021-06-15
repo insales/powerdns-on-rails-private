@@ -15,9 +15,9 @@ describe "macros/show.html.haml" do
   end
 
   it "should have an overview table" do
-    rendered.should have_css('table.grid td', :text => "Name")
-    rendered.should have_css('table.grid td', :text => "Description")
-    rendered.should have_css('table.grid td', :text => "Active")
+    rendered.should have_css('.row', text: /Name\s*#{@macro.name}/)
+    rendered.should have_css('.row', text: /Description\s*#{@macro.description}/)
+    rendered.should have_css('.row', text: /Active\sYes/)
   end
 
   it "should have a list of steps" do

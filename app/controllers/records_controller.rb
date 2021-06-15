@@ -8,13 +8,26 @@ class RecordsController < InheritedResources::Base
     render :text => t(:message_token_not_authorized), :status => 403
   end
 
+  def resource_params
+    params.require(:record).permit(
+      :domain_id,
+      :name,
+      :content,
+      :ttl,
+      :prio,
+      :change_date,
+      :disabled,
+      :ordername,
+      :auth
+    )
+  end
 
   def create
     record_type = params[:record][:type].downcase
     if record_type == 'loc'
-      @record = parent.build_loc_record(params[:record])
+      @record = parent.build_loc_record(resource_params)
     else
-      @record = parent.send(:"#{record_type}_records").new(params[:record])
+      @record = parent.send(:"#{record_type}_records").new(resource_params)
     end
 
     if current_token && !current_token.allow_new_records? &&
