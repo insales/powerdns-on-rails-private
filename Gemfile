@@ -32,6 +32,7 @@ gem 'rails-controller-testing'
 gem 'nokogiri'
 
 gem 'bootsnap'
+gem 'mini_racer' # in place of nodejs 10+, light version of rubyracer
 
 group :development, :test do
   gem "rspec-rails"
